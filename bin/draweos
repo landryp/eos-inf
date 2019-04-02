@@ -1,0 +1,7 @@
+#!/bin/bash
+
+job=$1
+
+draw_foo $PWD/in/gpr_phi.pkl -o $PWD/dat/ -t $job
+
+integrate_phi $PWD/dat/draw_foo-$job.csv 2.32e10 1.26e13 --sigma-pressurec2=1e10
