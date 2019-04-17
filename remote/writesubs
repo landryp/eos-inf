@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Set run parameters
+
+binfile=$1
+subfile="${PWD}/remote/${binfile}.sub"
+
+# Print sub files
+
+echo "universe = vanilla" > $subfile
+echo "executable = $PWD/bin/$binfile" >> $subfile
+echo "arguments = \"\$(job)\" \"1\" \"\$(perdir)\" \"\$(gpfile)\" " >> $subfile
+echo "output = $PWD/remote/log/draweos-\$(job).out" >> $subfile
+echo "error = $PWD/remote/draweos-\$(job).err" >> $subfile
+echo "log = $PWD/remote/draweos-\$(job).log" >> $subfile
+echo "getenv = True" >> $subfile
+echo "accounting_group = ligo.dev.o2.cbc.pe.lalinference" >> $subfile
+echo "accounting_group.user = philippe.landry" >> $subfile
+echo "queue 1" >> $subfile
+

@@ -1,7 +1,18 @@
 #!/bin/bash
 
-job=$1
+jobi=$1
+numjobs=$2
+perdir=$3
+gpfile=$4
 
-draw_foo $PWD/in/gpr_phi.pkl -o $PWD/dat/ -t $job
+draw-gpr $PWD/in/$gpfile -n $numjobs -N $perdir -o $PWD/dat/
 
-integrate_phi $PWD/dat/draw_foo-$job.csv 2.32e10 1.26e13 --sigma-pressurec2=1e10
+for job in $(seq $jobi $(($jobi+$numjobs-1)))
+do
+	echo $job
+	dirnum=$(($job/$perdir))
+	printf -v dircode "%06d" $dirnum
+	printf -v jobcode "%06d" $job
+
+	integrate-phi $PWD/dat/DRAWmod$perdir-$dircode/draw-gpr-$jobcode.csv 2.32e10 -o $PWD/dat/DRAWmod$perdir-$dircode/eos-draw-$jobcode.csv --sigma-pressurec2 1e10 --stitch-below-reference-pressure --crust-eos sly
+done

@@ -1,7 +1,6 @@
 #!/bin/bash
 
-rm -f dat/*.csv
-rm -f dat/*.png
+rm -rf dat/*/
 
 
 

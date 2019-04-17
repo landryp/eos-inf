@@ -4,7 +4,7 @@ import numpy as np
 
 # Random draws from uniform prior in each component mass, with m2 < m1
 
-drawmass_uniform(mrange=[1.16,1.36,1.36,1.60]):
+def drawmass_uniform(mrange): #=[1.16,1.36,1.36,1.60]):
 
 	m1i, m1f, m2i, m2f = mrange # specify prior ranges
 	

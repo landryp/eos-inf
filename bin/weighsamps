@@ -1,0 +1,7 @@
+#!/bin/bash
+
+sampfile=$1
+gwfile=$2
+#sigma=$3
+
+weigh-samples $PWD/in/$gwfile $PWD/dat/$sampfile $PWD/dat/SAMPweights.csv lambda1 lambda2 m1_source m2_source #-b $sigma

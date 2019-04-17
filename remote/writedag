@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# Set run parameters
+
+numjobs=100
+mpereos=20
+gwfile="gwPhenomPNRT_post-lospin.csv"
+gpfile="gpr_phi.hdf5"
+
+jobi=0
+perdir=40
+dagfile="${PWD}/remote/INFEREOS.dag"
+
+# Print DAG file
+
+echo "### EOS inference on $gwposterior with $numjobs draws from prior $gprfile ###" > $dagfile
+
+for job in $(seq $jobi $(($jobi+$numjobs-1)))
+do
+	echo "JOB $(($job)) $PWD/remote/draweos.sub" >> $dagfile
+	echo "VARS $(($job)) jobi=\"$job\" numjobs=\"1\" perdir=\"$perdir\" gpfile=\"$gpfile\" " >> $dagfile
+	echo "RETRY $(($job)) 1" >> $dagfile
+	
+	echo "JOB $(($numjobs+$job)) $PWD/remote/getprops.sub" >> $dagfile
+	echo "VARS $(($numjobs+$job)) jobi=\"$job\" numjobs=\"1\" perdir=\"$perdir\" " >> $dagfile
+	echo "RETRY $(($numjobs+$job)) 1" >> $dagfile
+	echo "PARENT $(($job)) CHILD $(($numjobs+$job))" >> $dagfile
+	echo "PARENT $(($numjobs+$job)) CHILD $(($numjobs+$numjobs))" >> $dagfile
+done
+
+echo "JOB $(($numjobs+$numjobs)) $PWD/remote/getbinaries.sub" >> $dagfile
+echo "VARS $(($numjobs+$numjobs)) mpereos=\"$mpereos\" " >> $dagfile
+echo "RETRY $(($numjobs+$numjobs)) 1" >> $dagfile
+echo "PARENT $(($numjobs+$numjobs)) CHILD $(($numjobs+$numjobs+1))" >> $dagfile
+
+echo "JOB $(($numjobs+$numjobs+1)) $PWD/remote/collectbinaries.sub" >> $dagfile
+echo "RETRY $(($numjobs+$numjobs+1)) 1" >> $dagfile
+echo "PARENT $(($numjobs+$numjobs+1)) CHILD $(($numjobs+$numjobs+2))" >> $dagfile
+
+echo "JOB $(($numjobs+$numjobs+2)) $PWD/remote/weighsamps.sub" >> $dagfile
+echo "VARS $(($numjobs+$numjobs+2)) sampfile=\"SAMP.csv\" gwfile=\"$gwfile\" " >> $dagfile
+echo "RETRY $(($numjobs+$numjobs+2)) 1" >> $dagfile
+
