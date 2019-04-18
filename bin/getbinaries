@@ -6,9 +6,9 @@ __date__ = '04-2019'
 
 import numpy as np
 from optparse import OptionParser
-from drawmass import drawmass_uniform as drawmass
-from constants import *
-from macro import macro as getmacro
+from eosinf.drawmass import drawmass_uniform as drawmass
+from nsstruc.constants import *
+from nsstruc.macro import macro as getmacro
 import glob
 
 parser = OptionParser(usage=__usage__, description=__doc__)

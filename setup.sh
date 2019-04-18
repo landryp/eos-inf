@@ -1,2 +1,2 @@
-export PATH=$PWD/bin:$PWD/ns-struc/bin:$PWD/universality/bin:$PWD/remote:$PATH
-export PYTHONPATH=$PWD/lib:$PWD/ns-struc/lib:$PWD/universality:$PYTHONPATH
+export PATH=$PWD/opt/bin:$PWD/opt/remote:$PATH
+export PYTHONPATH=$PWD/opt/lib/python2.7/site-packages:$PYTHONPATH
