@@ -1,6 +1,6 @@
 universe = vanilla
 executable = /home/phil/Documents/Research/eos-inf/bin/getprops
-arguments = "$(job)" "$(perdir)" "$(outdir)"
+arguments = "$(jobi)" "$(perdir)" "$(outdir)"
 output = /home/phil/Documents/Research/tmp/log/getprops-$(job).out
 error = /home/phil/Documents/Research/tmp/log/getprops-$(job).err
 log = /home/phil/Documents/Research/tmp/log/getprops-$(job).log

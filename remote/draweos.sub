@@ -1,6 +1,6 @@
 universe = vanilla
 executable = /home/phil/Documents/Research/eos-inf/bin/draweos
-arguments = "$(job)" "$(perdir)" "$(gpfile)" "$(outdir)"
+arguments = "$(jobi)" "1" "$(perdir)" "$(gpfile)" "$(outdir)"
 output = /home/phil/Documents/Research/tmp/log/draweos-$(job).out
 error = /home/phil/Documents/Research/tmp/log/draweos-$(job).err
 log = /home/phil/Documents/Research/tmp/log/draweos-$(job).log
