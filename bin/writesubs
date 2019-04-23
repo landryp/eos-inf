@@ -21,9 +21,9 @@ do
 	echo "universe = vanilla" > $subfile
 	echo "executable = $indir/bin/$binfile" >> $subfile
 	echo $arg >> $subfile
-	echo "output = $outdir/log/$binfile-\$(job).out" >> $subfile
-	echo "error = $outdir/log/$binfile-\$(job).err" >> $subfile
-	echo "log = $outdir/log/$binfile-\$(job).log" >> $subfile
+	echo "output = $outdir/log/$binfile-\$(jobi).out" >> $subfile
+	echo "error = $outdir/log/$binfile-\$(jobi).err" >> $subfile
+	echo "log = $outdir/log/$binfile-\$(jobi).log" >> $subfile
 	echo "getenv = True" >> $subfile
 	echo "accounting_group = ligo.dev.o2.cbc.pe.lalinference" >> $subfile
 	echo "accounting_group.user = philippe.landry" >> $subfile
