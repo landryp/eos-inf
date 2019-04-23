@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# Set run parameters
+
+binfiles=( "draweos" "getprops" "getbinaries" "collectbinaries" "weighsamps" )
+args=( "arguments = \"\$(job)\" \"\$(perdir)\" \"\$(gpfile)\" \"\$(outdir)\" " "arguments = \"\$(job)\" \"\$(perdir)\" \"\$(outdir)\" " "arguments = \"\$(mpereos)\" \"\$(outdir)\" " "arguments = \"\$(outdir)\" " "arguments = \"\$(gwfile)\" \"\$(sampfile)\" \"\$(weightsfile)\" \"\$(outdir)\" " )
+#"arguments = \"\$(job)\" \"1\" \"\$(perdir)\" \"\$(gpfile)\" \"\$(outdir)\" "
+
+indir="/home/phil/Documents/Research/eos-inf"
+outdir="/home/phil/Documents/Research/tmp"
+
+mkdir -p ${outdir}/log
+
+# Print sub files
+
+for i in $(seq 0 $((${#binfiles[@]}-1)))
+do
+	binfile=${binfiles[$i]}
+	subfile="${indir}/remote/${binfile}.sub"
+	arg=${args[$i]}
+
+	echo "universe = vanilla" > $subfile
+	echo "executable = $indir/bin/$binfile" >> $subfile
+	echo $arg >> $subfile
+	echo "output = $outdir/log/$binfile-\$(job).out" >> $subfile
+	echo "error = $outdir/log/$binfile-\$(job).err" >> $subfile
+	echo "log = $outdir/log/$binfile-\$(job).log" >> $subfile
+	echo "getenv = True" >> $subfile
+	echo "accounting_group = ligo.dev.o2.cbc.pe.lalinference" >> $subfile
+	echo "accounting_group.user = philippe.landry" >> $subfile
+	echo "queue 1" >> $subfile
+done

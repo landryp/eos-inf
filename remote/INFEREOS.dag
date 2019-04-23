@@ -1,811 +1,92 @@
-### EOS inference on  with 100 draws from prior  ###
+### EOS inference on /home/phil/Documents/Research/eos-inf/in/gwPhenomPNRT_post-lospin.csv with 10 draws from prior /home/phil/Documents/Research/eos-inf/in/gpr_phi.hdf5, reading from /home/phil/Documents/Research/eos-inf and printing to /home/phil/Documents/Research/tmp ###
 JOB 0 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 0 jobi="0" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
+VARS 0 jobi="0" numjobs="1" perdir="5" gpfile="/home/phil/Documents/Research/eos-inf/in/gpr_phi.hdf5" outdir="/home/phil/Documents/Research/tmp" 
 RETRY 0 1
-JOB 100 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 100 jobi="0" numjobs="1" perdir="40" 
-RETRY 100 1
-PARENT 0 CHILD 100
-PARENT 100 CHILD 200
-JOB 1 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 1 jobi="1" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 1 1
-JOB 101 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 101 jobi="1" numjobs="1" perdir="40" 
-RETRY 101 1
-PARENT 1 CHILD 101
-PARENT 101 CHILD 200
-JOB 2 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 2 jobi="2" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 2 1
-JOB 102 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 102 jobi="2" numjobs="1" perdir="40" 
-RETRY 102 1
-PARENT 2 CHILD 102
-PARENT 102 CHILD 200
-JOB 3 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 3 jobi="3" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 3 1
-JOB 103 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 103 jobi="3" numjobs="1" perdir="40" 
-RETRY 103 1
-PARENT 3 CHILD 103
-PARENT 103 CHILD 200
-JOB 4 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 4 jobi="4" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 4 1
-JOB 104 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 104 jobi="4" numjobs="1" perdir="40" 
-RETRY 104 1
-PARENT 4 CHILD 104
-PARENT 104 CHILD 200
-JOB 5 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 5 jobi="5" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 5 1
-JOB 105 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 105 jobi="5" numjobs="1" perdir="40" 
-RETRY 105 1
-PARENT 5 CHILD 105
-PARENT 105 CHILD 200
-JOB 6 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 6 jobi="6" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 6 1
-JOB 106 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 106 jobi="6" numjobs="1" perdir="40" 
-RETRY 106 1
-PARENT 6 CHILD 106
-PARENT 106 CHILD 200
-JOB 7 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 7 jobi="7" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 7 1
-JOB 107 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 107 jobi="7" numjobs="1" perdir="40" 
-RETRY 107 1
-PARENT 7 CHILD 107
-PARENT 107 CHILD 200
-JOB 8 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 8 jobi="8" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 8 1
-JOB 108 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 108 jobi="8" numjobs="1" perdir="40" 
-RETRY 108 1
-PARENT 8 CHILD 108
-PARENT 108 CHILD 200
-JOB 9 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 9 jobi="9" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 9 1
-JOB 109 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 109 jobi="9" numjobs="1" perdir="40" 
-RETRY 109 1
-PARENT 9 CHILD 109
-PARENT 109 CHILD 200
-JOB 10 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 10 jobi="10" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
+JOB 10 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
+VARS 10 jobi="0" numjobs="1" perdir="5" outdir="/home/phil/Documents/Research/tmp" 
 RETRY 10 1
-JOB 110 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 110 jobi="10" numjobs="1" perdir="40" 
-RETRY 110 1
-PARENT 10 CHILD 110
-PARENT 110 CHILD 200
-JOB 11 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 11 jobi="11" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
+PARENT 0 CHILD 10
+PARENT 10 CHILD 20
+JOB 1 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
+VARS 1 jobi="1" numjobs="1" perdir="5" gpfile="/home/phil/Documents/Research/eos-inf/in/gpr_phi.hdf5" outdir="/home/phil/Documents/Research/tmp" 
+RETRY 1 1
+JOB 11 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
+VARS 11 jobi="1" numjobs="1" perdir="5" outdir="/home/phil/Documents/Research/tmp" 
 RETRY 11 1
-JOB 111 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 111 jobi="11" numjobs="1" perdir="40" 
-RETRY 111 1
-PARENT 11 CHILD 111
-PARENT 111 CHILD 200
-JOB 12 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 12 jobi="12" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
+PARENT 1 CHILD 11
+PARENT 11 CHILD 20
+JOB 2 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
+VARS 2 jobi="2" numjobs="1" perdir="5" gpfile="/home/phil/Documents/Research/eos-inf/in/gpr_phi.hdf5" outdir="/home/phil/Documents/Research/tmp" 
+RETRY 2 1
+JOB 12 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
+VARS 12 jobi="2" numjobs="1" perdir="5" outdir="/home/phil/Documents/Research/tmp" 
 RETRY 12 1
-JOB 112 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 112 jobi="12" numjobs="1" perdir="40" 
-RETRY 112 1
-PARENT 12 CHILD 112
-PARENT 112 CHILD 200
-JOB 13 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 13 jobi="13" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
+PARENT 2 CHILD 12
+PARENT 12 CHILD 20
+JOB 3 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
+VARS 3 jobi="3" numjobs="1" perdir="5" gpfile="/home/phil/Documents/Research/eos-inf/in/gpr_phi.hdf5" outdir="/home/phil/Documents/Research/tmp" 
+RETRY 3 1
+JOB 13 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
+VARS 13 jobi="3" numjobs="1" perdir="5" outdir="/home/phil/Documents/Research/tmp" 
 RETRY 13 1
-JOB 113 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 113 jobi="13" numjobs="1" perdir="40" 
-RETRY 113 1
-PARENT 13 CHILD 113
-PARENT 113 CHILD 200
-JOB 14 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 14 jobi="14" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
+PARENT 3 CHILD 13
+PARENT 13 CHILD 20
+JOB 4 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
+VARS 4 jobi="4" numjobs="1" perdir="5" gpfile="/home/phil/Documents/Research/eos-inf/in/gpr_phi.hdf5" outdir="/home/phil/Documents/Research/tmp" 
+RETRY 4 1
+JOB 14 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
+VARS 14 jobi="4" numjobs="1" perdir="5" outdir="/home/phil/Documents/Research/tmp" 
 RETRY 14 1
-JOB 114 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 114 jobi="14" numjobs="1" perdir="40" 
-RETRY 114 1
-PARENT 14 CHILD 114
-PARENT 114 CHILD 200
-JOB 15 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 15 jobi="15" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
+PARENT 4 CHILD 14
+PARENT 14 CHILD 20
+JOB 5 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
+VARS 5 jobi="5" numjobs="1" perdir="5" gpfile="/home/phil/Documents/Research/eos-inf/in/gpr_phi.hdf5" outdir="/home/phil/Documents/Research/tmp" 
+RETRY 5 1
+JOB 15 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
+VARS 15 jobi="5" numjobs="1" perdir="5" outdir="/home/phil/Documents/Research/tmp" 
 RETRY 15 1
-JOB 115 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 115 jobi="15" numjobs="1" perdir="40" 
-RETRY 115 1
-PARENT 15 CHILD 115
-PARENT 115 CHILD 200
-JOB 16 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 16 jobi="16" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
+PARENT 5 CHILD 15
+PARENT 15 CHILD 20
+JOB 6 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
+VARS 6 jobi="6" numjobs="1" perdir="5" gpfile="/home/phil/Documents/Research/eos-inf/in/gpr_phi.hdf5" outdir="/home/phil/Documents/Research/tmp" 
+RETRY 6 1
+JOB 16 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
+VARS 16 jobi="6" numjobs="1" perdir="5" outdir="/home/phil/Documents/Research/tmp" 
 RETRY 16 1
-JOB 116 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 116 jobi="16" numjobs="1" perdir="40" 
-RETRY 116 1
-PARENT 16 CHILD 116
-PARENT 116 CHILD 200
-JOB 17 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 17 jobi="17" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
+PARENT 6 CHILD 16
+PARENT 16 CHILD 20
+JOB 7 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
+VARS 7 jobi="7" numjobs="1" perdir="5" gpfile="/home/phil/Documents/Research/eos-inf/in/gpr_phi.hdf5" outdir="/home/phil/Documents/Research/tmp" 
+RETRY 7 1
+JOB 17 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
+VARS 17 jobi="7" numjobs="1" perdir="5" outdir="/home/phil/Documents/Research/tmp" 
 RETRY 17 1
-JOB 117 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 117 jobi="17" numjobs="1" perdir="40" 
-RETRY 117 1
-PARENT 17 CHILD 117
-PARENT 117 CHILD 200
-JOB 18 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 18 jobi="18" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
+PARENT 7 CHILD 17
+PARENT 17 CHILD 20
+JOB 8 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
+VARS 8 jobi="8" numjobs="1" perdir="5" gpfile="/home/phil/Documents/Research/eos-inf/in/gpr_phi.hdf5" outdir="/home/phil/Documents/Research/tmp" 
+RETRY 8 1
+JOB 18 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
+VARS 18 jobi="8" numjobs="1" perdir="5" outdir="/home/phil/Documents/Research/tmp" 
 RETRY 18 1
-JOB 118 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 118 jobi="18" numjobs="1" perdir="40" 
-RETRY 118 1
-PARENT 18 CHILD 118
-PARENT 118 CHILD 200
-JOB 19 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 19 jobi="19" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
+PARENT 8 CHILD 18
+PARENT 18 CHILD 20
+JOB 9 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
+VARS 9 jobi="9" numjobs="1" perdir="5" gpfile="/home/phil/Documents/Research/eos-inf/in/gpr_phi.hdf5" outdir="/home/phil/Documents/Research/tmp" 
+RETRY 9 1
+JOB 19 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
+VARS 19 jobi="9" numjobs="1" perdir="5" outdir="/home/phil/Documents/Research/tmp" 
 RETRY 19 1
-JOB 119 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 119 jobi="19" numjobs="1" perdir="40" 
-RETRY 119 1
-PARENT 19 CHILD 119
-PARENT 119 CHILD 200
-JOB 20 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 20 jobi="20" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
+PARENT 9 CHILD 19
+PARENT 19 CHILD 20
+JOB 20 /home/phil/Documents/Research/eos-inf/remote/getbinaries.sub
+VARS 20 mpereos="20" outdir="/home/phil/Documents/Research/tmp" 
 RETRY 20 1
-JOB 120 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 120 jobi="20" numjobs="1" perdir="40" 
-RETRY 120 1
-PARENT 20 CHILD 120
-PARENT 120 CHILD 200
-JOB 21 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 21 jobi="21" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
+PARENT 20 CHILD 21
+JOB 21 /home/phil/Documents/Research/eos-inf/remote/collectbinaries.sub
+VARS 21 outdir="/home/phil/Documents/Research/tmp" 
 RETRY 21 1
-JOB 121 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 121 jobi="21" numjobs="1" perdir="40" 
-RETRY 121 1
-PARENT 21 CHILD 121
-PARENT 121 CHILD 200
-JOB 22 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 22 jobi="22" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
+PARENT 21 CHILD 22
+JOB 22 /home/phil/Documents/Research/eos-inf/remote/weighsamps.sub
+VARS 22 gwfile="/home/phil/Documents/Research/eos-inf/in/gwPhenomPNRT_post-lospin.csv" sampfile="/home/phil/Documents/Research/tmp/SAMP.csv" weightsfile="/home/phil/Documents/Research/tmp/SAMPweights.csv" 
 RETRY 22 1
-JOB 122 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 122 jobi="22" numjobs="1" perdir="40" 
-RETRY 122 1
-PARENT 22 CHILD 122
-PARENT 122 CHILD 200
-JOB 23 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 23 jobi="23" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 23 1
-JOB 123 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 123 jobi="23" numjobs="1" perdir="40" 
-RETRY 123 1
-PARENT 23 CHILD 123
-PARENT 123 CHILD 200
-JOB 24 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 24 jobi="24" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 24 1
-JOB 124 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 124 jobi="24" numjobs="1" perdir="40" 
-RETRY 124 1
-PARENT 24 CHILD 124
-PARENT 124 CHILD 200
-JOB 25 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 25 jobi="25" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 25 1
-JOB 125 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 125 jobi="25" numjobs="1" perdir="40" 
-RETRY 125 1
-PARENT 25 CHILD 125
-PARENT 125 CHILD 200
-JOB 26 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 26 jobi="26" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 26 1
-JOB 126 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 126 jobi="26" numjobs="1" perdir="40" 
-RETRY 126 1
-PARENT 26 CHILD 126
-PARENT 126 CHILD 200
-JOB 27 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 27 jobi="27" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 27 1
-JOB 127 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 127 jobi="27" numjobs="1" perdir="40" 
-RETRY 127 1
-PARENT 27 CHILD 127
-PARENT 127 CHILD 200
-JOB 28 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 28 jobi="28" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 28 1
-JOB 128 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 128 jobi="28" numjobs="1" perdir="40" 
-RETRY 128 1
-PARENT 28 CHILD 128
-PARENT 128 CHILD 200
-JOB 29 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 29 jobi="29" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 29 1
-JOB 129 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 129 jobi="29" numjobs="1" perdir="40" 
-RETRY 129 1
-PARENT 29 CHILD 129
-PARENT 129 CHILD 200
-JOB 30 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 30 jobi="30" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 30 1
-JOB 130 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 130 jobi="30" numjobs="1" perdir="40" 
-RETRY 130 1
-PARENT 30 CHILD 130
-PARENT 130 CHILD 200
-JOB 31 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 31 jobi="31" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 31 1
-JOB 131 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 131 jobi="31" numjobs="1" perdir="40" 
-RETRY 131 1
-PARENT 31 CHILD 131
-PARENT 131 CHILD 200
-JOB 32 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 32 jobi="32" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 32 1
-JOB 132 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 132 jobi="32" numjobs="1" perdir="40" 
-RETRY 132 1
-PARENT 32 CHILD 132
-PARENT 132 CHILD 200
-JOB 33 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 33 jobi="33" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 33 1
-JOB 133 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 133 jobi="33" numjobs="1" perdir="40" 
-RETRY 133 1
-PARENT 33 CHILD 133
-PARENT 133 CHILD 200
-JOB 34 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 34 jobi="34" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 34 1
-JOB 134 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 134 jobi="34" numjobs="1" perdir="40" 
-RETRY 134 1
-PARENT 34 CHILD 134
-PARENT 134 CHILD 200
-JOB 35 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 35 jobi="35" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 35 1
-JOB 135 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 135 jobi="35" numjobs="1" perdir="40" 
-RETRY 135 1
-PARENT 35 CHILD 135
-PARENT 135 CHILD 200
-JOB 36 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 36 jobi="36" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 36 1
-JOB 136 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 136 jobi="36" numjobs="1" perdir="40" 
-RETRY 136 1
-PARENT 36 CHILD 136
-PARENT 136 CHILD 200
-JOB 37 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 37 jobi="37" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 37 1
-JOB 137 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 137 jobi="37" numjobs="1" perdir="40" 
-RETRY 137 1
-PARENT 37 CHILD 137
-PARENT 137 CHILD 200
-JOB 38 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 38 jobi="38" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 38 1
-JOB 138 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 138 jobi="38" numjobs="1" perdir="40" 
-RETRY 138 1
-PARENT 38 CHILD 138
-PARENT 138 CHILD 200
-JOB 39 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 39 jobi="39" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 39 1
-JOB 139 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 139 jobi="39" numjobs="1" perdir="40" 
-RETRY 139 1
-PARENT 39 CHILD 139
-PARENT 139 CHILD 200
-JOB 40 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 40 jobi="40" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 40 1
-JOB 140 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 140 jobi="40" numjobs="1" perdir="40" 
-RETRY 140 1
-PARENT 40 CHILD 140
-PARENT 140 CHILD 200
-JOB 41 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 41 jobi="41" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 41 1
-JOB 141 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 141 jobi="41" numjobs="1" perdir="40" 
-RETRY 141 1
-PARENT 41 CHILD 141
-PARENT 141 CHILD 200
-JOB 42 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 42 jobi="42" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 42 1
-JOB 142 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 142 jobi="42" numjobs="1" perdir="40" 
-RETRY 142 1
-PARENT 42 CHILD 142
-PARENT 142 CHILD 200
-JOB 43 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 43 jobi="43" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 43 1
-JOB 143 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 143 jobi="43" numjobs="1" perdir="40" 
-RETRY 143 1
-PARENT 43 CHILD 143
-PARENT 143 CHILD 200
-JOB 44 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 44 jobi="44" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 44 1
-JOB 144 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 144 jobi="44" numjobs="1" perdir="40" 
-RETRY 144 1
-PARENT 44 CHILD 144
-PARENT 144 CHILD 200
-JOB 45 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 45 jobi="45" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 45 1
-JOB 145 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 145 jobi="45" numjobs="1" perdir="40" 
-RETRY 145 1
-PARENT 45 CHILD 145
-PARENT 145 CHILD 200
-JOB 46 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 46 jobi="46" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 46 1
-JOB 146 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 146 jobi="46" numjobs="1" perdir="40" 
-RETRY 146 1
-PARENT 46 CHILD 146
-PARENT 146 CHILD 200
-JOB 47 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 47 jobi="47" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 47 1
-JOB 147 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 147 jobi="47" numjobs="1" perdir="40" 
-RETRY 147 1
-PARENT 47 CHILD 147
-PARENT 147 CHILD 200
-JOB 48 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 48 jobi="48" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 48 1
-JOB 148 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 148 jobi="48" numjobs="1" perdir="40" 
-RETRY 148 1
-PARENT 48 CHILD 148
-PARENT 148 CHILD 200
-JOB 49 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 49 jobi="49" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 49 1
-JOB 149 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 149 jobi="49" numjobs="1" perdir="40" 
-RETRY 149 1
-PARENT 49 CHILD 149
-PARENT 149 CHILD 200
-JOB 50 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 50 jobi="50" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 50 1
-JOB 150 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 150 jobi="50" numjobs="1" perdir="40" 
-RETRY 150 1
-PARENT 50 CHILD 150
-PARENT 150 CHILD 200
-JOB 51 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 51 jobi="51" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 51 1
-JOB 151 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 151 jobi="51" numjobs="1" perdir="40" 
-RETRY 151 1
-PARENT 51 CHILD 151
-PARENT 151 CHILD 200
-JOB 52 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 52 jobi="52" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 52 1
-JOB 152 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 152 jobi="52" numjobs="1" perdir="40" 
-RETRY 152 1
-PARENT 52 CHILD 152
-PARENT 152 CHILD 200
-JOB 53 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 53 jobi="53" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 53 1
-JOB 153 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 153 jobi="53" numjobs="1" perdir="40" 
-RETRY 153 1
-PARENT 53 CHILD 153
-PARENT 153 CHILD 200
-JOB 54 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 54 jobi="54" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 54 1
-JOB 154 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 154 jobi="54" numjobs="1" perdir="40" 
-RETRY 154 1
-PARENT 54 CHILD 154
-PARENT 154 CHILD 200
-JOB 55 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 55 jobi="55" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 55 1
-JOB 155 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 155 jobi="55" numjobs="1" perdir="40" 
-RETRY 155 1
-PARENT 55 CHILD 155
-PARENT 155 CHILD 200
-JOB 56 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 56 jobi="56" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 56 1
-JOB 156 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 156 jobi="56" numjobs="1" perdir="40" 
-RETRY 156 1
-PARENT 56 CHILD 156
-PARENT 156 CHILD 200
-JOB 57 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 57 jobi="57" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 57 1
-JOB 157 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 157 jobi="57" numjobs="1" perdir="40" 
-RETRY 157 1
-PARENT 57 CHILD 157
-PARENT 157 CHILD 200
-JOB 58 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 58 jobi="58" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 58 1
-JOB 158 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 158 jobi="58" numjobs="1" perdir="40" 
-RETRY 158 1
-PARENT 58 CHILD 158
-PARENT 158 CHILD 200
-JOB 59 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 59 jobi="59" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 59 1
-JOB 159 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 159 jobi="59" numjobs="1" perdir="40" 
-RETRY 159 1
-PARENT 59 CHILD 159
-PARENT 159 CHILD 200
-JOB 60 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 60 jobi="60" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 60 1
-JOB 160 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 160 jobi="60" numjobs="1" perdir="40" 
-RETRY 160 1
-PARENT 60 CHILD 160
-PARENT 160 CHILD 200
-JOB 61 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 61 jobi="61" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 61 1
-JOB 161 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 161 jobi="61" numjobs="1" perdir="40" 
-RETRY 161 1
-PARENT 61 CHILD 161
-PARENT 161 CHILD 200
-JOB 62 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 62 jobi="62" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 62 1
-JOB 162 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 162 jobi="62" numjobs="1" perdir="40" 
-RETRY 162 1
-PARENT 62 CHILD 162
-PARENT 162 CHILD 200
-JOB 63 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 63 jobi="63" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 63 1
-JOB 163 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 163 jobi="63" numjobs="1" perdir="40" 
-RETRY 163 1
-PARENT 63 CHILD 163
-PARENT 163 CHILD 200
-JOB 64 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 64 jobi="64" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 64 1
-JOB 164 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 164 jobi="64" numjobs="1" perdir="40" 
-RETRY 164 1
-PARENT 64 CHILD 164
-PARENT 164 CHILD 200
-JOB 65 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 65 jobi="65" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 65 1
-JOB 165 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 165 jobi="65" numjobs="1" perdir="40" 
-RETRY 165 1
-PARENT 65 CHILD 165
-PARENT 165 CHILD 200
-JOB 66 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 66 jobi="66" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 66 1
-JOB 166 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 166 jobi="66" numjobs="1" perdir="40" 
-RETRY 166 1
-PARENT 66 CHILD 166
-PARENT 166 CHILD 200
-JOB 67 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 67 jobi="67" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 67 1
-JOB 167 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 167 jobi="67" numjobs="1" perdir="40" 
-RETRY 167 1
-PARENT 67 CHILD 167
-PARENT 167 CHILD 200
-JOB 68 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 68 jobi="68" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 68 1
-JOB 168 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 168 jobi="68" numjobs="1" perdir="40" 
-RETRY 168 1
-PARENT 68 CHILD 168
-PARENT 168 CHILD 200
-JOB 69 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 69 jobi="69" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 69 1
-JOB 169 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 169 jobi="69" numjobs="1" perdir="40" 
-RETRY 169 1
-PARENT 69 CHILD 169
-PARENT 169 CHILD 200
-JOB 70 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 70 jobi="70" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 70 1
-JOB 170 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 170 jobi="70" numjobs="1" perdir="40" 
-RETRY 170 1
-PARENT 70 CHILD 170
-PARENT 170 CHILD 200
-JOB 71 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 71 jobi="71" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 71 1
-JOB 171 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 171 jobi="71" numjobs="1" perdir="40" 
-RETRY 171 1
-PARENT 71 CHILD 171
-PARENT 171 CHILD 200
-JOB 72 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 72 jobi="72" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 72 1
-JOB 172 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 172 jobi="72" numjobs="1" perdir="40" 
-RETRY 172 1
-PARENT 72 CHILD 172
-PARENT 172 CHILD 200
-JOB 73 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 73 jobi="73" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 73 1
-JOB 173 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 173 jobi="73" numjobs="1" perdir="40" 
-RETRY 173 1
-PARENT 73 CHILD 173
-PARENT 173 CHILD 200
-JOB 74 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 74 jobi="74" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 74 1
-JOB 174 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 174 jobi="74" numjobs="1" perdir="40" 
-RETRY 174 1
-PARENT 74 CHILD 174
-PARENT 174 CHILD 200
-JOB 75 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 75 jobi="75" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 75 1
-JOB 175 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 175 jobi="75" numjobs="1" perdir="40" 
-RETRY 175 1
-PARENT 75 CHILD 175
-PARENT 175 CHILD 200
-JOB 76 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 76 jobi="76" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 76 1
-JOB 176 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 176 jobi="76" numjobs="1" perdir="40" 
-RETRY 176 1
-PARENT 76 CHILD 176
-PARENT 176 CHILD 200
-JOB 77 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 77 jobi="77" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 77 1
-JOB 177 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 177 jobi="77" numjobs="1" perdir="40" 
-RETRY 177 1
-PARENT 77 CHILD 177
-PARENT 177 CHILD 200
-JOB 78 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 78 jobi="78" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 78 1
-JOB 178 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 178 jobi="78" numjobs="1" perdir="40" 
-RETRY 178 1
-PARENT 78 CHILD 178
-PARENT 178 CHILD 200
-JOB 79 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 79 jobi="79" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 79 1
-JOB 179 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 179 jobi="79" numjobs="1" perdir="40" 
-RETRY 179 1
-PARENT 79 CHILD 179
-PARENT 179 CHILD 200
-JOB 80 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 80 jobi="80" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 80 1
-JOB 180 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 180 jobi="80" numjobs="1" perdir="40" 
-RETRY 180 1
-PARENT 80 CHILD 180
-PARENT 180 CHILD 200
-JOB 81 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 81 jobi="81" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 81 1
-JOB 181 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 181 jobi="81" numjobs="1" perdir="40" 
-RETRY 181 1
-PARENT 81 CHILD 181
-PARENT 181 CHILD 200
-JOB 82 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 82 jobi="82" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 82 1
-JOB 182 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 182 jobi="82" numjobs="1" perdir="40" 
-RETRY 182 1
-PARENT 82 CHILD 182
-PARENT 182 CHILD 200
-JOB 83 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 83 jobi="83" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 83 1
-JOB 183 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 183 jobi="83" numjobs="1" perdir="40" 
-RETRY 183 1
-PARENT 83 CHILD 183
-PARENT 183 CHILD 200
-JOB 84 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 84 jobi="84" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 84 1
-JOB 184 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 184 jobi="84" numjobs="1" perdir="40" 
-RETRY 184 1
-PARENT 84 CHILD 184
-PARENT 184 CHILD 200
-JOB 85 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 85 jobi="85" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 85 1
-JOB 185 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 185 jobi="85" numjobs="1" perdir="40" 
-RETRY 185 1
-PARENT 85 CHILD 185
-PARENT 185 CHILD 200
-JOB 86 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 86 jobi="86" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 86 1
-JOB 186 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 186 jobi="86" numjobs="1" perdir="40" 
-RETRY 186 1
-PARENT 86 CHILD 186
-PARENT 186 CHILD 200
-JOB 87 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 87 jobi="87" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 87 1
-JOB 187 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 187 jobi="87" numjobs="1" perdir="40" 
-RETRY 187 1
-PARENT 87 CHILD 187
-PARENT 187 CHILD 200
-JOB 88 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 88 jobi="88" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 88 1
-JOB 188 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 188 jobi="88" numjobs="1" perdir="40" 
-RETRY 188 1
-PARENT 88 CHILD 188
-PARENT 188 CHILD 200
-JOB 89 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 89 jobi="89" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 89 1
-JOB 189 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 189 jobi="89" numjobs="1" perdir="40" 
-RETRY 189 1
-PARENT 89 CHILD 189
-PARENT 189 CHILD 200
-JOB 90 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 90 jobi="90" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 90 1
-JOB 190 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 190 jobi="90" numjobs="1" perdir="40" 
-RETRY 190 1
-PARENT 90 CHILD 190
-PARENT 190 CHILD 200
-JOB 91 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 91 jobi="91" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 91 1
-JOB 191 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 191 jobi="91" numjobs="1" perdir="40" 
-RETRY 191 1
-PARENT 91 CHILD 191
-PARENT 191 CHILD 200
-JOB 92 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 92 jobi="92" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 92 1
-JOB 192 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 192 jobi="92" numjobs="1" perdir="40" 
-RETRY 192 1
-PARENT 92 CHILD 192
-PARENT 192 CHILD 200
-JOB 93 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 93 jobi="93" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 93 1
-JOB 193 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 193 jobi="93" numjobs="1" perdir="40" 
-RETRY 193 1
-PARENT 93 CHILD 193
-PARENT 193 CHILD 200
-JOB 94 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 94 jobi="94" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 94 1
-JOB 194 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 194 jobi="94" numjobs="1" perdir="40" 
-RETRY 194 1
-PARENT 94 CHILD 194
-PARENT 194 CHILD 200
-JOB 95 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 95 jobi="95" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 95 1
-JOB 195 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 195 jobi="95" numjobs="1" perdir="40" 
-RETRY 195 1
-PARENT 95 CHILD 195
-PARENT 195 CHILD 200
-JOB 96 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 96 jobi="96" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 96 1
-JOB 196 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 196 jobi="96" numjobs="1" perdir="40" 
-RETRY 196 1
-PARENT 96 CHILD 196
-PARENT 196 CHILD 200
-JOB 97 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 97 jobi="97" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 97 1
-JOB 197 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 197 jobi="97" numjobs="1" perdir="40" 
-RETRY 197 1
-PARENT 97 CHILD 197
-PARENT 197 CHILD 200
-JOB 98 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 98 jobi="98" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 98 1
-JOB 198 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 198 jobi="98" numjobs="1" perdir="40" 
-RETRY 198 1
-PARENT 98 CHILD 198
-PARENT 198 CHILD 200
-JOB 99 /home/phil/Documents/Research/eos-inf/remote/draweos.sub
-VARS 99 jobi="99" numjobs="1" perdir="40" gpfile="gpr_phi.hdf5" 
-RETRY 99 1
-JOB 199 /home/phil/Documents/Research/eos-inf/remote/getprops.sub
-VARS 199 jobi="99" numjobs="1" perdir="40" 
-RETRY 199 1
-PARENT 99 CHILD 199
-PARENT 199 CHILD 200
-JOB 200 /home/phil/Documents/Research/eos-inf/remote/getbinaries.sub
-VARS 200 mpereos="20" 
-RETRY 200 1
-PARENT 200 CHILD 201
-JOB 201 /home/phil/Documents/Research/eos-inf/remote/collectbinaries.sub
-RETRY 201 1
-PARENT 201 CHILD 202
-JOB 202 /home/phil/Documents/Research/eos-inf/remote/weighsamps.sub
-VARS 202 sampfile="SAMP.csv" gwfile="gwPhenomPNRT_post-lospin.csv" 
-RETRY 202 1
