@@ -6,7 +6,7 @@ perdir=$3
 gpfile=$4
 outdir=$5
 
-draw-gpr $gpfile -n $numjobs -N $perdir -o $outdir
+draw-gpr $gpfile -s $jobi -n $numjobs -N $perdir -o $outdir
 
 for job in $(seq $jobi $(($jobi+$numjobs-1)))
 do
