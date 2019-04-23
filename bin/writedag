@@ -27,11 +27,11 @@ do
 	echo "JOB $(($job)) $indir/remote/draweos.sub" >> $dagfile
 	echo "VARS $(($job)) jobi=\"$job\" numjobs=\"$each\" perdir=\"$perdir\" gpfile=\"$gpfile\" outdir=\"$outdir\"" >> $dagfile
 	echo "RETRY $(($job)) 1" >> $dagfile
+	echo "PARENT $(($job)) CHILD $(($numjobs+$job))" >> $dagfile
 	
 	echo "JOB $(($numjobs+$job)) $indir/remote/getprops.sub" >> $dagfile
 	echo "VARS $(($numjobs+$job)) jobi=\"$job\" numjobs=\"1\" perdir=\"$perdir\" outdir=\"$outdir\"" >> $dagfile
 	echo "RETRY $(($numjobs+$job)) 1" >> $dagfile
-	echo "PARENT $(($job)) CHILD $(($numjobs+$job))" >> $dagfile
 	echo "PARENT $(($numjobs+$job)) CHILD $(($numjobs+$numjobs))" >> $dagfile
 done
 
