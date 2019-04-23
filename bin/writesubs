@@ -6,8 +6,8 @@ binfiles=( "draweos" "getprops" "getbinaries" "collectbinaries" "weighsamps" )
 args=( "arguments = \"\$(jobi)\" \"1\" \"\$(perdir)\" \"\$(gpfile)\" \"\$(outdir)\" " "arguments = \"\$(jobi)\" \"\$(perdir)\" \"\$(outdir)\" " "arguments = \"\$(mpereos)\" \"\$(outdir)\" " "arguments = \"\$(outdir)\" " "arguments = \"\$(gwfile)\" \"\$(sampfile)\" \"\$(weightsfile)\" \"\$(outdir)\" " )
 #"arguments = \"\$(job)\" \"1\" \"\$(perdir)\" \"\$(gpfile)\" \"\$(outdir)\" "
 
-indir="/home/phil/Documents/Research/eos-inf"
-outdir="/home/phil/Documents/Research/tmp"
+indir="/home/philippe.landry/eos-inf"
+outdir="/home/philippe.landry/eos-inf_test"
 
 mkdir -p ${outdir}/log
 

@@ -2,9 +2,9 @@
 
 # Set run parameters
 
-indir="/home/phil/Documents/Research/eos-inf"
+indir="/home/philippe.landry/eos-inf"
 gpfile="${indir}/in/gpr_phi.hdf5"
-outdir="/home/phil/Documents/Research/tmp"
+outdir="/home/philippe.landry/eos-inf_test"
 
 numjobs=10
 mpereos=20
