@@ -3,7 +3,7 @@
 # Set run parameters
 
 binfiles=( "draweos" "getprops" "getbinaries" "collectbinaries" "weighsamps" )
-args=( "arguments = \"\$(jobi) \$(numjobs) \$(perdir) \$(gpfile) \$(outdir)\"" "arguments = \"\$(jobi) \$(perdir) \$(outdir)\"" "arguments = \"\$(mpereos) \$(outdir)\"" "arguments = \"\$(outdir)\"" "arguments = \"\$(gwfile) \$(sampfile) \$(weightsfile) \$(outdir)\"" )
+args=( "arguments = \"\$(jobi) \$(numjobs) \$(perdir) \$(gpfile) \$(outdir)\"" "arguments = \"\$(jobi) \$(numjobs) \$(perdir) \$(outdir)\"" "arguments = \"\$(mpereos) \$(outdir)\"" "arguments = \"\$(outdir)\"" "arguments = \"\$(gwfile) \$(sampfile) \$(weightsfile) \$(outdir)\"" )
 
 indir="/home/philippe.landry/eos-inf"
 outdir="/home/philippe.landry/eos-inf_test"
@@ -26,6 +26,6 @@ do
 	echo "log = $outdir/log/$binfile-\$(jobi).log" >> $subfile
 	echo "getenv = True" >> $subfile
 	echo "accounting_group = ligo.dev.o2.cbc.pe.lalinference" >> $subfile
-	echo "accounting_group.user = philippe.landry" >> $subfile
+	echo "accounting_group_user = philippe.landry" >> $subfile
 	echo "queue 1" >> $subfile
 done
