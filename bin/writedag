@@ -35,12 +35,12 @@ do
 	echo "PARENT $(($numjobs+$job)) CHILD $(($numjobs+$numjobs))" >> $dagfile
 done
 
-echo "JOB $(($numjobs+$numjobs)) $indir/remote/getbinaries.sub" >> $dagfile
+echo "JOB $(($numjobs+$numjobs)) $indir/remote/getbins.sub" >> $dagfile
 echo "VARS $(($numjobs+$numjobs)) mpereos=\"$mpereos\" outdir=\"$outdir\"" >> $dagfile
 echo "RETRY $(($numjobs+$numjobs)) 1" >> $dagfile
 echo "PARENT $(($numjobs+$numjobs)) CHILD $(($numjobs+$numjobs+1))" >> $dagfile
 
-echo "JOB $(($numjobs+$numjobs+1)) $indir/remote/collectbinaries.sub" >> $dagfile
+echo "JOB $(($numjobs+$numjobs+1)) $indir/remote/collectbins.sub" >> $dagfile
 echo "VARS $(($numjobs+$numjobs+1)) outdir=\"$outdir\"" >> $dagfile
 echo "RETRY $(($numjobs+$numjobs+1)) 1" >> $dagfile
 echo "PARENT $(($numjobs+$numjobs+1)) CHILD $(($numjobs+$numjobs+2))" >> $dagfile

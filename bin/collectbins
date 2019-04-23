@@ -1,0 +1,5 @@
+#!/bin/bash
+
+outdir=$1
+
+collectbinaries -d $outdir/ -o $outdir/

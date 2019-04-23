@@ -1,0 +1,6 @@
+#!/bin/bash
+
+mpereos=$1
+outdir=$2
+
+getbinaries $mpereos -d $outdir/ -o $outdir/
