@@ -3,7 +3,7 @@
 # Set run parameters
 
 binfiles=( "draweos" "getprops" "getbinaries" "collectbinaries" "weighsamps" )
-args=( "arguments = \"\$(jobi)\" \"1\" \"\$(perdir)\" \"\$(gpfile)\" \"\$(outdir)\" " "arguments = \"\$(jobi)\" \"\$(perdir)\" \"\$(outdir)\" " "arguments = \"\$(mpereos)\" \"\$(outdir)\" " "arguments = \"\$(outdir)\" " "arguments = \"\$(gwfile)\" \"\$(sampfile)\" \"\$(weightsfile)\" \"\$(outdir)\" " )
+args=( "arguments = \"\$(jobi)\" \"\$(numjobs)\" \"\$(perdir)\" \"\$(gpfile)\" \"\$(outdir)\" " "arguments = \"\$(jobi)\" \"\$(perdir)\" \"\$(outdir)\" " "arguments = \"\$(mpereos)\" \"\$(outdir)\" " "arguments = \"\$(outdir)\" " "arguments = \"\$(gwfile)\" \"\$(sampfile)\" \"\$(weightsfile)\" \"\$(outdir)\" " )
 #"arguments = \"\$(job)\" \"1\" \"\$(perdir)\" \"\$(gpfile)\" \"\$(outdir)\" "
 
 indir="/home/philippe.landry/eos-inf"
