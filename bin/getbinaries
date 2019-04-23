@@ -12,14 +12,12 @@ from nsstruc.macro import macro as getmacro
 import glob
 
 parser = OptionParser(usage=__usage__, description=__doc__)
-#parser.add_option('-n', '--msamps', default=1, help='number of mass pairs to sample per EoS, DEFAULT=1', metavar=1)
 parser.add_option('-m', '--massrng', default='1.25,1.75,1.00,1.50', help='comma-separated list of m1 and m2 ranges to draw masses from, DEFAULT=1.25,1.75,1.00,1.50', metavar='1.25,1.75,1.00,1.50')
 parser.add_option('-d', '--dir', default='./dat/', help='path to directory housing NS properties data, DEFAULT=./dat/', metavar='./dat/')
 parser.add_option('-o', '--outdir', default='./dat/', help='path to output directory, DEFAULT=./dat/', metavar='./dat/')
 parser.add_option('-t', '--tag', default='SAMP', help='tag for output data file, DEFAULT=SAMP', metavar='SAMP')
 
 opts, args = parser.parse_args()
-#num = int(float(opts.msamps))
 num = int(float(args[0]))
 mrng = str(opts.massrng).split(',')
 mrng = [float(m) for m in mrng]
