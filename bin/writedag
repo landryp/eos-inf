@@ -25,27 +25,27 @@ echo "### EOS inference on $gwfile with $numjobs draws from prior $gpfile, readi
 for job in $(seq $jobi $(($jobi+$numjobs-1)))
 do
 	echo "JOB $(($job)) $indir/remote/draweos.sub" >> $dagfile
-	echo "VARS $(($job)) jobi=\"$job\" numjobs=\"$each\" perdir=\"$perdir\" gpfile=\"$gpfile\" outdir=\"$outdir\" " >> $dagfile
+	echo "VARS $(($job)) jobi=\"$job\" numjobs=\"$each\" perdir=\"$perdir\" gpfile=\"$gpfile\" outdir=\"$outdir\"" >> $dagfile
 	echo "RETRY $(($job)) 1" >> $dagfile
 	
 	echo "JOB $(($numjobs+$job)) $indir/remote/getprops.sub" >> $dagfile
-	echo "VARS $(($numjobs+$job)) jobi=\"$job\" numjobs=\"1\" perdir=\"$perdir\" outdir=\"$outdir\" " >> $dagfile
+	echo "VARS $(($numjobs+$job)) jobi=\"$job\" numjobs=\"1\" perdir=\"$perdir\" outdir=\"$outdir\"" >> $dagfile
 	echo "RETRY $(($numjobs+$job)) 1" >> $dagfile
 	echo "PARENT $(($job)) CHILD $(($numjobs+$job))" >> $dagfile
 	echo "PARENT $(($numjobs+$job)) CHILD $(($numjobs+$numjobs))" >> $dagfile
 done
 
 echo "JOB $(($numjobs+$numjobs)) $indir/remote/getbinaries.sub" >> $dagfile
-echo "VARS $(($numjobs+$numjobs)) mpereos=\"$mpereos\" outdir=\"$outdir\" " >> $dagfile
+echo "VARS $(($numjobs+$numjobs)) mpereos=\"$mpereos\" outdir=\"$outdir\"" >> $dagfile
 echo "RETRY $(($numjobs+$numjobs)) 1" >> $dagfile
 echo "PARENT $(($numjobs+$numjobs)) CHILD $(($numjobs+$numjobs+1))" >> $dagfile
 
 echo "JOB $(($numjobs+$numjobs+1)) $indir/remote/collectbinaries.sub" >> $dagfile
-echo "VARS $(($numjobs+$numjobs+1)) outdir=\"$outdir\" " >> $dagfile
+echo "VARS $(($numjobs+$numjobs+1)) outdir=\"$outdir\"" >> $dagfile
 echo "RETRY $(($numjobs+$numjobs+1)) 1" >> $dagfile
 echo "PARENT $(($numjobs+$numjobs+1)) CHILD $(($numjobs+$numjobs+2))" >> $dagfile
 
 echo "JOB $(($numjobs+$numjobs+2)) $indir/remote/weighsamps.sub" >> $dagfile
-echo "VARS $(($numjobs+$numjobs+2)) gwfile=\"$gwfile\" sampfile=\"$sampfile\" weightsfile=\"$weightsfile\" " >> $dagfile
+echo "VARS $(($numjobs+$numjobs+2)) gwfile=\"$gwfile\" sampfile=\"$sampfile\" weightsfile=\"$weightsfile\"" >> $dagfile
 echo "RETRY $(($numjobs+$numjobs+2)) 1" >> $dagfile
 
