@@ -6,12 +6,12 @@ indir="/home/philippe.landry/eos-inf"
 gpfile="${indir}/in/gpr_phi.hdf5"
 outdir="/home/philippe.landry/eos-inf_test"
 
-numjobs=1000
-mpereos=50
+numjobs=100
+mpereos=20
 gwfile="${indir}/in/gwPhenomPNRT_post-lospin.csv"
 
 jobi=0
-perdir=100
+perdir=10
 dagfile="${indir}/remote/INFEREOS.dag"
 
 sampfile="${outdir}/SAMP.csv"
