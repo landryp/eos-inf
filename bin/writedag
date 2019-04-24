@@ -6,11 +6,11 @@ indir="/home/philippe.landry/eos-inf"
 gpfile="${indir}/in/gpr_phi.hdf5"
 outdir="/home/philippe.landry/eos-inf_test"
 
-mkdir -p ${outdir}/remote
-
-numjobs=100
+numjobs=1000
 mpereos=50
 gwfile="${indir}/in/gwPhenomPNRT_post-lospin.csv"
+
+mkdir -p ${outdir}/remote
 
 jobi=0
 perdir=50
