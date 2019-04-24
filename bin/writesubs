@@ -5,7 +5,6 @@
 binfiles=( "draweos" "getprops" "getbins" "collectbins" "weighsamps" )
 args=( "arguments = \"\$(jobi) \$(numjobs) \$(perdir) \$(gpfile) \$(outdir)\"" "arguments = \"\$(jobi) \$(numjobs) \$(perdir) \$(outdir)\"" "arguments = \"\$(mpereos) \$(outdir)\"" "arguments = \"\$(outdir)\"" "arguments = \"\$(gwfile) \$(sampfile) \$(weightsfile) \$(outdir)\"" )
 
-indir="/home/philippe.landry/eos-inf"
 outdir="/home/philippe.landry/eos-inf_test"
 
 mkdir -p ${outdir}/log
@@ -19,7 +18,7 @@ do
 	arg=${args[$i]}
 
 	echo "universe = vanilla" > $subfile
-	echo "executable = $indir/bin/$binfile" >> $subfile
+	echo "executable = $outdir/bin/$binfile" >> $subfile
 	echo $arg >> $subfile
 	echo "output = $outdir/log/$binfile-\$(jobi).out" >> $subfile
 	echo "error = $outdir/log/$binfile-\$(jobi).err" >> $subfile
