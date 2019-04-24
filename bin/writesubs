@@ -15,7 +15,7 @@ mkdir -p ${outdir}/log
 for i in $(seq 0 $((${#binfiles[@]}-1)))
 do
 	binfile=${binfiles[$i]}
-	subfile="${indir}/remote/${binfile}.sub"
+	subfile="${outdir}/remote/${binfile}.sub"
 	arg=${args[$i]}
 
 	echo "universe = vanilla" > $subfile
