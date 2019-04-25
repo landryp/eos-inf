@@ -15,13 +15,13 @@ draweos $jobi $numjobs $perdir $gpfile $outdir
 
 getprops $jobi $numjobs $perdir $outdir
 
-getbinaries $mpereos -d $outdir/ -o $outdir/
+getbinaries $mpereos -m 1.16,1.36,1.36,1.60 -d $outdir/ -o $outdir/
 
 collectbinaries -d $outdir/ -o $outdir/
 
 weighsamps $gwfile $sampfile $weightsfile
 
-kde-corner-samples -s GPprior $sampfile -s GPpost $weightsfile -s GWpost $gwfile -v --weight-column GPpost logweights --weight-column-is-log GPpost -o $outdir m1_source m2_source lambda1 lambda2 --color GPprior blue --color GPpost red --color GWpost green -r m1_source 1.25 1.75 -r m2_source 1.0 1.5 -r lambda1 0. 500. -r lambda2 0. 1000. -b m1_source 0.02 -b m2_source 0.02 -b lambda1 10. -b lambda2 10.
+kde-corner-samples -s GPprior $sampfile -s GPpost $weightsfile -s GWpost $gwfile -v --weight-column GPpost logweights --weight-column-is-log GPpost -o $outdir m1_source m2_source lambda1 lambda2 --color GPprior blue --color GPpost red --color GWpost green -r m1_source 1.35 1.60 -r m2_source 1.15 1.40 -r lambda1 0. 1000. -r lambda2 0. 1500. -b m1_source 0.02 -b m2_source 0.02 -b lambda1 10. -b lambda2 10.
 
 ### fix below ###
 #plot-process -s GPprior ./dat/SAMP.csv -s GPpost ./dat/SAMPweights.csv -v --weight-column GPpost logweights --weight-column-is-log GPpost -o ./dat/ pressurec2 baryon_density 1e12 1e16 --eos-column GPprior EoS --eos-column GPpost EoS --eos-dir GPprior ./dat/eos/ --eos-dir GPpost ./dat/eos/ --eos-basename GPprior eos-draw-%06d.csv --eos-basename GPpost eos-draw-%06d.csv --bns-dir GPprior ./dat/ --bns-dir GPpost ./dat/ --bns-basename GPprior macro-draw-%06d.csv --bns-basename GPpost macro-draw-%06d.csv -l pressurec2 -l baryon_density

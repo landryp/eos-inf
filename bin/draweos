@@ -15,5 +15,5 @@ do
 	printf -v dircode "%06d" $dirnum
 	printf -v jobcode "%06d" $job
 
-	integrate-phi $outdir/DRAWmod$perdir-$dircode/draw-gpr-$jobcode.csv 2.32e10 -o $outdir/DRAWmod$perdir-$dircode/eos-draw-$jobcode.csv --sigma-pressurec2 1e10 --stitch-below-reference-pressure --crust-eos sly
+	integrate-phi $outdir/DRAWmod$perdir-$dircode/draw-gpr-$jobcode.csv 2.32e10 -o $outdir/DRAWmod$perdir-$dircode/eos-draw-$jobcode.csv --sigma-logpressurec2 9. --stitch-below-reference-pressure --crust-eos sly
 done

@@ -79,7 +79,8 @@ for dirs in dirslist:
 			
 					branchnum2 = 'BH'
 					m2props = {'M': m2,'rhoc': 0.,'R': 1e-5*2.*G*m2*Msun/c**2,'Lambda': 0.,'I': 1e-45*m2*Msun*(2.*G*m2*Msun/c**2)**2}
-					m2props = [m2].append([m2props[prop] for prop in props])
+					m2propstmp = [m2] + [m2props[prop] for prop in props]
+					m2props = m2propstmp
 				
 				if len(branches1) > 0:
 			
@@ -91,7 +92,8 @@ for dirs in dirslist:
 			
 					branchnum1 = 'BH'
 					m1props = {'M': m1,'rhoc': 0.,'R': 1e-5*2.*G*m1*Msun/c**2,'Lambda': 0.,'I': 1e-45*m1*Msun*(2.*G*m1*Msun/c**2)**2}
-					m1props = [m1].append([m1props[prop] for prop in props])
+					m1propstmp = [m1] + [m1props[prop] for prop in props]
+					m1props = m1propstmp
 						
 				sampprops = np.array([m2props, m1props]).flatten()
 				sampprops = [str(float(sampprop)) for sampprop in sampprops]
