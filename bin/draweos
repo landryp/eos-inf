@@ -6,6 +6,10 @@ perdir=$3
 gpfile=$4
 outdir=$5
 
+crusts=( 'sly' 'eng' )
+echo '### record crusts affixed to Gaussian process EoSs ###' > $outdir/crustlog.dat
+echo 'EoS, crust' > $outdir/crustlog.dat
+
 draw-gpr $gpfile -s $jobi -n $numjobs -N $perdir -o $outdir
 
 for job in $(seq $jobi $(($jobi+$numjobs-1)))
@@ -14,6 +18,10 @@ do
 	dirnum=$(($job/$perdir))
 	printf -v dircode "%06d" $dirnum
 	printf -v jobcode "%06d" $job
+	
+	crustnum=$(($RANDOM % $((${#crusts[@]}))))
+	crust=${crusts[$crustnum]}
+	echo "$job, $crust" >> $outdir/crustlog.dat
 
-	integrate-phi $outdir/DRAWmod$perdir-$dircode/draw-gpr-$jobcode.csv 2.32e10 -o $outdir/DRAWmod$perdir-$dircode/eos-draw-$jobcode.csv --sigma-logpressurec2 9. --stitch-below-reference-pressure --crust-eos sly
+	integrate-phi $outdir/DRAWmod$perdir-$dircode/draw-gpr-$jobcode.csv 2.32e10 -o $outdir/DRAWmod$perdir-$dircode/eos-draw-$jobcode.csv --sigma-logpressurec2 9. --stitch-below-reference-pressure --crust-eos $crust
 done
