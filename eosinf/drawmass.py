@@ -4,9 +4,10 @@ import numpy as np
 
 # Random draws from uniform prior in each component mass, with m2 < m1
 
-def drawmass(mrange,Mcut='False'):
+def drawmass(mrange,Mcut=[0.,1e10]):
 
-	while Mcut != True:	 
+	Mcok = False
+	while Mcok != True:	 
 
 		m1i, m1f, m2i, m2f = mrange # specify prior ranges, e.g. [1.16,1.36,1.36,1.60]
 	
@@ -14,7 +15,7 @@ def drawmass(mrange,Mcut='False'):
 		m1 = (m1f-m1i)*np.random.random_sample()+m1i
 	
 		Mc = (m1*m2)**0.6/(m1+m2)**0.2
-		if Mc <= Mcut[1] and Mc >= Mcut[0]: Mcut = True
+		if Mc <= Mcut[1] and Mc >= Mcut[0]: Mcok = True
 	
 	m1out = max(m1,m2)
 	m2out = min(m1,m2) # enforce m2 < m1

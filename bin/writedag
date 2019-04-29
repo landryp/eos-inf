@@ -9,6 +9,8 @@ outdir="/home/philippe.landry/eos-inf_test"
 numjobs=1000
 mpereos=1
 gwfile="${indir}/in/gwPhenomPNRT_post-lospin.csv"
+mrng='1.06,1.46,1.24,1.72'
+Mcrng='1.184,1.188'
 
 mkdir -p ${outdir}/remote
 
@@ -37,7 +39,7 @@ do
 done
 
 echo "JOB $(($numjobs+$numjobs)) $outdir/remote/getbins.sub" >> $dagfile
-echo "VARS $(($numjobs+$numjobs)) mpereos=\"$mpereos\" outdir=\"$outdir\"" >> $dagfile
+echo "VARS $(($numjobs+$numjobs)) mpereos=\"$mpereos\" outdir=\"$outdir\" mrng=\"$mrng\" Mcrng=\"$Mcrng\"" >> $dagfile
 echo "RETRY $(($numjobs+$numjobs)) 1" >> $dagfile
 echo "PARENT $(($numjobs+$numjobs)) CHILD $(($numjobs+$numjobs+1))" >> $dagfile
 
