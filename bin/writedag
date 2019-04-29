@@ -7,13 +7,13 @@ gpfile="${indir}/in/gpr_phi.hdf5"
 outdir="/home/philippe.landry/eos-inf_test"
 
 numjobs=1000
-mpereos=50
+mpereos=1
 gwfile="${indir}/in/gwPhenomPNRT_post-lospin.csv"
 
 mkdir -p ${outdir}/remote
 
 jobi=0
-perdir=50
+perdir=100
 dagfile="${outdir}/remote/INFEREOS.dag"
 
 sampfile="${outdir}/SAMP.csv"

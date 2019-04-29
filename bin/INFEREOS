@@ -15,7 +15,7 @@ draweos $jobi $numjobs $perdir $gpfile $outdir
 
 getprops $jobi $numjobs $perdir $outdir
 
-getbinaries $mpereos -m 1.16,1.36,1.36,1.60 -M 1.184,1.188 -d $outdir/ -o $outdir/
+getbinaries $mpereos -m 1.06,1.46,1.24,1.72 -M 1.184,1.188 -d $outdir/ -o $outdir/
 
 collectbinaries -d $outdir/ -o $outdir/
 
