@@ -34,9 +34,17 @@ for dirs in dirslist:
 		shortname = eos.split('MACRO')[-1]
 		sampfile = eos+'/SAMP'+shortname+'.csv'
 	
+		lines = 0
 		if os.path.isfile(sampfile):
 		
+			sampcheck = open(sampfile)
+			for line in sampcheck: lines = lines+1
+			
+		if lines > 1:
+		
 			sampdat = np.genfromtxt(sampfile,delimiter=',',names=True,dtype=None)
+			if sampdat.size==1:
+				sampdat = np.array([sampdat], dtype=sampdat.dtype)
 			props = list(sampdat.dtype.names)
 			props = [item for item in props if item not in['EoS','branch1','branch2','M1','M2','Mmax']]
 			
