@@ -6,7 +6,7 @@ perdir=$3
 gpfile=$4
 outdir=$5
 
-crusts=( 'sly' 'sly' )
+crusts=( 'sly' 'eng' )
 echo '### record crusts affixed to Gaussian process EoSs ###' > $outdir/crustlog.dat
 echo 'EoS, crust' > $outdir/crustlog.dat
 
@@ -23,5 +23,5 @@ do
 	crust=${crusts[$crustnum]}
 	echo "$job, $crust" >> $outdir/crustlog.dat
 
-	integrate-phi $outdir/DRAWmod$perdir-$dircode/draw-gpr-$jobcode.csv 2.32e10 -o $outdir/DRAWmod$perdir-$dircode/eos-draw-$jobcode.csv --sigma-logpressurec2 1. --stitch-below-reference-pressure --crust-eos $crust
+	integrate-phi $outdir/DRAWmod$perdir-$dircode/draw-gpr-$jobcode.csv 2.32e10 -o $outdir/DRAWmod$perdir-$dircode/eos-draw-$jobcode.csv --sigma-logpressurec2 9. --stitch-below-reference-pressure --crust-eos $crust
 done
