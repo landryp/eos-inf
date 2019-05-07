@@ -11,6 +11,7 @@ mpereos=1
 gwfile="${indir}/in/gwPhenomPNRT_post-lospin.csv"
 mrng='1.06,1.46,1.24,1.72'
 Mcrng='1.184,1.188'
+Mobs='1.93'
 
 mkdir -p ${outdir}/remote
 
@@ -44,7 +45,7 @@ echo "RETRY $(($numjobs+$numjobs)) 1" >> $dagfile
 echo "PARENT $(($numjobs+$numjobs)) CHILD $(($numjobs+$numjobs+1))" >> $dagfile
 
 echo "JOB $(($numjobs+$numjobs+1)) $outdir/remote/collectbins.sub" >> $dagfile
-echo "VARS $(($numjobs+$numjobs+1)) outdir=\"$outdir\"" >> $dagfile
+echo "VARS $(($numjobs+$numjobs+1)) Mobs=\"$Mobs\" outdir=\"$outdir\"" >> $dagfile
 echo "RETRY $(($numjobs+$numjobs+1)) 1" >> $dagfile
 echo "PARENT $(($numjobs+$numjobs+1)) CHILD $(($numjobs+$numjobs+2))" >> $dagfile
 
