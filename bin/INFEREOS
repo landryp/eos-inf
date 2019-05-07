@@ -7,8 +7,9 @@ mpereos=$4
 gwfile=$5
 gpfile=$6
 outdir=$7
-mrng=$8 #1.06,1.46,1.24,1.72
-Mcrng=$9 #1.184,1.188
+mrng=$8 # 1.06,1.46,1.24,1.72
+Mcrng=$9 # 1.184,1.188
+Mobs=$10 # 1.93
 
 sampfile=$outdir/SAMP.csv
 weightsfile=$outdir/SAMPweights.csv
@@ -17,9 +18,9 @@ draweos $jobi $numjobs $perdir $gpfile $outdir
 
 getprops $jobi $numjobs $perdir $outdir
 
-getbinaries $mpereos -m $mrange -M $mcrange -d $outdir/ -o $outdir/
+getbinaries $mpereos -m $mrng -M $Mcrng -d $outdir/ -o $outdir/
 
-collectbinaries -d $outdir/ -o $outdir/
+collectbinaries -M $Mobs -d $outdir/ -o $outdir/
 
 weighsamps $gwfile $sampfile $weightsfile
 

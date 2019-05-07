@@ -2,9 +2,9 @@
 
 import numpy as np
 
-# Random draws from uniform prior in each component mass, with m2 < m1
+# DRAW MASSES FROM SPECIFIED PRIOR
 
-def drawmass(mrange,Mcut=[0.,1e10]):
+def drawmass(mrange,Mcut=[0.,1e10]): # random draws from uniform prior in each component mass, with m2 < m1
 
 	Mcok = False
 	while Mcok != True:	 

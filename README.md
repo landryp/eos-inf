@@ -8,7 +8,7 @@ Code for performing equation of state inference with data from observations of n
 
 ###### EoS inference (local)
 
-* INFEREOS startjobnum numjobs jobsperdir massesperjob gwfile gpfile outdir
+* INFEREOS startjobnum numjobs jobsperdir massesperjob gwfile gpfile outdir mrng Mcrng Mobs
 
 ###### EoS inference (remote)
 

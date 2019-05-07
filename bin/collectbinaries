@@ -1,6 +1,6 @@
 #!/usr/bin/python
-__doc__ = 'COLLECTBINARIES -- collect binary NS data that satisfies specified constraints'
-__usage__ = 'collectbinaries'
+__doc__ = 'COLLECTBINARIES -- collect binary neutron star data that satisfies specified constraints'
+__usage__ = 'collectbinaries [-v] [-M 1.93] [-d ./dat/] [-o ./dat/]'
 __author__ = 'philippe.landry@ligo.org'
 __date__ = '04-2019'
 
@@ -14,22 +14,31 @@ parser.add_option('-M', '--mmaxobs', default='1.93', help='observational lower b
 parser.add_option('-d', '--dir', default='./dat/', help='path to directory housing NS properties data, DEFAULT=./dat/', metavar='./dat/')
 parser.add_option('-o', '--outdir', default='./dat/', help='path to output directory, DEFAULT=./dat/', metavar='./dat/')
 parser.add_option('-t', '--tag', default='SAMP', help='tag for output data file, DEFAULT=SAMP', metavar='SAMP')
+parser.add_option('-v', '--verbose', action='store_true', default=False, help='toggle verbose output, DEFAULT=False', metavar='False')
 
 opts, args = parser.parse_args()
 mobs = float(opts.mmaxobs)
 indir = str(opts.dir)
 outdir = str(opts.outdir)
 tag = str(opts.tag)
+verb = opts.verbose
 
 outfile = open(outdir+"SAMP.csv","w")
 dropfile = open(outdir+"DROP.csv","w")
-j=0
+failfile = open(outdir+"FAIL.csv","w")
 
+failfile.write('EoS \n')
+
+# CHECK BINARY PROPERTIES AND CONCATENATE DATA, DISCARDING EOSS WITH INSUFFICIENTLY LARGE MMAX
+
+j=0
 dirslist = glob.glob(outdir+"DRAW*")
 for dirs in dirslist:
 
 	eoslist = glob.glob(dirs+"/MACRO*")
 	for eos in eoslist:
+	
+		if verb == True: print 'Read properties of binaries with '+str(eos)+' stars'
 	
 		shortname = eos.split('MACRO')[-1]
 		sampfile = eos+'/SAMP'+shortname+'.csv'
@@ -40,6 +49,11 @@ for dirs in dirslist:
 			sampcheck = open(sampfile)
 			for line in sampcheck: lines = lines+1
 			
+		else:
+		
+			if verb == True: print 'No binaries found'
+			failfile.write('{0} \n'.format(eos))
+			
 		if lines > 1:
 		
 			sampdat = np.genfromtxt(sampfile,delimiter=',',names=True,dtype=None)
@@ -48,7 +62,16 @@ for dirs in dirslist:
 			props = list(sampdat.dtype.names)
 			props = [item for item in props if item not in['EoS','branch1','branch2','M1','M2','Mmax']]
 			
+			if j==0:
+			
+				outfile.write(('EoS,branch2,branch1,Mmax,mc_source,q,mtotal_source,m1_source,m2_source,' +','.join(props)+'\n').replace('Lambda','lambda'))
+				dropfile.write(('EoS,branch2,branch1,Mmax,mc_source,q,mtotal_source,m1_source,m2_source,' +','.join(props)+'\n').replace('Lambda','lambda'))
+				
+				j = j+1
+			
 			for i in range(len(sampdat['EoS'])):
+			
+				if verb == True: print 'Checking properties for binary '+str(i)
 			
 				eosnum = (str(np.asarray(sampdat['EoS'])[i]).split('draw-')[-1]).split('.csv')[0]
 				branchnums = [str(np.asarray(sampdat['branch2'])[i]),str(np.asarray(sampdat['branch1'])[i])]
@@ -64,19 +87,16 @@ for dirs in dirslist:
 				for prop in props:
 				
 					proplist.append(str(np.asarray(sampdat[prop])[i]))
-				
-				if j==0:
-				
-					outfile.write(('EoS,branch2,branch1,Mmax,mc_source,q,mtotal_source,m1_source,m2_source,' +','.join(props)+'\n').replace('Lambda','lambda'))
-					dropfile.write(('EoS,branch2,branch1,Mmax,mc_source,q,mtotal_source,m1_source,m2_source,' +','.join(props)+'\n').replace('Lambda','lambda'))
 					
 				if Mmax >= mobs:
+				
+					if verb == True: print 'Maximum mass ok'
 			
 					outfile.write('{0},{1},{2},{3},{4},{5},{6},{7},{8} \n'.format(eosnum,','.join(branchnums),Mmax,Mc,q,M,m1,m2,','.join(proplist)))
 					
 				else:
 				
+					if verb == True: print 'Maximum mass less than '+str(mobs)
+				
 					dropfile.write('{0},{1},{2},{3},{4},{5},{6},{7},{8} \n'.format(eosnum,','.join(branchnums),Mmax,Mc,q,M,m1,m2,','.join(proplist)))
-					
-				j = j+1
 
