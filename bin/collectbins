@@ -1,5 +1,6 @@
 #!/bin/bash
 
-outdir=$1
+Mobs=$1
+outdir=$2
 
-collectbinaries -d $outdir/ -o $outdir/
+collectbinaries -M $Mobs -d $outdir/ -o $outdir/

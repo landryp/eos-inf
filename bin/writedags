@@ -2,21 +2,21 @@
 
 # Set run parameters
 
-indir="/home/philippe.landry/eos-inf"
-gpfile="${indir}/in/gpr_phi.hdf5"
-outdir="/home/philippe.landry/eos-inf_test"
+indir=$1 #"/home/philippe.landry/eos-inf"
+jobi=$2 #0
+numjobs=$3 #1000
+perdir=$4 #100
+mpereos=$5 #1
+gwfile=$6 #"${indir}/in/gwPhenomPNRT_post-lospin.csv"
+gpfile=$7 #"${indir}/in/gpr_phi.hdf5"
+outdir=$8 #"/home/philippe.landry/eos-inf_test"
+mrng=$9 #'1.06,1.46,1.24,1.72'
+Mcrng=${10} #'1.184,1.188'
+Mobs=${11} #'1.93'
 
-numjobs=1000
-mpereos=1
-gwfile="${indir}/in/gwPhenomPNRT_post-lospin.csv"
-mrng='1.06,1.46,1.24,1.72'
-Mcrng='1.184,1.188'
-Mobs='1.93'
+# Create output files and directories
 
 mkdir -p ${outdir}/remote
-
-jobi=0
-perdir=100
 dagfile1="${outdir}/remote/EOSPRIOR.dag"
 dagfile2="${outdir}/remote/INFEREOS.dag"
 dagfile3="${outdir}/remote/POSTPLOTS.dag"

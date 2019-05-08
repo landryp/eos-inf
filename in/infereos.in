@@ -1,6 +1,7 @@
+./eos-inf
 0
-5
 3
+2
 20
 ./eos-inf/in/gwPhenomPNRT_post-lospin.csv
 ./eos-inf/in/gpr_phi.hdf5
