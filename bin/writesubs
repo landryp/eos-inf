@@ -12,7 +12,6 @@ outdir="/home/philippe.landry/eos-inf_test"
 
 for i in $(seq 0 $((${#binfiles[@]}-1)))
 do
-
 	binfile=${binfiles[$i]}
 	subfile="${outdir}/remote/${binfile}.sub"
 	arg=${args[$i]}

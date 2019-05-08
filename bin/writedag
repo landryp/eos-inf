@@ -24,6 +24,7 @@ weightsfile="${outdir}/SAMPweights.csv"
 each=1
 
 # Print DAG file
+
 echo "### EOS inference on $gwfile with $numjobs draws from prior $gpfile, reading from $indir and printing to $outdir ###" > $dagfile
 
 for job in $(seq $jobi $(($jobi+$numjobs-1)))

@@ -25,24 +25,56 @@ sampfile="${outdir}/SAMP.csv"
 weightsfile="${outdir}/SAMPweights.csv"
 each=1
 
+# Print sub files
+
+binfiles=( "draweos" "getprops" "getbins" "collectbins" "weighsamps" "plotposts" )
+args=( "arguments = \"\$(jobi) \$(numjobs) \$(perdir) \$(gpfile) \$(outdir)\"" "arguments = \"\$(jobi) \$(numjobs) \$(perdir) \$(outdir)\"" "arguments = \"\$(mpereos) \$(outdir) \$(mrng) \$(Mcrng)\"" "arguments = \"\$(Mobs) \$(outdir)\"" "arguments = \"\$(gwfile) \$(sampfile) \$(weightsfile) \$(outdir)\"" "arguments = \"\$(sampfile) \$(weightsfile) \$(gwfile) \$(outdir)\"" )
+
+for i in $(seq 0 $((${#binfiles[@]}-1)))
+do
+	binfile=${binfiles[$i]}
+	subfile="${outdir}/remote/${binfile}.sub"
+	arg=${args[$i]}
+
+	echo "universe = vanilla" > $subfile
+	echo "executable = $indir/bin/$binfile" >> $subfile
+	echo $arg >> $subfile
+	if [ $i -ge 2 ]
+	then
+		echo "output = $outdir/log/$binfile.out" >> $subfile
+		echo "error = $outdir/log/$binfile.err" >> $subfile
+		echo "log = $outdir/log/$binfile.log" >> $subfile
+	else
+		echo "output = $outdir/log/JOB\$(jobi)/$binfile-\$(jobi).out" >> $subfile
+		echo "error = $outdir/log/JOB\$(jobi)/$binfile-\$(jobi).err" >> $subfile
+		echo "log = $outdir/log/JOB\$(jobi)/$binfile-\$(jobi).log" >> $subfile
+	fi
+	echo "getenv = True" >> $subfile
+	echo "accounting_group = ligo.dev.o2.cbc.pe.lalinference" >> $subfile
+	echo "accounting_group_user = philippe.landry" >> $subfile
+	echo "queue 1" >> $subfile
+done
+
 # Print DAG file 1
-echo "### EOS prior process with $numjobs draws from prior $gpfile, reading from $indir and printing to $outdir ###" > $dagfile
+
+echo "### EOS prior process with $numjobs draws from prior $gpfile, reading from $indir and printing to $outdir ###" > $dagfile1
 
 for job in $(seq $jobi $(($jobi+$numjobs-1)))
 do
 	mkdir -p ${outdir}/log/JOB${job}
 	
-	echo "JOB $(($job)) $outdir/remote/draweos.sub" >> $dagfile
-	echo "VARS $(($job)) jobi=\"$job\" numjobs=\"$each\" perdir=\"$perdir\" gpfile=\"$gpfile\" outdir=\"$outdir\"" >> $dagfile
-	echo "RETRY $(($job)) 1" >> $dagfile
-	echo "PARENT $(($job)) CHILD $(($numjobs+$job))" >> $dagfile
+	echo "JOB $(($job)) $outdir/remote/draweos.sub" >> $dagfile1
+	echo "VARS $(($job)) jobi=\"$job\" numjobs=\"$each\" perdir=\"$perdir\" gpfile=\"$gpfile\" outdir=\"$outdir\"" >> $dagfile1
+	echo "RETRY $(($job)) 1" >> $dagfile1
+	echo "PARENT $(($job)) CHILD $(($numjobs+$job))" >> $dagfile1
 	
-	echo "JOB $(($numjobs+$job)) $outdir/remote/getprops.sub" >> $dagfile
-	echo "VARS $(($numjobs+$job)) jobi=\"$job\" numjobs=\"1\" perdir=\"$perdir\" outdir=\"$outdir\"" >> $dagfile
-	echo "RETRY $(($numjobs+$job)) 1" >> $dagfile
+	echo "JOB $(($numjobs+$job)) $outdir/remote/getprops.sub" >> $dagfile1
+	echo "VARS $(($numjobs+$job)) jobi=\"$job\" numjobs=\"1\" perdir=\"$perdir\" outdir=\"$outdir\"" >> $dagfile1
+	echo "RETRY $(($numjobs+$job)) 1" >> $dagfile1
 done
 
 # Print DAG file 2
+
 echo "### EOS inference on $gwfile with $mpereos mass samples per EOS from prior $gpfile, reading from $indir and printing to $outdir ###" > $dagfile2
 
 echo "JOB $(($numjobs+$numjobs)) $outdir/remote/getbins.sub" >> $dagfile2
@@ -60,6 +92,7 @@ echo "VARS $(($numjobs+$numjobs+2)) gwfile=\"$gwfile\" sampfile=\"$sampfile\" we
 echo "RETRY $(($numjobs+$numjobs+2)) 1" >> $dagfile2
 
 # Print DAG file 3
+
 echo "### Plots of EOS posterior from $gpfile reweighted by $gwfile, reading from $indir and printing to $outdir ###" > $dagfile3
 
 echo "JOB $(($numjobs+$numjobs+3)) $outdir/remote/plotposts.sub" >> $dagfile3
