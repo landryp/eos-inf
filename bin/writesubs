@@ -2,8 +2,8 @@
 
 # Set run parameters
 
-binfiles=( "draweos" "getprops" "getbins" "collectbins" "weighsamps" )
-args=( "arguments = \"\$(jobi) \$(numjobs) \$(perdir) \$(gpfile) \$(outdir)\"" "arguments = \"\$(jobi) \$(numjobs) \$(perdir) \$(outdir)\"" "arguments = \"\$(mpereos) \$(outdir) \$(mrng) \$(Mcrng)\"" "arguments = \"\$(Mobs) \$(outdir)\"" "arguments = \"\$(gwfile) \$(sampfile) \$(weightsfile) \$(outdir)\"" )
+binfiles=( "draweos" "getprops" "getbins" "collectbins" "weighsamps" "plotposts" )
+args=( "arguments = \"\$(jobi) \$(numjobs) \$(perdir) \$(gpfile) \$(outdir)\"" "arguments = \"\$(jobi) \$(numjobs) \$(perdir) \$(outdir)\"" "arguments = \"\$(mpereos) \$(outdir) \$(mrng) \$(Mcrng)\"" "arguments = \"\$(Mobs) \$(outdir)\"" "arguments = \"\$(gwfile) \$(sampfile) \$(weightsfile) \$(outdir)\"" "arguments = \"\$(sampfile) \$(weightsfile) \$(gwfile) \$(outdir)\"" )
 
 indir="/home/philippe.landry/eos-inf"
 outdir="/home/philippe.landry/eos-inf_test"
