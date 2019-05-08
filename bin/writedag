@@ -28,6 +28,8 @@ echo "### EOS inference on $gwfile with $numjobs draws from prior $gpfile, readi
 
 for job in $(seq $jobi $(($jobi+$numjobs-1)))
 do
+	mkdir -p ${outdir}/log/JOB${job}
+	
 	echo "JOB $(($job)) $outdir/remote/draweos.sub" >> $dagfile
 	echo "VARS $(($job)) jobi=\"$job\" numjobs=\"$each\" perdir=\"$perdir\" gpfile=\"$gpfile\" outdir=\"$outdir\"" >> $dagfile
 	echo "RETRY $(($job)) 1" >> $dagfile

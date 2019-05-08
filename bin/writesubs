@@ -8,8 +8,6 @@ args=( "arguments = \"\$(jobi) \$(numjobs) \$(perdir) \$(gpfile) \$(outdir)\"" "
 indir="/home/philippe.landry/eos-inf"
 outdir="/home/philippe.landry/eos-inf_test"
 
-mkdir -p ${outdir}/log
-
 # Print sub files
 
 for i in $(seq 0 $((${#binfiles[@]}-1)))
