@@ -18,9 +18,9 @@ draweos $jobi $numjobs $perdir $gpfile $outdir
 
 getprops $jobi $numjobs $perdir $outdir
 
-getbinaries $mpereos -m $mrng -M $Mcrng -d $outdir/ -o $outdir/
+getbinaries $mpereos -v -m $mrng -M $Mcrng -d $outdir/ -o $outdir/
 
-collectbinaries -M $Mobs -d $outdir/ -o $outdir/
+collectbinaries -v -M $Mobs -d $outdir/ -o $outdir/
 
 weighsamps $gwfile $sampfile $weightsfile
 

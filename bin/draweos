@@ -10,7 +10,7 @@ crusts=( 'sly' 'eng' )
 echo '### record crusts affixed to Gaussian process EoSs ###' > $outdir/CRUSTS.dat
 echo 'EoS, crust' > $outdir/CRUSTS.dat
 
-draw-gpr $gpfile -s $jobi -n $numjobs -N $perdir -o $outdir
+draw-gpr $gpfile -v -s $jobi -n $numjobs -N $perdir -o $outdir
 
 for job in $(seq $jobi $(($jobi+$numjobs-1)))
 do
@@ -23,5 +23,5 @@ do
 	crust=${crusts[$crustnum]}
 	echo "$job, $crust" >> $outdir/CRUSTS.dat
 
-	integrate-phi $outdir/DRAWmod$perdir-$dircode/draw-gpr-$jobcode.csv 2.32e10 -o $outdir/DRAWmod$perdir-$dircode/eos-draw-$jobcode.csv --sigma-logpressurec2 9. --stitch-below-reference-pressure --crust-eos $crust
+	integrate-phi $outdir/DRAWmod$perdir-$dircode/draw-gpr-$jobcode.csv 2.32e10 -v -o $outdir/DRAWmod$perdir-$dircode/eos-draw-$jobcode.csv --sigma-logpressurec2 9. --stitch-below-reference-pressure --crust-eos $crust
 done
