@@ -21,6 +21,19 @@ dagfile1="${outdir}/remote/EOSPRIOR.dag"
 dagfile2="${outdir}/remote/INFEREOS.dag"
 dagfile3="${outdir}/remote/POSTPLOTS.dag"
 
+infile=${outdir}/remote/writedags.in
+echo $indir > $infile
+echo $jobi >> $infile
+echo $numjobs >> $infile
+echo $perdir >> $infile
+echo $mpereos >> $infile
+echo $gwfile >> $infile
+echo $gpfile >> $infile
+echo $outdir >> $infile
+echo $mrng >> $infile
+echo $Mcrng >> $infile
+echo $Mobs >> $infile
+
 sampfile="${outdir}/SAMP.csv"
 weightsfile="${outdir}/SAMPweights.csv"
 each=1

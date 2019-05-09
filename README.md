@@ -8,12 +8,11 @@ Code for performing equation of state inference with data from observations of n
 
 ###### EoS inference (local)
 
-* INFEREOS startjobnum numjobs jobsperdir massesperjob gwfile gpfile outdir mrng Mcrng Mobs
+* INFEREOS indir startjobnum numjobs jobsperdir massesperjob gwfile gpfile outdir mrng Mcrng Mobs
 
 ###### EoS inference (remote)
 
-* writedag (writes dag for condor)
-* writesubs (writes subs for condor)
+* writedags $(cat eos-inf/in/writedags.in) (writes dags and subs for condor)
 
 ---
 
@@ -51,6 +50,9 @@ Code for performing equation of state inference with data from observations of n
 4. Submit jobs to condor with ``condor_submit_dag $PWD/target/remote/DAGNAME.dag'' for EOSPRIOR.dag, followed by INFEREOS.dag and POSTPLOTS.dag once complete; monitor with ``condor_q -dag'' and ``tail -f $PWD/target/remote/DAGNAME*.dagman.out''
 5. Access data via softlink at https://ldas-jobs.ligo-wa.caltech.edu/~philippe.landry/
 
-Note: if running on head node, prevent hangup with ``nohup command 1> nohup.out 2> nohup.err &''
+---
 
-Reed's remote gpr-eos-gw170817 repo: https://ldas-jobs.ligo-wa.caltech.edu/~reed.essick/BNS_tides/gpr-eos-gw170817
+### Notes
+
+* If running on head node, prevent hangup with ``nohup command 1> nohup.out 2> nohup.err &''
+* Reed's remote gpr-eos-gw170817 repo is located at https://ldas-jobs.ligo-wa.caltech.edu/~reed.essick/BNS_tides/gpr-eos-gw170817
