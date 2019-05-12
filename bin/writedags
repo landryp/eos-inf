@@ -13,6 +13,7 @@ outdir=$8 #"/home/philippe.landry/eos-inf_test"
 mrng=$9 #'1.06,1.46,1.24,1.72'
 Mcrng=${10} #'1.184,1.188'
 Mobs=${11} #'1.93'
+crustdir=${12} # "/home/philippe.landry/gpr-eos-gw170817/eos/eos"
 
 # Create output files and directories
 
@@ -33,6 +34,7 @@ echo $outdir >> $infile
 echo $mrng >> $infile
 echo $Mcrng >> $infile
 echo $Mobs >> $infile
+echo $crustdir >> $infile
 
 sampfile="${outdir}/SAMP.csv"
 weightsfile="${outdir}/SAMPweights.csv"
@@ -41,7 +43,7 @@ each=1
 # Print sub files
 
 binfiles=( "draweos" "getprops" "getbins" "collectbins" "weighsamps" "plotposts" )
-args=( "arguments = \"\$(jobi) \$(numjobs) \$(perdir) \$(gpfile) \$(outdir)\"" "arguments = \"\$(jobi) \$(numjobs) \$(perdir) \$(outdir)\"" "arguments = \"\$(mpereos) \$(outdir) \$(mrng) \$(Mcrng)\"" "arguments = \"\$(Mobs) \$(outdir)\"" "arguments = \"\$(gwfile) \$(sampfile) \$(weightsfile) \$(outdir)\"" "arguments = \"\$(sampfile) \$(weightsfile) \$(gwfile) \$(outdir)\"" )
+args=( "arguments = \"\$(jobi) \$(numjobs) \$(perdir) \$(gpfile) \$(outdir) \$(crustdir)\"" "arguments = \"\$(jobi) \$(numjobs) \$(perdir) \$(outdir)\"" "arguments = \"\$(mpereos) \$(outdir) \$(mrng) \$(Mcrng)\"" "arguments = \"\$(Mobs) \$(outdir)\"" "arguments = \"\$(gwfile) \$(sampfile) \$(weightsfile) \$(outdir)\"" "arguments = \"\$(sampfile) \$(weightsfile) \$(gwfile) \$(outdir)\" \$(indir)\"" )
 
 for i in $(seq 0 $((${#binfiles[@]}-1)))
 do
@@ -77,7 +79,7 @@ do
 	mkdir -p ${outdir}/log/JOB${job}
 	
 	echo "JOB $(($job)) $outdir/remote/draweos.sub" >> $dagfile1
-	echo "VARS $(($job)) jobi=\"$job\" numjobs=\"$each\" perdir=\"$perdir\" gpfile=\"$gpfile\" outdir=\"$outdir\"" >> $dagfile1
+	echo "VARS $(($job)) jobi=\"$job\" numjobs=\"$each\" perdir=\"$perdir\" gpfile=\"$gpfile\" outdir=\"$outdir\" crustdir=\"$crustdir\"" >> $dagfile1
 	echo "RETRY $(($job)) 1" >> $dagfile1
 	echo "PARENT $(($job)) CHILD $(($numjobs+$job))" >> $dagfile1
 	
@@ -109,5 +111,5 @@ echo "RETRY $(($numjobs+$numjobs+2)) 1" >> $dagfile2
 echo "### Plots of EOS posterior from $gpfile reweighted by $gwfile, reading from $indir and printing to $outdir ###" > $dagfile3
 
 echo "JOB $(($numjobs+$numjobs+3)) $outdir/remote/plotposts.sub" >> $dagfile3
-echo "VARS $(($numjobs+$numjobs+3)) sampfile=\"$sampfile\" weightsfile=\"$weightsfile\" gwfile=\"$gwfile\" outdir=\"$outdir\"" >> $dagfile3
+echo "VARS $(($numjobs+$numjobs+3)) sampfile=\"$sampfile\" weightsfile=\"$weightsfile\" gwfile=\"$gwfile\" outdir=\"$outdir\" indir=\"$indir\"" >> $dagfile3
 echo "RETRY $(($numjobs+$numjobs+3)) 1" >> $dagfile3

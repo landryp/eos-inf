@@ -52,6 +52,14 @@ Code for performing equation of state inference with data from observations of n
 
 ---
 
+### Local instructions
+
+1. Navigate to local run directory and run ``. install _codes.sh''; create/clear target directory
+2. Navigate to local repo and adjust run parameters in in/writedags.in; install code with ``python setup.py install --prefix ../opt/''
+3. From run directory, run ``INFEREOS $(cat $PWD/repo/in/infereos.in)''
+
+---
+
 ### Notes
 
 * If running on head node, prevent hangup with ``nohup command 1> nohup.out 2> nohup.err &''
