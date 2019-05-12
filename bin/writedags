@@ -43,7 +43,7 @@ each=1
 # Print sub files
 
 binfiles=( "draweos" "getprops" "getbins" "collectbins" "weighsamps" "plotposts" )
-args=( "arguments = \"\$(jobi) \$(numjobs) \$(perdir) \$(gpfile) \$(outdir) \$(crustdir)\"" "arguments = \"\$(jobi) \$(numjobs) \$(perdir) \$(outdir)\"" "arguments = \"\$(mpereos) \$(outdir) \$(mrng) \$(Mcrng)\"" "arguments = \"\$(Mobs) \$(outdir)\"" "arguments = \"\$(gwfile) \$(sampfile) \$(weightsfile) \$(outdir)\"" "arguments = \"\$(sampfile) \$(weightsfile) \$(gwfile) \$(outdir)\" \$(indir)\"" )
+args=( "arguments = \"\$(jobi) \$(numjobs) \$(perdir) \$(gpfile) \$(outdir) \$(crustdir)\"" "arguments = \"\$(jobi) \$(numjobs) \$(perdir) \$(outdir)\"" "arguments = \"\$(mpereos) \$(outdir) \$(mrng) \$(Mcrng)\"" "arguments = \"\$(Mobs) \$(outdir)\"" "arguments = \"\$(gwfile) \$(sampfile) \$(weightsfile) \$(outdir)\"" "arguments = \"\$(sampfile) \$(weightsfile) \$(gwfile) \$(outdir) \$(indir)\"" )
 
 for i in $(seq 0 $((${#binfiles[@]}-1)))
 do
