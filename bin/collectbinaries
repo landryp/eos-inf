@@ -92,7 +92,13 @@ for dirs in dirslist:
 				
 					if verb == True: print 'Maximum mass ok'
 			
-					outfile.write('{0},{1},{2},{3},{4},{5},{6},{7},{8} \n'.format(eosnum,','.join(branchnums),Mmax,Mc,q,M,m1,m2,','.join(proplist)))
+					if branchnums[0] != 'BH' and branchnums[1] != 'BH':
+						
+						if verb == True: print 'Stability ok'
+						outfile.write('{0},{1},{2},{3},{4},{5},{6},{7},{8} \n'.format(eosnum,','.join(branchnums),Mmax,Mc,q,M,m1,m2,','.join(proplist)))
+						
+					else:
+						if verb == True: print 'Unstable'
 					
 				else:
 				
