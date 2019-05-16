@@ -1,6 +1,6 @@
 #!/usr/bin/python
 __doc__ = 'PLOTSAMPS -- plot samples returned by INFEREOS'
-__usage__ = 'plotsamps EoS1,EoS2,... [-v] [-s] [-p m1,lambda1] [-d ./dat/] [-o ./dat/]'
+__usage__ = 'plotsamps EoS1,EoS2,... [-v] [-s] [-p M,Lambda] [-d ./dat/] [-o ./dat/]'
 __author__ = 'philippe.landry@ligo.org'
 __date__ = '03-2019'
 
@@ -9,7 +9,7 @@ from optparse import OptionParser
 from nsstruc.pltsetup import *
 
 parser = OptionParser(usage=__usage__, description=__doc__)
-parser.add_option('-p', '--props', default='m1,lambda1', help='comma-separated list of NS properties to plot (x,y), DEFAULT=m1,lambda1', metavar='m1,lambda1')
+parser.add_option('-p', '--props', default='M,Lambda', help='comma-separated list of NS properties to plot (x,y), DEFAULT=M,Lambda', metavar='M,Lambda')
 parser.add_option('-d', '--dir', default='./dat/', help='path to directory housing NS properties data, DEFAULT=./dat/', metavar='./dat/')
 parser.add_option('-o', '--outdir', default='./plt/', help='path to directory for plot output, DEFAULT=./plt/', metavar='./plt/')
 parser.add_option('-t', '--tag', default='', help='tag to append to output filename, DEFAULT=None', metavar='""')
@@ -30,7 +30,8 @@ leg = opts.legend
 verb = opts.verbose
 
 fig = plt.figure(1)
-propslabels = {'rhoc1': r'$\rho_{c,1} \, [\mathrm{g/cm}^3]$','rhoc2': r'$\rho_{c,2} \, [\mathrm{g/cm}^3]$','R1': r'$R_1 \, \mathrm{[km]}$','R2': r'$R_2 \, \mathrm{[km]}$','lambda1': r'$\Lambda_1$','lambda2': r'$\Lambda_2$','I1': r'$I_1 \, [10^{45} \, \mathrm{g \, cm}^2]$','I2': r'$I_2 \, [10^{45} \, \mathrm{g \, cm}^2]$','Mb1': r'$M_{b,1} \, [M_{\odot}]$','Mb2': r'$M_{b,2} \, [M_{\odot}]$'}
+#propslabels = {'rhoc1': r'$\rho_{c,1} \, [\mathrm{g/cm}^3]$','rhoc2': r'$\rho_{c,2} \, [\mathrm{g/cm}^3]$','R1': r'$R_1 \, \mathrm{[km]}$','R2': r'$R_2 \, \mathrm{[km]}$','lambda1': r'$\Lambda_1$','lambda2': r'$\Lambda_2$','I1': r'$I_1 \, [10^{45} \, \mathrm{g \, cm}^2]$','I2': r'$I_2 \, [10^{45} \, \mathrm{g \, cm}^2]$','Mb1': r'$M_{b,1} \, [M_{\odot}]$','Mb2': r'$M_{b,2} \, [M_{\odot}]$'}
+propslabels = {'rhoc': r'$\rho_c \, [\mathrm{g/cm}^3]$','R': r'$R \, \mathrm{[km]}$','Lambda': r'$\Lambda$','I': r'$I \, [10^{45} \, \mathrm{g \, cm}^2]$','Mb': r'$M_b \, [M_{\odot}]$'}
 
 # LOAD NS PROPERTIES FOR EACH EOS
 
@@ -38,7 +39,7 @@ eosnames = list(set(eosnames))
 
 for eosname in eosnames:
 
-	dircode = eosname.lstrip(0)/100
+	dircode = eosname.lstrip('0')/100
 	dircode = dircode.zfill(6)
 	propspath = indir+'DRAWmod100-'+dircode+'/macro-draw-'+eosname+'.csv'
 	if verb == True: print 'Look up samples for '+str(eosname)+' stars'
