@@ -17,6 +17,7 @@ parser.add_option('-f', '--pltname', default='sampsplot', help='plot output file
 parser.add_option('-a', '--alpha', default=1., help='transparency of curves on plot, DEFAULT=1.0', metavar='1.0')
 parser.add_option('-L', '--legend', action='store_false', default=True, help='toggle legend display, DEFAULT=True', metavar='True')
 parser.add_option('-v', '--verbose', action='store_true', default=False, help='toggle verbose output, DEFAULT=False', metavar='False')
+parser.add_option('-s', '--scatter', action='store_true', default=False, help='toggle scatter display, DEFAULT=False', metavar='False')
 
 opts, args = parser.parse_args()
 samppath = str(args[0])
@@ -28,24 +29,31 @@ pltname = str(opts.pltname)
 a = float(opts.alpha)
 leg = opts.legend
 verb = opts.verbose
+scatter = opts.scatter
 
 fig = plt.figure(1)
 #propslabels = {'rhoc1': r'$\rho_{c,1} \, [\mathrm{g/cm}^3]$','rhoc2': r'$\rho_{c,2} \, [\mathrm{g/cm}^3]$','R1': r'$R_1 \, \mathrm{[km]}$','R2': r'$R_2 \, \mathrm{[km]}$','lambda1': r'$\Lambda_1$','lambda2': r'$\Lambda_2$','I1': r'$I_1 \, [10^{45} \, \mathrm{g \, cm}^2]$','I2': r'$I_2 \, [10^{45} \, \mathrm{g \, cm}^2]$','Mb1': r'$M_{b,1} \, [M_{\odot}]$','Mb2': r'$M_{b,2} \, [M_{\odot}]$'}
-propslabels = {'rhoc': r'$\rho_c \, [\mathrm{g/cm}^3]$','R': r'$R \, \mathrm{[km]}$','Lambda': r'$\Lambda$','I': r'$I \, [10^{45} \, \mathrm{g \, cm}^2]$','Mb': r'$M_b \, [M_{\odot}]$'}
+propslabels = {'rhoc': r'$\rho_c \, [\mathrm{g/cm}^3]$','R': r'$R \, \mathrm{[km]}$','Lambda': r'$\Lambda$','I': r'$I \, [10^{45} \, \mathrm{g \, cm}^2]$','Mb': r'$M_b \, [M_{\odot}]$','M': r'$M \, [M_{\odot}]$'}
 
 # LOAD NS PROPERTIES FOR EACH EOS
 
-sampdat = np.genfromtxt(samppath,names=True,delimiter=',')
+sampdat = np.genfromtxt(indir+samppath,names=True,delimiter=',')
 eosnames = sampdat['EoS']
 
+m1dat = sampdat['m1_source']
+prop1dat = sampdat['lambda1']
+m2dat = sampdat['m2_source']
+prop2dat = sampdat['lambda2']
+
 eosnames = list(set(eosnames))
+eosnames = [int(eosname) for eosname in eosnames]
 
 for eosname in eosnames:
 
-	dircode = int(eosname)/100
+	dircode = eosname/100
 	dircode = str(dircode).zfill(6)
-	print dircode
-	propspath = indir+'DRAWmod100-'+dircode+'/macro-draw-'+eosname+'.csv'
+	print dircode, eosname
+	propspath = indir+'DRAWmod100-'+str(dircode)+'/macro-draw-'+str(eosname).zfill(6)+'.csv'
 	print propspath
 	if verb == True: print 'Look up samples for '+str(eosname)+' stars'
 
@@ -56,12 +64,16 @@ for eosname in eosnames:
 	if verb == True: print 'Plotting observables vs mass for '+str(eosname)+' stars'
 	plt.xlabel(propslabels[props[0]])
 	plt.ylabel(propslabels[props[1]])
-	if 'lambda' in props[0]:
+	if 'Lambda' in props[0]:
 		if any(L > 0. for L in propsdat[props[0]]): plt.xscale('log')
-	if 'lambda' in props[1]:
+	if 'Lambda' in props[1]:
 		if any(L > 0. for L in propsdat[props[1]]): plt.yscale('log')
 		
-	plt.plot(propsdat[props[0]],propsdat[props[1]],lw=2,label=eosname, lc='k', alpha=a)
+	plt.plot(propsdat[props[0]],propsdat[props[1]],lw=2,label=eosname, color='k', alpha=a)
+
+if scatter == True:
+	plt.scatter(m1dat,prop1dat,label=eosname,marker='.',color='b',alpha=a)
+	plt.scatter(m2dat,prop2dat,label=eosname,marker='.',color='b',alpha=a)
 
 if leg == True: plt.legend(loc=0)		
 plt.savefig(outdir+pltname+tag+'.png')
