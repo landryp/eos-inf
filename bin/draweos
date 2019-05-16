@@ -7,7 +7,7 @@ gpfile=$4
 outdir=$5
 crustdir=$6
 
-crusts=( 'sly' 'eng' )
+crusts=( 'sly' 'eng' 'hqc18' 'sly230a' )
 echo '### record crusts affixed to Gaussian process EoSs ###' > $outdir/CRUSTS.dat
 echo 'EoS, crust' > $outdir/CRUSTS.dat
 

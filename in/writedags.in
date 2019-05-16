@@ -1,11 +1,11 @@
 /home/philippe.landry/eos-inf
 0
+1000
 100
-100
-1
+50
 /home/philippe.landry/eos-inf/in/gwPhenomPNRT_post-lospin.csv
-/home/philippe.landry/eos-inf/in/gpr_gpr_hyperonic-agnostic.hdf5
-/home/philippe.landry/eos-inf_hypagntest
+/home/philippe.landry/eos-inf/in/gpr_gpr_hadronic-agnostic-stupid.hdf5
+/home/philippe.landry/GPEOS_hadagnstp
 1.06,1.46,1.24,1.72
 1.184,1.188
 1.93
