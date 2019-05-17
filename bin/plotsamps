@@ -92,8 +92,8 @@ if ref != False:
 		refm2 = refdat['m2_source']
 		refprop2 = refdat['lambda2']
 	
-		plt.plot(refm1,refprop1,lw=2, color='r', alpha=a)
-		plt.plot(refm2,refprop2,lw=2, color='r', alpha=a)
+		plt.plot(refm1,refprop1,lw=2, color='r', alpha=1)
+		plt.plot(refm2,refprop2,lw=2, color='r', alpha=1)
 
 if leg == True: plt.legend(loc=0)		
 plt.savefig(outdir+pltname+tag+'.png')
