@@ -1,12 +1,12 @@
 ./eos-inf
 0
-3
-2
-20
+10
+5
+1
 ./eos-inf/in/gwPhenomPNRT_post-lospin.csv
-./eos-inf/in/gpr_phi.hdf5
+./eos-inf/in/gpr_phi-h4_h4.hdf5
 ./tmp
 1.06,1.46,1.24,1.72
-1.184,1.188
+1.176,1.196
 1.93
 ./gpr-eos-gw170817/eos/eos

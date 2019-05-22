@@ -10,6 +10,7 @@ from eosinf.drawmass import drawmass
 from nsstruc.constants import *
 from nsstruc.macro import macro as getmacro
 import glob
+import os
 
 parser = OptionParser(usage=__usage__, description=__doc__)
 parser.add_option('-m', '--massrng', default='1.25,1.75,1.00,1.50', help='comma-separated list of m1 and m2 ranges to draw masses from, DEFAULT=1.25,1.75,1.00,1.50', metavar='1.25,1.75,1.00,1.50')
@@ -32,8 +33,14 @@ verb = opts.verbose
 
 # ASSOCIATE RANDOM BINARIES WITH EACH EOS AND SAVE CORRESPONDING PROPERTIES
 
-dirslist = glob.glob(outdir+"DRAW*")
+dirslist = glob.glob(indir+"DRAW*")
 for dirs in dirslist:
+
+	if indir != outdir:
+	
+		newdir = dirs.replace(indir, outdir)
+		if not os.path.exists(newdir):
+			os.mkdir(newdir)
 
 	eoslist = glob.glob(dirs+"/MACRO*")
 	for eos in eoslist:
@@ -44,7 +51,14 @@ for dirs in dirslist:
 		if len(macros) > 0:
 		
 			shortname = eos.split('MACRO')[-1]
-			outfile = open(eos+"/"+tag+shortname+".csv","w")
+			if indir != outdir:
+			
+				newpath = eos.replace(indir, outdir)
+				if not os.path.exists(newpath):
+					os.mkdir(newpath)
+				outfile = open(newpath+"/"+tag+shortname+".csv","w")
+			else:
+				outfile = open(eos+"/"+tag+shortname+".csv","w")
 			macrodat = np.genfromtxt(macros[0],names=True,delimiter=',')
 			props = list(macrodat.dtype.names)
 			props.remove('M')
