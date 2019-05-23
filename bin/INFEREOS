@@ -7,20 +7,25 @@ perdir=$4 #100
 mpereos=$5 #1
 gwfile=$6 #${indir}/in/gwPhenomPNRT_post-lospin.csv
 gpfile=$7 #${indir}/in/gpr_phi.hdf5
-outdir=$8 #./tmp
-mrng=$9 #1.06,1.46,1.24,1.72
-Mcrng=${10} #1.184,1.188
-Mobs=${11} #1.93
-crustdir=${12} # ./gpr-eos-gw170817/eos/eos
+dbdir=$8 #./tmp
+outdir=$9 #./tmp_1k
+mrng=${10} #1.06,1.46,1.24,1.72
+Mcrng=${11} #1.184,1.188
+Mobs=${12} #1.93
+crustdir=${13} # ./gpr-eos-gw170817/eos/eos
 
 sampfile=$outdir/SAMP.csv
 weightsfile=$outdir/SAMPweights.csv
 
-draweos $jobi $numjobs $perdir $gpfile $outdir $crustdir
+if test ! -f "$dbdir/CRUSTS.dat"; then
 
-getprops $jobi $numjobs $perdir $outdir
+	draweos $jobi $numjobs $perdir $gpfile $dbdir $crustdir
 
-getbinaries $mpereos -v -m $mrng -M $Mcrng -d $outdir/ -o $outdir/
+	getprops $jobi $numjobs $perdir $dbdir
+
+fi
+
+getbinaries $mpereos -v -m $mrng -M $Mcrng -d $dbdir/ -o $outdir/
 
 collectbinaries -v -M $Mobs -d $outdir/ -o $outdir/
 
