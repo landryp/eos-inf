@@ -74,6 +74,8 @@ done
 
 # Print DAG file 1
 
+mkdir -p ${outdir}/log
+
 if test ! -f "$dbdir/CRUSTS.dat"; then
 
 	echo "### EOS prior process with $numjobs draws from prior $gpfile, reading from $indir and printing to $dbdir ###" > $dagfile1
