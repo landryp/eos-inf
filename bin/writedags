@@ -76,19 +76,19 @@ done
 
 if test ! -f "$dbdir/CRUSTS.dat"; then
 
-	echo "### EOS prior process with $numjobs draws from prior $gpfile, reading from $indir and printing to $outdir ###" > $dagfile1
+	echo "### EOS prior process with $numjobs draws from prior $gpfile, reading from $indir and printing to $dbdir ###" > $dagfile1
 
 	for job in $(seq $jobi $(($jobi+$numjobs-1)))
 	do
 		mkdir -p ${outdir}/log/JOB${job}
 	
 		echo "JOB $(($job)) $outdir/remote/draweos.sub" >> $dagfile1
-		echo "VARS $(($job)) jobi=\"$job\" numjobs=\"$each\" perdir=\"$perdir\" gpfile=\"$gpfile\" outdir=\"$outdir\" crustdir=\"$crustdir\"" >> $dagfile1
+		echo "VARS $(($job)) jobi=\"$job\" numjobs=\"$each\" perdir=\"$perdir\" gpfile=\"$gpfile\" dbdir=\"$outdir\" crustdir=\"$crustdir\"" >> $dagfile1
 		echo "RETRY $(($job)) 1" >> $dagfile1
 		echo "PARENT $(($job)) CHILD $(($numjobs+$job))" >> $dagfile1
 	
 		echo "JOB $(($numjobs+$job)) $outdir/remote/getprops.sub" >> $dagfile1
-		echo "VARS $(($numjobs+$job)) jobi=\"$job\" numjobs=\"1\" perdir=\"$perdir\" outdir=\"$outdir\"" >> $dagfile1
+		echo "VARS $(($numjobs+$job)) jobi=\"$job\" numjobs=\"1\" perdir=\"$perdir\" dbdir=\"$outdir\"" >> $dagfile1
 		echo "RETRY $(($numjobs+$job)) 1" >> $dagfile1
 	done
 
