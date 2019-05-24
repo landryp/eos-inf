@@ -45,7 +45,7 @@ each=1
 # Print sub files
 
 binfiles=( "draweos" "getprops" "getbins" "collectbins" "weighsamps" "plotposts" )
-args=( "arguments = \"\$(jobi) \$(numjobs) \$(perdir) \$(gpfile) \$(dbdir) \$(crustdir)\"" "arguments = \"\$(jobi) \$(numjobs) \$(perdir) \$(dbdir)\"" "arguments = \"\$(mpereos) \$(dbdir) \$(outdir) \$(mrng) \$(Mcrng)\"" "arguments = \"\$(Mobs) \$(outdir)\"" "arguments = \"\$(gwfile) \$(sampfile) \$(weightsfile) \$(outdir)\"" "arguments = \"\$(sampfile) \$(weightsfile) \$(gwfile) \$(outdir) \$(indir)\"" )
+args=( "arguments = \"\$(jobi) \$(numjobs) \$(perdir) \$(gpfile) \$(dbdir) \$(crustdir)\"" "arguments = \"\$(jobi) \$(numjobs) \$(perdir) \$(dbdir)\"" "arguments = \"\$(mpereos) \$(dbdir) \$(outdir) \$(mrng) \$(Mcrng)\"" "arguments = \"\$(Mobs) \$(outdir)\"" "arguments = \"\$(gwfile) \$(sampfile) \$(weightsfile) \$(outdir)\"" "arguments = \"\$(sampfile) \$(weightsfile) \$(gwfile) \$(outdir) \$(indir) \$(perdir)\"" )
 
 for i in $(seq 0 $((${#binfiles[@]}-1)))
 do
@@ -119,5 +119,5 @@ echo "RETRY $(($numjobs+$numjobs+2)) 1" >> $dagfile2
 echo "### Plots of EOS posterior from $gpfile reweighted by $gwfile, reading from $indir and printing to $outdir ###" > $dagfile3
 
 echo "JOB $(($numjobs+$numjobs+3)) $outdir/remote/plotposts.sub" >> $dagfile3
-echo "VARS $(($numjobs+$numjobs+3)) sampfile=\"$sampfile\" weightsfile=\"$weightsfile\" gwfile=\"$gwfile\" outdir=\"$outdir\" indir=\"$indir\"" >> $dagfile3
+echo "VARS $(($numjobs+$numjobs+3)) sampfile=\"$sampfile\" weightsfile=\"$weightsfile\" gwfile=\"$gwfile\" outdir=\"$outdir\" indir=\"$indir\" perdir=\"$perdir\"" >> $dagfile3
 echo "RETRY $(($numjobs+$numjobs+3)) 1" >> $dagfile3
