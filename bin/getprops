@@ -12,7 +12,7 @@ do
 	printf -v dircode "%06d" $dirnum
 	printf -v jobcode "%06d" $job
 
-	getnsprops eos-draw-$jobcode.csv -v -p R,M,Lambda,I,Mb -d $outdir/DRAWmod$perdir-$dircode/ -o $outdir/DRAWmod$perdir-$dircode/
+	getnsprops eos-draw-$jobcode.csv -v -p R,M,Lambda,I,Mb -m 5e6 -d $outdir/DRAWmod$perdir-$dircode/ -o $outdir/DRAWmod$perdir-$dircode/
 	
 	splitbranches macro-draw-$jobcode.csv -v -d $outdir/DRAWmod$perdir-$dircode/ -o $outdir/DRAWmod$perdir-$dircode/ -f MACROdraw-$jobcode -t "" 
 	
