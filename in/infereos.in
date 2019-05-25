@@ -1,12 +1,12 @@
 ./eos-inf
 0
+10
 5
-3
-1
+50
 ./eos-inf/in/gwPhenomPNRT_post-lospin.csv
 ./eos-inf/in/gpr_phi-h4_h4.hdf5
-./tmp
-./tmp
+./H4_locr
+./H4_locr50
 1.06,1.46,1.24,1.72
 1.176,1.196
 1.93

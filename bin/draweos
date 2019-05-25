@@ -24,7 +24,7 @@ do
 	crust=${crusts[$crustnum]}
 	echo "$job, $crust" >> $outdir/CRUSTS.dat
 
-	integrate-phi $outdir/DRAWmod$perdir-$dircode/draw-gpr-$jobcode.csv 1e11 -v -o $outdir/DRAWmod$perdir-$dircode/eos-draw-$jobcode.csv --sigma-logpressurec2 2. --stitch-below-reference-pressure --crust-eos $crustdir/$crust.csv
+	integrate-phi $outdir/DRAWmod$perdir-$dircode/draw-gpr-$jobcode.csv 1e12 -v -o $outdir/DRAWmod$perdir-$dircode/eos-draw-$jobcode.csv --sigma-logpressurec2 2. --stitch-below-reference-pressure --crust-eos $crustdir/$crust.csv
 done
 
 # previous settings for integrate-phi ref-pressure 2.32e10, sigma-logpressure 9.

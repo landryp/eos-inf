@@ -65,3 +65,4 @@ Code for performing equation of state inference with data from observations of n
 * If running on head node, prevent hangup with ``nohup command 1> nohup.out 2> nohup.err &''
 * Reed's remote gpr-eos-gw170817 repo is located at https://ldas-jobs.ligo-wa.caltech.edu/~reed.essick/BNS_tides/gpr-eos-gw170817
 * Make diagnostic plot of M-R relations etc. for synthetic EoSs with plotprops $(ls -m target/DRAWmod#-#/macro-draw*.csv | tr -d '\n') -p R,Lambda -a 0.5 -L -d ./ -o target/
+* For this purpose, if list of all drawn EoSs needed, use (echo "EoS"; for i in $(seq -f "%06g" 1 1000); do    echo "$i"; done) > ALL.csv
