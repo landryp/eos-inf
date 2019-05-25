@@ -9,11 +9,11 @@ perdir=$6
 
 kde-corner-samples -s GPprior $sampfile -s GPpost $weightsfile -s GWpost $gwfile -v --weight-column GPpost logweights --weight-column-is-log GPpost -o $outdir m1_source m2_source lambda1 lambda2 --color GPprior blue --color GPpost red --color GWpost green -r m1_source 1.25 1.75 -r m2_source 1.0 1.5 -r lambda1 0. 1500. -r lambda2 0. 2000. -b m1_source 0.02 -b m2_source 0.02 -b lambda1 10. -b lambda2 10. --reference SLY $indir/dat/REF-SLY_LAL.csv --reference H4 $indir/dat/REF-H4_LAL.csv --reference MS1 $indir/dat/REF-MS1_LAL.csv --reference-color SLY gray --reference-color H4 gray --reference-color MS1 gray --figheight 12 --figwidth 12
 
-plotcsv $(getpaths eos-draw SAMP.csv -d $outdir/ -o $outdir/ -s DRAWmod$perdir -m $perdir) -x baryon_density -y pressurec2 -a 0.1 -d '' -o $outdir/ -L True,True -l 1e12,1e16,1e8,1e16 -m -k -A baryon_density[g/cm^3],pressurec2[g/cm^3] -t EOS
+plotcsv $(getpaths eos-draw SAMP.csv -d $outdir/ -o $outdir/ -s DRAWmod$perdir -m $perdir) -x baryon_density -y pressurec2 -a 0.1 -d '' -o $outdir/ -L True,True -l 1e12,1e16,1e8,1e16 -m -k -A baryon_density[g/cm^3],pressurec2[g/cm^3] -t EOS -r $indir/dat/macro-SLY_LAL.csv,$indir/dat/macro-H4_LAL.csv,$indir/macro-MS1_LAL.csv
 
-plotcsv $(getpaths MACROdraw SAMP.csv -d $outdir/ -o $outdir/ -s DRAWmod$perdir,MACROdraw -m $perdir,1 -t -0) -x M -y R -a 0.1 -d '' -o $outdir/ -m -k -A M[Msun],R[km] -t MR
+plotcsv $(getpaths MACROdraw SAMP.csv -d $outdir/ -o $outdir/ -s DRAWmod$perdir,MACROdraw -m $perdir,1 -t -0) -x M -y R -a 0.1 -d '' -o $outdir/ -m -k -A M[Msun],R[km] -t MR -r $indir/dat/macro-SLY_LAL.csv,$indir/dat/macro-H4_LAL.csv,$indir/macro-MS1_LAL.csv
 
-plotcsv $(getpaths MACROdraw SAMP.csv -d $outdir/ -o $outdir/ -s DRAWmod$perdir,MACROdraw -m $perdir,1 -t -0) -x M -y Lambda -a 0.1 -d '' -o $outdir/ -m -k -A M[Msun],Lambda -L False,True -t MLambda
+plotcsv $(getpaths MACROdraw SAMP.csv -d $outdir/ -o $outdir/ -s DRAWmod$perdir,MACROdraw -m $perdir,1 -t -0) -x M -y Lambda -a 0.1 -d '' -o $outdir/ -m -k -A M[Msun],Lambda -L False,True -t MLambda -r $indir/dat/macro-SLY_LAL.csv,$indir/dat/macro-H4_LAL.csv,$indir/macro-MS1_LAL.csv
 
 ### fix below ###
 #plot-process -s GPprior ./dat/SAMP.csv -s GPpost ./dat/SAMPweights.csv -v --weight-column GPpost logweights --weight-column-is-log GPpost -o ./dat/ pressurec2 baryon_density 1e12 1e16 --eos-column GPprior EoS --eos-column GPpost EoS --eos-dir GPprior ./dat/eos/ --eos-dir GPpost ./dat/eos/ --eos-basename GPprior eos-draw-%06d.csv --eos-basename GPpost eos-draw-%06d.csv --bns-dir GPprior ./dat/ --bns-dir GPpost ./dat/ --bns-basename GPprior macro-draw-%06d.csv --bns-basename GPpost macro-draw-%06d.csv -l pressurec2 -l baryon_density
