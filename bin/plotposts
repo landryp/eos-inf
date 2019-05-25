@@ -11,9 +11,9 @@ kde-corner-samples -s GPprior $sampfile -s GPpost $weightsfile -s GWpost $gwfile
 
 plotcsv $(getpaths eos-draw SAMP.csv -d $outdir/ -o $outdir/ -s DRAWmod$perdir -m $perdir) -x baryon_density -y pressurec2 -a 0.1 -d '' -o $outdir/ -L True,True -l 1e12,1e16,1e8,1e16 -m -k -A baryon_density[g/cm^3],pressurec2[g/cm^3] -t EOS -r $indir/dat/SLY_LAL.csv,$indir/dat/H4_LAL.csv,$indir/dat/MS1_LAL.csv
 
-plotcsv $(getpaths MACROdraw SAMP.csv -d $outdir/ -o $outdir/ -s DRAWmod$perdir,MACROdraw -m $perdir,1 -t -0) -x M -y R -a 0.1 -d '' -o $outdir/ -m -k -A M[Msun],R[km] -t MR -r $indir/dat/macro-SLY_LAL.csv,$indir/dat/macro-H4_LAL.csv,$indir/dat/macro-MS1_LAL.csv
+plotcsv $(getpaths MACROdraw SAMP.csv -d $outdir/ -o $outdir/ -s DRAWmod$perdir,MACROdraw -m $perdir,1 -t -0) -x M -y R -a 0.1 -d '' -o $outdir/ -m -k -A M[Msun],R[km] -l 0.5,3.0,5.,25. -t MR -r $indir/dat/macro-SLY_LAL.csv,$indir/dat/macro-H4_LAL.csv,$indir/dat/macro-MS1_LAL.csv
 
-plotcsv $(getpaths MACROdraw SAMP.csv -d $outdir/ -o $outdir/ -s DRAWmod$perdir,MACROdraw -m $perdir,1 -t -0) -x M -y Lambda -a 0.1 -d '' -o $outdir/ -m -k -A M[Msun],Lambda -L False,True -l 0.5,3.0,5.,25. -t MLambda -r $indir/dat/macro-SLY_LAL.csv,$indir/dat/macro-H4_LAL.csv,$indir/dat/macro-MS1_LAL.csv
+plotcsv $(getpaths MACROdraw SAMP.csv -d $outdir/ -o $outdir/ -s DRAWmod$perdir,MACROdraw -m $perdir,1 -t -0) -x M -y Lambda -a 0.1 -d '' -o $outdir/ -m -k -A M[Msun],Lambda -L False,True -t MLambda -r $indir/dat/macro-SLY_LAL.csv,$indir/dat/macro-H4_LAL.csv,$indir/dat/macro-MS1_LAL.csv
 
 ### fix below ###
 #plot-process -s GPprior ./dat/SAMP.csv -s GPpost ./dat/SAMPweights.csv -v --weight-column GPpost logweights --weight-column-is-log GPpost -o ./dat/ pressurec2 baryon_density 1e12 1e16 --eos-column GPprior EoS --eos-column GPpost EoS --eos-dir GPprior ./dat/eos/ --eos-dir GPpost ./dat/eos/ --eos-basename GPprior eos-draw-%06d.csv --eos-basename GPpost eos-draw-%06d.csv --bns-dir GPprior ./dat/ --bns-dir GPpost ./dat/ --bns-basename GPprior macro-draw-%06d.csv --bns-basename GPpost macro-draw-%06d.csv -l pressurec2 -l baryon_density
