@@ -1,12 +1,12 @@
 /home/philippe.landry/eos-inf
 0
-100
-10
+10000
+1000
 1
 /home/philippe.landry/eos-inf/in/gwPhenomPNRT_post-lospin.csv
-/home/philippe.landry/eos-inf/in/gpr_phi-h4_h4.hdf5
-/home/philippe.landry/H4_hicr3
-/home/philippe.landry/H4_hicr3
+/home/philippe.landry/eos-inf/in/gpr_gpr_hadronic-informed.hdf5
+/home/philippe.landry/GPpriors/hadinf
+/home/philippe.landry/GPpriors/hadinf
 1.06,1.46,1.24,1.72
 1.176,1.196
 1.93
