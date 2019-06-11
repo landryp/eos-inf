@@ -1,7 +1,0 @@
-#!/bin/bash
-
-outdir=$1
-perdir=$2
-weightsfile=$3
-
-addnumbranches $weightsfile -m $perdir -d $outdir -o $outdir

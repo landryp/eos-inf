@@ -1,56 +1,65 @@
 #!/usr/bin/python
-__doc__ = 'ADDNUMBRANCHES -- add number of stable branches column to weighted samples csv file'
-__usage__ = 'addnumbranches SAMPweights.csv [-m 1000] [-d ./dat/] [-o ./dat/]'
+__doc__ = 'ADDPROP -- add canonical and other properties to weighted samples csv file'
+__usage__ = 'addprop SAMPweights.csv [-m 1000] [-d ./dat/] [-o ./dat/] [-p M=1.4,R]'
 __author__ = 'philippe.landry@ligo.org'
 __date__ = '06-2019'
 
 import numpy as np
 from optparse import OptionParser
 import glob
+from nsstruc.macro import macro
 
 parser = OptionParser(usage=__usage__, description=__doc__)
+parser.add_option('-p', '--props', default='M=1.4,R', help='properties to append, DEFAULT="M=1.4,R"', metavar='TARGET_PROP=TARGET,PROP')
 parser.add_option('-m', '--mod', default=1000, help='number of draws per subfolder, DEFAULT=1000', metavar='MOD')
 parser.add_option('-d', '--dir', default='./dat/', help='path to directory housing properties files, DEFAULT=./dat/', metavar='./dat/')
 parser.add_option('-o', '--outdir', default='./dat/', help='output path for new samples file, DEFAULT=./dat/', metavar='./dat/')
-parser.add_option('-t', '--tag', default='_branches', help='tag for output data file, DEFAULT=_branches', metavar='_branches')
+parser.add_option('-t', '--tag', default='_props', help='tag for output data file, DEFAULT=_props', metavar='_props')
 
 opts, args = parser.parse_args()
 sampfile = str(args[0])
+props = str(opts.props)
+target = props.split(',')[0]
+targetprop = target.split('=')[0]
+targetval = target.split('=')[-1]
+prop = props.split(',')[-1]
 mod = int(opts.mod)
 indir = str(opts.dir)
 outdir = str(opts.outdir)
 tag = str(opts.tag)
+
+macrokeys = {'M': 0,'rhoc': 1,'R': 2,'Lambda': 3,'I': 4,'Mb': 5}
 
 # READ INPUT WEIGHTED SAMPLES FILE
 
 sampdat = np.genfromtxt(indir+'/'+sampfile,delimiter=',',names=True,dtype=None)
 sampcols = list(sampdat.dtype.names)
 
-if not 'branches' in sampcols:
+label = prop+'_'+targetval
 
-	sampcols.append('branches')
+if not label in sampcols:
+
+	sampcols.append(label)
 	eoslist = sampdat['EoS']
 
-# APPEND NUMBER OF BRANCHES COLUMN AND SAVE
+# APPEND PROPERTY AND SAVE
 
 	dat = np.zeros((len(sampdat['EoS']),len(sampcols)))
 	for i in range(len(sampcols)):
 
 		col = sampcols[i]
 	
-		if col == 'branches':	
+		if col == label:	
 	
 			for k in range(len(sampdat['EoS'])):
 	
-				eos = int(eoslist[k])
+				eos = int(eoslist[k])	
 				num = str(eos/mod).zfill(6)
 				num2 = str(eos).zfill(6)
-				path = indir+'/DRAWmod'+str(mod)+'-'+str(num)+'/MACROdraw-'+str(num2)
-				brancheslist = glob.glob(path+"/MACROdraw-*.csv")			
+				path = indir+'/DRAWmod'+str(mod)+'-'+str(num)+'/macro-draw-'+str(num2)+'.csv'
 				
-				numbranches = len(brancheslist)
-
-				dat[k,i] = numbranches
+				macros = macro(path,target)
+				dat[k,i] = macros[macrokeys[prop]]
 	
 		else:	dat[:,i] = sampdat[col]
 

@@ -40,6 +40,10 @@ Code for performing equation of state inference with data from observations of n
 
 * weighsamps gwfile sampfile weightsfile
 
+###### Counting stable NS sequences per EoS
+
+* addbranches dir perdir weightsfile 
+
 ---
 
 ### Remote instructions

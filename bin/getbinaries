@@ -13,7 +13,7 @@ import glob
 import os
 
 parser = OptionParser(usage=__usage__, description=__doc__)
-parser.add_option('-m', '--massrng', default='1.25,1.75,1.00,1.50', help='comma-separated list of m1 and m2 ranges to draw masses from, DEFAULT=1.25,1.75,1.00,1.50', metavar='1.25,1.75,1.00,1.50')
+parser.add_option('-m', '--massrng', default='1.00,1.50,1.25,1.75', help='comma-separated list of m2 and m1 ranges to draw masses from, DEFAULT=1.00,1.50,1.25,1.75', metavar='1.00,1.50,1.25,1.75')
 parser.add_option('-M', '--Mccut', default='0.,1e10', help='chirp mass cut-off range, DEFAULT=None', metavar='1.184,1.188')
 parser.add_option('-d', '--dir', default='./dat/', help='path to directory housing NS properties data, DEFAULT=./dat/', metavar='./dat/')
 parser.add_option('-o', '--outdir', default='./dat/', help='path to output directory, DEFAULT=./dat/', metavar='./dat/')

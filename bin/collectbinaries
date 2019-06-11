@@ -64,8 +64,8 @@ for dirs in dirslist:
 			
 			if j==0:
 			
-				outfile.write(('EoS,branch2,branch1,Mmax,mc_source,q,mtotal_source,m1_source,m2_source,' +','.join(props)+'\n').replace('Lambda','lambda'))
-				dropfile.write(('EoS,branch2,branch1,Mmax,mc_source,q,mtotal_source,m1_source,m2_source,' +','.join(props)+'\n').replace('Lambda','lambda'))
+				outfile.write(('EoS,branch2,branch1,Mmax,mc_source,q,mtotal_source,m1_source,m2_source,lambda_tilde,' +','.join(props)+'\n').replace('Lambda','lambda'))
+				dropfile.write(('EoS,branch2,branch1,Mmax,mc_source,q,mtotal_source,m1_source,m2_source,lambda_tilde,' +','.join(props)+'\n').replace('Lambda','lambda'))
 				
 				j = j+1
 			
@@ -83,6 +83,10 @@ for dirs in dirslist:
 				Mc = (m1*m2)**0.6/(m1+m2)**0.2
 				M = m1+m2
 				
+				L1 = np.asarray(sampdat['Lambda1'])[i]
+				L2 = np.asarray(sampdat['Lambda2'])[i]
+				Ltilde = (16./13.)*((m1+12.*m2)*m1**4*L1+(m2+12.*m1)*m2**4*L2)/M**5
+				
 				proplist = []
 				for prop in props:
 				
@@ -95,7 +99,7 @@ for dirs in dirslist:
 					if branchnums[0] != 'BH' and branchnums[1] != 'BH':
 						
 						if verb == True: print 'Stability ok'
-						outfile.write('{0},{1},{2},{3},{4},{5},{6},{7},{8} \n'.format(eosnum,','.join(branchnums),Mmax,Mc,q,M,m1,m2,','.join(proplist)))
+						outfile.write('{0},{1},{2},{3},{4},{5},{6},{7},{8},{9} \n'.format(eosnum,','.join(branchnums),Mmax,Mc,q,M,m1,m2,Ltilde,','.join(proplist)))
 						
 					else:
 						if verb == True: print 'Unstable'
@@ -104,5 +108,5 @@ for dirs in dirslist:
 				
 					if verb == True: print 'Maximum mass less than '+str(mobs)
 				
-					dropfile.write('{0},{1},{2},{3},{4},{5},{6},{7},{8} \n'.format(eosnum,','.join(branchnums),Mmax,Mc,q,M,m1,m2,','.join(proplist)))
+					dropfile.write('{0},{1},{2},{3},{4},{5},{6},{7},{8},{9} \n'.format(eosnum,','.join(branchnums),Mmax,Mc,q,M,m1,m2,Ltilde,','.join(proplist)))
 
