@@ -1,8 +1,9 @@
 #!/bin/bash
 
-outdir=$1
-perdir=$2
-weightsfile=$3
+dbdir=$1
+outdir=$2
+perdir=$3
+weightsfile=$4
 
 addnumbranches $weightsfile -m $perdir -d $outdir -o $outdir -t "_PROPS"
 
@@ -12,7 +13,7 @@ addprop ${weightsfile::-4}_PROPS.csv -m $perdir -d $outdir -o $outdir -p M=1.4,I
 addprop ${weightsfile::-4}_PROPS.csv -m $perdir -d $outdir -o $outdir -p M=1.4,Mb -t ""
 addprop ${weightsfile::-4}_PROPS.csv -m $perdir -d $outdir -o $outdir -p M=1.338,I -t ""
 
-addcentral ${weightsfile::-4}_PROPS.csv -m $perdir -d $outdir -o $outdir -p pc1 -t ""
-addcentral ${weightsfile::-4}_PROPS.csv -m $perdir -d $outdir -o $outdir -p pc2 -t ""
-addcentral ${weightsfile::-4}_PROPS.csv -m $perdir -d $outdir -o $outdir -p ec1 -t ""
-addcentral ${weightsfile::-4}_PROPS.csv -m $perdir -d $outdir -o $outdir -p ec2 -t ""
+addcentral ${weightsfile::-4}_PROPS.csv -m $perdir -d $dbdir -i $outdir -o $outdir -p pc1 -t ""
+addcentral ${weightsfile::-4}_PROPS.csv -m $perdir -d $dbdir -i $outdir -o $outdir -p pc2 -t ""
+addcentral ${weightsfile::-4}_PROPS.csv -m $perdir -d $dbdir -i $outdir -o $outdir -p ec1 -t ""
+addcentral ${weightsfile::-4}_PROPS.csv -m $perdir -d $dbdir -i $outdir -o $outdir -p ec2 -t ""

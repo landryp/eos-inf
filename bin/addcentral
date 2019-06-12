@@ -13,7 +13,8 @@ from nsstruc.macro import macro
 parser = OptionParser(usage=__usage__, description=__doc__)
 parser.add_option('-p', '--props', default='pc1', help='central values to append, DEFAULT="pc1"', metavar='CENTRAL_VAL')
 parser.add_option('-m', '--mod', default=1000, help='number of draws per subfolder, DEFAULT=1000', metavar='MOD')
-parser.add_option('-d', '--dir', default='./dat/', help='path to directory housing properties files, DEFAULT=./dat/', metavar='./dat/')
+parser.add_option('-d', '--dir', default='./dat/', help='path to directory housing EoS files, DEFAULT=./dat/', metavar='./dat/')
+parser.add_option('-i', '--indir', default='./dat/', help='path to directory housing properties files, DEFAULT=./dat/', metavar='./dat/')
 parser.add_option('-o', '--outdir', default='./dat/', help='output path for new samples file, DEFAULT=./dat/', metavar='./dat/')
 parser.add_option('-t', '--tag', default='_central', help='tag for output data file, DEFAULT=_central', metavar='_central')
 
@@ -23,7 +24,8 @@ prop = str(opts.props)
 var = prop.split('c')[0]
 star = prop.split('c')[-1]
 mod = int(opts.mod)
-indir = str(opts.dir)
+dbdir = str(opts.dir)
+indir = str(opts.indir)
 outdir = str(opts.outdir)
 tag = str(opts.tag)
 
@@ -58,7 +60,7 @@ if not label in sampcols:
 					
 				num = str(eos/mod).zfill(6)
 				num2 = str(eos).zfill(6)
-				path = indir+'/DRAWmod'+str(mod)+'-'+str(num)+'/eos-draw-'+str(num2)+'.csv'
+				path = dbdir+'/DRAWmod'+str(mod)+'-'+str(num)+'/eos-draw-'+str(num2)+'.csv'
 				eosdat = np.genfromtxt(path,delimiter=',',names=True,dtype=None)
 				rhodat = eosdat['baryon_density']
 				vardat = eosdat[varkeys[var]]
