@@ -38,6 +38,8 @@ outfile = open(outdir+'/'+sampfile.split('.')[0]+tag+'.csv',"w")
 	
 # CHECK FOR FAILS
 	
+outfile.write(line[0])
+	
 for i in range(len(R1list)):
 
 	if R1list[i] == rfail and R2list[i] == rfail:	continue
