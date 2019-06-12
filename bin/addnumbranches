@@ -11,13 +11,15 @@ import glob
 parser = OptionParser(usage=__usage__, description=__doc__)
 parser.add_option('-m', '--mod', default=1000, help='number of draws per subfolder, DEFAULT=1000', metavar='MOD')
 parser.add_option('-d', '--dir', default='./dat/', help='path to directory housing properties files, DEFAULT=./dat/', metavar='./dat/')
+parser.add_option('-i', '--indir', default='./dat/', help='path to directory housing samples file, DEFAULT=./dat/', metavar='./dat/')
 parser.add_option('-o', '--outdir', default='./dat/', help='output path for new samples file, DEFAULT=./dat/', metavar='./dat/')
 parser.add_option('-t', '--tag', default='_branches', help='tag for output data file, DEFAULT=_branches', metavar='_branches')
 
 opts, args = parser.parse_args()
 sampfile = str(args[0])
 mod = int(opts.mod)
-indir = str(opts.dir)
+dbdir = str(opts.dir)
+indir = str(opts.indir)
 outdir = str(opts.outdir)
 tag = str(opts.tag)
 
@@ -45,7 +47,7 @@ if not 'branches' in sampcols:
 				eos = int(eoslist[k])
 				num = str(eos/mod).zfill(6)
 				num2 = str(eos).zfill(6)
-				path = indir+'/DRAWmod'+str(mod)+'-'+str(num)+'/MACROdraw-'+str(num2)
+				path = dbdir+'/DRAWmod'+str(mod)+'-'+str(num)+'/MACROdraw-'+str(num2)
 				brancheslist = glob.glob(path+"/MACROdraw-*.csv")			
 				
 				numbranches = len(brancheslist)

@@ -5,13 +5,13 @@ outdir=$2
 perdir=$3
 weightsfile=$4
 
-addnumbranches $weightsfile -m $perdir -d $outdir -o $outdir -t "_PROPS"
+addnumbranches $weightsfile -m $perdir -d $dbdir -i $outdir -o $outdir -t "_PROPS"
 
-addprop ${weightsfile::-4}_PROPS.csv -m $perdir -d $outdir -o $outdir -p M=1.4,R -t ""
-addprop ${weightsfile::-4}_PROPS.csv -m $perdir -d $outdir -o $outdir -p M=1.4,Lambda -t ""
-addprop ${weightsfile::-4}_PROPS.csv -m $perdir -d $outdir -o $outdir -p M=1.4,I -t ""
-addprop ${weightsfile::-4}_PROPS.csv -m $perdir -d $outdir -o $outdir -p M=1.4,Mb -t ""
-addprop ${weightsfile::-4}_PROPS.csv -m $perdir -d $outdir -o $outdir -p M=1.338,I -t ""
+addprop ${weightsfile::-4}_PROPS.csv -m $perdir -d $dbdir -i $outdir -o $outdir -p M=1.4,R -t ""
+addprop ${weightsfile::-4}_PROPS.csv -m $perdir -d $dbdir -i $outdir -o $outdir -p M=1.4,Lambda -t ""
+addprop ${weightsfile::-4}_PROPS.csv -m $perdir -d $dbdir -i $outdir -o $outdir -p M=1.4,I -t ""
+addprop ${weightsfile::-4}_PROPS.csv -m $perdir -d $dbdir -i $outdir -o $outdir -p M=1.4,Mb -t ""
+addprop ${weightsfile::-4}_PROPS.csv -m $perdir -d $dbdir -i $outdir -o $outdir -p M=1.338,I -t ""
 
 addcentral ${weightsfile::-4}_PROPS.csv -m $perdir -d $dbdir -i $outdir -o $outdir -p pc1 -t ""
 addcentral ${weightsfile::-4}_PROPS.csv -m $perdir -d $dbdir -i $outdir -o $outdir -p pc2 -t ""

@@ -14,7 +14,7 @@ parser = OptionParser(usage=__usage__, description=__doc__)
 parser.add_option('-p', '--props', default='pc1', help='central values to append, DEFAULT="pc1"', metavar='CENTRAL_VAL')
 parser.add_option('-m', '--mod', default=1000, help='number of draws per subfolder, DEFAULT=1000', metavar='MOD')
 parser.add_option('-d', '--dir', default='./dat/', help='path to directory housing EoS files, DEFAULT=./dat/', metavar='./dat/')
-parser.add_option('-i', '--indir', default='./dat/', help='path to directory housing properties files, DEFAULT=./dat/', metavar='./dat/')
+parser.add_option('-i', '--indir', default='./dat/', help='path to directory housing samples file, DEFAULT=./dat/', metavar='./dat/')
 parser.add_option('-o', '--outdir', default='./dat/', help='output path for new samples file, DEFAULT=./dat/', metavar='./dat/')
 parser.add_option('-t', '--tag', default='_central', help='tag for output data file, DEFAULT=_central', metavar='_central')
 
