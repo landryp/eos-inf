@@ -16,3 +16,5 @@ addcentral ${weightsfile::-4}_PROPS.csv -m $perdir -d $outdir -o $outdir -p pc1 
 addcentral ${weightsfile::-4}_PROPS.csv -m $perdir -d $outdir -o $outdir -p pc2 -t ""
 addcentral ${weightsfile::-4}_PROPS.csv -m $perdir -d $outdir -o $outdir -p ec1 -t ""
 addcentral ${weightsfile::-4}_PROPS.csv -m $perdir -d $outdir -o $outdir -p ec2 -t ""
+
+removefails ${weightsfile::-4}_PROPS.csv -d $outdir -o $outdir -r 30.0 -t ""

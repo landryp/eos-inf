@@ -7,7 +7,7 @@ gpfile=$4
 outdir=$5
 crustdir=$6
 
-crusts=( 'sly' 'hqc18' 'eng' 'sly230a' )
+crusts=( 'sly' 'hqc18' 'eng' )
 
 draw-gpr $gpfile -v -s $jobi -n $numjobs -N $perdir -o $outdir
 
