@@ -79,6 +79,9 @@ mkdir -p ${outdir}/log
 if test ! -f "$dbdir/CRUSTS.dat"; then
 
 	echo "### EOS prior process with $numjobs draws from prior $gpfile, reading from $indir and printing to $dbdir ###" > $dagfile1
+	
+	echo '### record crusts affixed to Gaussian process EoSs ###' > $dbdir/CRUSTS.dat
+	echo 'EoS, crust' > $dbdir/CRUSTS.dat
 
 	for job in $(seq $jobi $(($jobi+$numjobs-1)))
 	do

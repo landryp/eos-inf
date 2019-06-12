@@ -19,6 +19,9 @@ weightsfile=$outdir/SAMPweights.csv
 
 if test ! -f "$dbdir/CRUSTS.dat"; then
 
+	echo '### record crusts affixed to Gaussian process EoSs ###' > $dbdir/CRUSTS.dat
+	echo 'EoS, crust' > $dbdir/CRUSTS.dat
+
 	draweos $jobi $numjobs $perdir $gpfile $dbdir $crustdir
 
 	getprops $jobi $numjobs $perdir $dbdir

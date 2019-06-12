@@ -8,8 +8,6 @@ outdir=$5
 crustdir=$6
 
 crusts=( 'sly' 'hqc18' 'eng' 'sly230a' )
-echo '### record crusts affixed to Gaussian process EoSs ###' > $outdir/CRUSTS.dat
-echo 'EoS, crust' > $outdir/CRUSTS.dat
 
 draw-gpr $gpfile -v -s $jobi -n $numjobs -N $perdir -o $outdir
 
