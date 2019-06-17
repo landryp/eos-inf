@@ -30,7 +30,7 @@ fi
 
 getbinaries $mpereos -v -m $mrng -M $Mcrng -d $dbdir/ -o $outdir/
 
-collectbinaries -v -M $Mobs -d $outdir/ -o $outdir/
+collectbinaries -v -M $Mobs -d $dbdir/ -i $outdir/ -o $outdir/ -p M=1.4,R+M=1.4,Lambda+M=1.4,I+M=1.4,Mb+M=1.338,I -c pc1,pc2,ec1,ec2
 
 weighsamps $gwfile $sampfile $weightsfile
 

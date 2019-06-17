@@ -1,27 +1,64 @@
 #!/usr/bin/python
 __doc__ = 'COLLECTBINARIES -- collect binary neutron star data that satisfies specified constraints'
-__usage__ = 'collectbinaries [-v] [-M 1.93] [-d ./dat/] [-o ./dat/]'
+__usage__ = 'collectbinaries [-v] [-M 1.93] [-p M=1.4,R+M=1.4,Lambda] [-d ./dat/] [-o ./dat/]'
 __author__ = 'philippe.landry@ligo.org'
 __date__ = '04-2019'
 
 import numpy as np
 from optparse import OptionParser
+from scipy.interpolate import interp1d
 import os
 import glob
+from nsstruc.macro import macro
 
 parser = OptionParser(usage=__usage__, description=__doc__)
 parser.add_option('-M', '--mmaxobs', default='1.93', help='observational lower bound on the NS maximum mass to use, DEFAULT=1.93', metavar='1.93')
-parser.add_option('-d', '--dir', default='./dat/', help='path to directory housing NS properties data, DEFAULT=./dat/', metavar='./dat/')
+parser.add_option('-p', '--props', default='M=1.4,R+M=1.4,Lambda', help='additional properties to append, DEFAULT="M=1.4,R+M=1.4,Lambda"', metavar='TARGET_PROP1=TARGET1,PROP1+TARGET_PROP2=TARGET2,PROP2')
+parser.add_option('-c', '--centralval', default='pc1,pc2', help='central values to append, DEFAULT="pc1,pc2"', metavar='CENTRAL_VAL')
+parser.add_option('-d', '--dir', default='./dat/', help='path to directory housing EoS files, DEFAULT=./dat/', metavar='./dat/')
+parser.add_option('-i', '--indir', default='./dat/', help='path to directory housing NS properties data, DEFAULT=./dat/', metavar='./dat/')
 parser.add_option('-o', '--outdir', default='./dat/', help='path to output directory, DEFAULT=./dat/', metavar='./dat/')
 parser.add_option('-t', '--tag', default='SAMP', help='tag for output data file, DEFAULT=SAMP', metavar='SAMP')
 parser.add_option('-v', '--verbose', action='store_true', default=False, help='toggle verbose output, DEFAULT=False', metavar='False')
 
 opts, args = parser.parse_args()
 mobs = float(opts.mmaxobs)
-indir = str(opts.dir)
+dbdir = str(opts.dir)
+indir = str(opts.indir)
 outdir = str(opts.outdir)
 tag = str(opts.tag)
 verb = opts.verbose
+
+moreprops = str(opts.props)
+moreprops = moreprops.split('+')
+targetslist = []
+targetpropslist = []
+targetvalslist = []
+morepropslist = []
+morepropsnames = []
+for morepropi in moreprops:
+	target = morepropi.split(',')[0]
+	targetprop = target.split('=')[0]
+	targetval = target.split('=')[-1]
+	moreprop = morepropi.split(',')[-1]
+	targetslist.append(target)
+	targetpropslist.append(targetprop)
+	targetvalslist.append(targetval)
+	morepropslist.append(moreprop)
+	morepropsnames.append(str(moreprop)+'_'+str(targetval))
+cval = str(opts.centralval)
+cval = cval.split(',')
+cvarlist = []
+cstarlist = []
+cvalnames = []
+for cvali in cval:
+	cvar = cvali.split('c')[0]
+	cstar = cvali.split('c')[-1]
+	cvarlist.append(cvar)
+	cstarlist.append(cstar)
+	
+macrokeys = {'M': 0,'rhoc': 1,'R': 2,'Lambda': 3,'I': 4,'Mb': 5}
+cvarkeys = {'p': 'pressurec2','e': 'energy_densityc2'}
 
 outfile = open(outdir+"SAMP.csv","w")
 dropfile = open(outdir+"DROP.csv","w")
@@ -33,6 +70,7 @@ failfile.write('EoS \n')
 
 j=0
 dirslist = glob.glob(outdir+"DRAW*")
+mod = int((dirslist[0].split('DRAWmod')[-1]).split('-')[0])
 for dirs in dirslist:
 
 	eoslist = glob.glob(dirs+"/MACRO*")
@@ -64,11 +102,11 @@ for dirs in dirslist:
 			
 			if j==0:
 			
-				outfile.write(('EoS,branch2,branch1,Mmax,mc_source,q,mtotal_source,m1_source,m2_source,lambda_tilde,' +','.join(props)+'\n').replace('Lambda','lambda'))
-				dropfile.write(('EoS,branch2,branch1,Mmax,mc_source,q,mtotal_source,m1_source,m2_source,lambda_tilde,' +','.join(props)+'\n').replace('Lambda','lambda'))
+				outfile.write(('EoS,branch2,branch1,branches,Mmax,mc_source,q,mtotal_source,m1_source,m2_source,lambda_tilde,' +','.join(props)+','+','.join(morepropsnames)+','+','.join(cval)+'\n').replace('Lambda','lambda'))
+				dropfile.write(('EoS,branch2,branch1,branches,Mmax,mc_source,q,mtotal_source,m1_source,m2_source,lambda_tilde,' +','.join(props)+','+','.join(morepropsnames)+','+','.join(cval)+'\n').replace('Lambda','lambda'))
 				
 				j = j+1
-			
+				
 			for i in range(len(sampdat['EoS'])):
 			
 				if verb == True: print 'Checking properties for binary '+str(i)
@@ -87,6 +125,35 @@ for dirs in dirslist:
 				L2 = np.asarray(sampdat['Lambda2'])[i]
 				Ltilde = (16./13.)*((m1+12.*m2)*m1**4*L1+(m2+12.*m1)*m2**4*L2)/M**5
 				
+				num = str(int(eosnum)/mod).zfill(6)
+				num2 = str(int(eosnum)).zfill(6)
+				path = indir+'/DRAWmod'+str(mod)+'-'+str(num)+'/macro-draw-'+str(num2)+'.csv'
+				
+				moredat = []
+				for ii in range(len(targetslist)):
+				
+					macros = macro(path,targetslist[ii])
+					moredat.append(str(macros[macrokeys[morepropslist[ii]]]))
+				
+				path2 = indir+'/DRAWmod'+str(mod)+'-'+str(num)+'/MACROdraw-'+str(num2)
+				brancheslist = glob.glob(path2+"/MACROdraw-*.csv")			
+				numbranches = len(brancheslist)
+			
+				cvaldat = []
+				for jj in range(len(cvarlist)):
+				
+					rhoc = float(sampdat['rhoc'+cstarlist[jj]])
+					path3 = dbdir+'/DRAWmod'+str(mod)+'-'+str(num)+'/eos-draw-'+str(num2)+'.csv'
+					eosdat = np.genfromtxt(path3,delimiter=',',names=True,dtype=None)
+					rhodat = eosdat['baryon_density']
+					vardat = eosdat[cvarkeys[cvar]]
+				
+					eosfunc = interp1d(rhodat,vardat,kind='linear',bounds_error=False,fill_value=0)
+				
+					val = eosfunc(rhoc)
+				
+					cvaldat.append(str(val))
+					
 				proplist = []
 				for prop in props:
 				
@@ -99,7 +166,7 @@ for dirs in dirslist:
 					if branchnums[0] != 'BH' and branchnums[1] != 'BH':
 						
 						if verb == True: print 'Stability ok'
-						outfile.write('{0},{1},{2},{3},{4},{5},{6},{7},{8},{9} \n'.format(eosnum,','.join(branchnums),Mmax,Mc,q,M,m1,m2,Ltilde,','.join(proplist)))
+						outfile.write('{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12} \n'.format(eosnum,','.join(branchnums),numbranches,Mmax,Mc,q,M,m1,m2,Ltilde,','.join(proplist),','.join(moredat),','.join(cvaldat)))
 						
 					else:
 						if verb == True: print 'Unstable'
@@ -107,6 +174,6 @@ for dirs in dirslist:
 				else:
 				
 					if verb == True: print 'Maximum mass less than '+str(mobs)
-				
-					dropfile.write('{0},{1},{2},{3},{4},{5},{6},{7},{8},{9} \n'.format(eosnum,','.join(branchnums),Mmax,Mc,q,M,m1,m2,Ltilde,','.join(proplist)))
+
+					dropfile.write('{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12} \n'.format(eosnum,','.join(branchnums),numbranches,Mmax,Mc,q,M,m1,m2,Ltilde,','.join(proplist),','.join(moredat),','.join(cvaldat)))
 
