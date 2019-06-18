@@ -127,7 +127,7 @@ for dirs in dirslist:
 				
 				num = str(int(eosnum)/mod).zfill(6)
 				num2 = str(int(eosnum)).zfill(6)
-				path = indir+'/DRAWmod'+str(mod)+'-'+str(num)+'/macro-draw-'+str(num2)+'.csv'
+				path = dbdir+'/DRAWmod'+str(mod)+'-'+str(num)+'/macro-draw-'+str(num2)+'.csv'
 				
 				moredat = []
 				for ii in range(len(targetslist)):
@@ -135,14 +135,14 @@ for dirs in dirslist:
 					macros = macro(path,targetslist[ii])
 					moredat.append(str(macros[macrokeys[morepropslist[ii]]]))
 				
-				path2 = indir+'/DRAWmod'+str(mod)+'-'+str(num)+'/MACROdraw-'+str(num2)
+				path2 = dbdir+'/DRAWmod'+str(mod)+'-'+str(num)+'/MACROdraw-'+str(num2)
 				brancheslist = glob.glob(path2+"/MACROdraw-*.csv")			
 				numbranches = len(brancheslist)
 			
 				cvaldat = []
 				for jj in range(len(cvarlist)):
 				
-					rhoc = float(sampdat['rhoc'+cstarlist[jj]])
+					rhoc = float(sampdat['rhoc'+cstarlist[jj]][i])
 					path3 = dbdir+'/DRAWmod'+str(mod)+'-'+str(num)+'/eos-draw-'+str(num2)+'.csv'
 					eosdat = np.genfromtxt(path3,delimiter=',',names=True,dtype=None)
 					rhodat = eosdat['baryon_density']
