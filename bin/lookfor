@@ -1,0 +1,48 @@
+#!/usr/bin/python
+__doc__ = 'LOOKFOR -- keep EoSs with specified properties from samples csv file'
+__usage__ = 'lookfor SAMP.csv [-d ./dat/] [-o ./dat/] [-p I_1.338] [-l 0.91,1.49]'
+__author__ = 'philippe.landry@ligo.org'
+__date__ = '06-2019'
+
+import numpy as np
+from optparse import OptionParser
+import glob
+from nsstruc.macro import macro
+
+parser = OptionParser(usage=__usage__, description=__doc__)
+parser.add_option('-p', '--prop', default='I_1.338', help='value to look for', metavar='PROP_NAME')
+parser.add_option('-l', '--lookupval', default='0.91,1.49', help='range of value to accept', metavar='MINVAL,MAXVAL')
+parser.add_option('-d', '--dir', default='./dat/', help='path to directory housing properties files, DEFAULT=./dat/', metavar='./dat/')
+parser.add_option('-o', '--outdir', default='./dat/', help='output path for new samples file, DEFAULT=./dat/', metavar='./dat/')
+parser.add_option('-t', '--tag', default='_lookfor', help='tag for output data file, DEFAULT=_lookfor', metavar='_TAG')
+
+opts, args = parser.parse_args()
+sampfile = str(args[0])
+prop = str(opts.prop)
+lval = str(opts.lookupval).split(',')
+lval = [float(val) for val in lval]
+indir = str(opts.dir)
+outdir = str(opts.outdir)
+tag = str(opts.tag)
+
+# READ INPUT SAMPLES FILE
+
+samppath = indir+'/'+sampfile
+sampdat = np.genfromtxt(samppath,delimiter=',',names=True,dtype=None)
+
+proplist = sampdat[prop]
+
+with open(samppath) as infile:
+
+	line = infile.readlines()
+
+outfile = open(outdir+'/'+sampfile.split('.')[0]+tag+'.csv',"w")
+	
+# CHECK FOR FAILS
+	
+outfile.write(line[0])
+	
+for i in range(len(proplist)):
+
+	if proplist[i] >= lval[0] and proplist[i] <= lval[1]:	outfile.write(line[i+1])
+
