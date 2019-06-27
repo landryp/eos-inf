@@ -1,6 +1,6 @@
 #!/usr/bin/python
 __doc__ = 'LOOKFOR -- keep EoSs with specified properties from samples csv file'
-__usage__ = 'lookfor SAMP.csv [-d ./dat/] [-o ./dat/] [-p I_1.338] [-l 0.91,1.49]'
+__usage__ = 'lookfor SAMP.csv [-d ./dat/] [-o ./dat/] [-p I_1338] [-l 0.91,1.49]'
 __author__ = 'philippe.landry@ligo.org'
 __date__ = '06-2019'
 
@@ -10,7 +10,7 @@ import glob
 from nsstruc.macro import macro
 
 parser = OptionParser(usage=__usage__, description=__doc__)
-parser.add_option('-p', '--prop', default='I_1.338', help='value to look for', metavar='PROP_NAME')
+parser.add_option('-p', '--prop', default='I_1338', help='value to look for', metavar='PROP_NAME')
 parser.add_option('-l', '--lookupval', default='0.91,1.49', help='range of value to accept', metavar='MINVAL,MAXVAL')
 parser.add_option('-d', '--dir', default='./dat/', help='path to directory housing properties files, DEFAULT=./dat/', metavar='./dat/')
 parser.add_option('-o', '--outdir', default='./dat/', help='output path for new samples file, DEFAULT=./dat/', metavar='./dat/')
