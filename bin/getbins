@@ -1,9 +1,0 @@
-#!/bin/bash
-
-mpereos=$1
-dbdir=$2
-outdir=$3
-mrng=$4 #1.06,1.46,1.24,1.72
-Mcrng=$5 #1.184,1.188
-
-getbinaries $mpereos -m $mrng -M $Mcrng -d $dbdir/ -o $outdir/

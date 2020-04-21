@@ -1,7 +1,0 @@
-#!/bin/bash
-
-gwfile=$1
-sampfile=$2
-weightsfile=$3
-
-weigh-samples $gwfile $sampfile $weightsfile lambda1 lambda2 m1_source m2_source -v
