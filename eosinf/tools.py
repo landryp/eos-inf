@@ -39,27 +39,21 @@ def geteosbanksize(eosdir,mod=1e3,subdirname='DRAWmod',tablename='eos-draw',deli
 
 	return eosbanksize
 
-def geteospaths(eosdir,eosbanksize,mod=1e3,subdirname='DRAWmod',tablename='eos-draw',delim='-',ext='csv'):
+def geteospath(idn,eosdir,eosbanksize,mod=1e3,subdirname='DRAWmod',tablename='eos-draw',delim='-',ext='csv'):
 
-	eosbanksize = int(eosbanksize)
+	eospath = eosdir+'/'+nameeossubdir(idn,mod,subdirname,delim)+'/'+nameeostable(idn,tablename,delim,ext)
 
-	eospaths = [eosdir+'/'+nameeossubdir(idn,mod,subdirname,delim)+'/'+nameeostable(idn,tablename,delim,ext) for idn in range(eosbanksize)]
+	return eospath
 
-	return eospaths
+def getgprpath(idn,eosdir,eosbanksize,mod=1e3,subdirname='DRAWmod',tablename='draw-gpr',delim='-',ext='csv'):
 
-def getgprpaths(eosdir,eosbanksize,mod=1e3,subdirname='DRAWmod',tablename='draw-gpr',delim='-',ext='csv'):
+	gprpath = eosdir+'/'+nameeossubdir(idn,mod,subdirname,delim)+'/'+nameeostable(idn,tablename,delim,ext)
 
-	eosbanksize = int(eosbanksize)
+	return gprpath
 
-	gprpaths = [eosdir+'/'+nameeossubdir(idn,mod,subdirname,delim)+'/'+nameeostable(idn,tablename,delim,ext) for idn in range(eosbanksize)]
+def getmacropath(idn,eosdir,eosbanksize,mod=1e3,subdirname='DRAWmod',macrodirname='MACROdraw',delim='-',ext='csv'):
 
-	return gprpaths
-
-def getmacropaths(eosdir,eosbanksize,mod=1e3,subdirname='DRAWmod',macrodirname='MACROdraw',delim='-',ext='csv'):
-
-	eosbanksize = int(eosbanksize)
-
-	macropaths = [glob.glob(eosdir+'/'+nameeossubdir(idn,mod,subdirname,delim)+'/'+namemacrodir(idn,macrodirname,delim)+'/'+macrodirname+delim+str(idn).zfill(6)+'-*.'+ext) for idn in range(eosbanksize)]
+	macropaths = glob.glob(eosdir+'/'+nameeossubdir(idn,mod,subdirname,delim)+'/'+namemacrodir(idn,macrodirname,delim)+'/'+macrodirname+delim+str(idn).zfill(6)+'-*.'+ext)
 
 	return macropaths
 

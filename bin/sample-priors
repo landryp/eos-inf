@@ -41,11 +41,6 @@ if verb: print "parsing eos bank metadata..."
 eosdir,mod,subdirname,tablename,macrodirname,delim,ext,eosbanksize,comps,failr = np.genfromtxt(eosdatfile,dtype=None) # read eos bank metadata
 eosbanksize = int(eosbanksize)
 
-if verb: print "mapping paths to eos and ns tables..."
-
-eospaths = tools.geteospaths(eosdir,eosbanksize,mod,subdirname,tablename,delim,ext)
-	macropaths = tools.getmacropaths(eosdir,eosbanksize,mod,subdirname,macrodirname,delim,ext) # retrieve eos tables and NS properties
-
 if verb: print "classifying eos bank by composition..."
 
 if comps == 'None': compidns = []
@@ -59,13 +54,16 @@ failr = float(failr) # record fail code for radius integrations
 # SAMPLE FROM EOS AND MASS PRIORS
 # parallelize?
 
-if verb: print "drawing eos and mass samples from priors..."
+if verb: print "mapping paths to eos and ns tables..."
 
 idns_list, numeos_list, eosfails_list, macros_list, mbranches_list = [], [], [], [], []
 prevcomp = 0
 for comp in compidns:
 	idrange = np.arange(prevcomp,comp)
 	idns = np.random.choice(idrange,size=compsize,replace=False)
+
+	eospaths = [tools.geteospath(idn,eosdir,eosbanksize,mod,subdirname,tablename,delim,ext) for idn in idns]
+	macropaths = [tools.getmacropath(idn,eosdir,eosbanksize,mod,subdirname,macrodirname,delim,ext) for idn in idns] # retrieve eos tables and NS properties
 
 	macros = [macropaths[idn] for idn in idns]
 	mseqs = [tools.getmassseq(macro) for macro in macros]
@@ -102,6 +100,8 @@ for i in range(numcomps):
 macrorels = [tools.getrels(macro) for macro in macros]
 bhrels = tools.getbhrels(macros[0][0])
 propnames = tools.getpropnames(macros[0][0])
+
+if verb: print "drawing eos and mass samples from priors..."
 
 msamps = []
 for i in range(numeos):
