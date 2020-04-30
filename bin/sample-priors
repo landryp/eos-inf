@@ -1,0 +1,119 @@
+#!/usr/bin/python
+__doc__ = 'SAMPLE-PRIORS -- sample from mass and EOS priors'
+__usage__ = 'sample-priors path/to/eosmetadata.in path/to/output.json [...]'
+__author__ = 'pgjlandry@gmail.com'
+__date__ = '04-2020'
+
+from optparse import OptionParser
+import numpy as np
+import numpy.random
+import json
+import eosinf.tools as tools
+import eosinf.priors as priors
+
+parser = OptionParser(usage=__usage__, description=__doc__)
+parser.add_option('-n', '--numeos', default=1e3, help='number of EOS samples, DEFAULT=1e3', metavar='NUM_EOS_SAMPLES')
+parser.add_option('-N', '--nummass', default=1e2, help='number of mass samples per EOS, DEFAULT=1e2', metavar='NUM_MASS_SAMPLES')
+parser.add_option('-m', '--mrange', default='0.,4.', help='bounds on mass prior, DEFAULT="0.,4."', metavar='LB,UB')
+parser.add_option('-p', '--mprior', default='flat', help='mass prior distribution, DEFAULT="flat"', metavar='PRIOR_KEY')
+parser.add_option('-M', '--mseq', default='0.8,0.8', help='require EOS to support stable NSs over this mass range, DEFAULT="0.8,0.8"', metavar='MINM,MAXM')
+parser.add_option('-r', '--randseed', default=2020, help='random seed to use, DEFAULT=2020', metavar='RAND_SEED')
+parser.add_option('-o', '--outprec', default=8, help='how many digits of precision to output, DEFAULT=8', metavar='PREC')
+parser.add_option('-v', '--verbose', action='store_true', default=False, help='toggle verbose output, DEFAULT=False', metavar='False')
+# add chirp mass/q cut?
+
+opts, args = parser.parse_args()
+eosdatfile = str(args[0])
+outfile = str(args[1])
+numeos = int(opts.numeos)
+nummass = int(opts.nummass)
+mprior = str(opts.mprior)
+mrange = [float(m) for m in str(opts.mrange).split(',')]
+mseqrng = [float(m) for m in str(opts.mseq).split(',')]
+outprec = "{"+":.{0}E".format(int(opts.outprec)-1)+"}"
+verb = opts.verbose # add some verbose output
+np.random.seed(int(opts.randseed))
+
+# PARSE EOS BANK METADATA
+
+eosdir,mod,subdirname,tablename,macrodirname,delim,ext,comps,failr = np.genfromtxt(eosdatfile,dtype=None) # read eos bank metadata
+eosbanksize = tools.geteosbanksize(eosdir) # calculate size of eos bank
+eospaths = tools.geteospaths(eosdir,eosbanksize,mod,subdirname,tablename,delim,ext)
+macropaths = tools.getmacropaths(eosdir,eosbanksize,mod,subdirname,macrodirname,delim,ext) # retrieve eos tables and NS properties
+
+if comps == 'None': compidns = []
+else: compidns = [int(idn) for idn in str(comps).split(',')] 
+compidns.append(eosbanksize) # separate eos by composition
+numcomps = len(compidns)
+compsize = numeos/numcomps
+
+failr = float(failr) # record fail code for radius integrations
+
+# SAMPLE FROM EOS AND MASS PRIORS
+# parallelize?
+idns_list, numeos_list, eosfails_list, macros_list, mbranches_list = [], [], [], [], []
+prevcomp = 0
+for comp in compidns:
+	idrange = np.arange(prevcomp,comp)
+	idns = np.random.choice(idrange,size=compsize,replace=False)
+
+	macros = [macropaths[idn] for idn in idns]
+	mseqs = [tools.getmassseq(macro) for macro in macros]
+	mbranches = [tools.getmassbranch(macro) for macro in macros]
+	mtests = [tools.testmassseq(mseq,mseqrng) for mseq in mseqs]
+	rtests = [tools.testr(mbranches[i],macros[i]) for i in range(compsize)]
+	tests = [0 if mtests[i] == 0 or rtests[i] == 0 else 1 for i in range(compsize)]
+	idns, macros, mseqs, eosfails = tools.removeosfails(idns,macros,mseqs,tests)
+	numeostmp = len(idns)
+
+	idns_list.append(idns)
+	numeos_list.append(numeostmp)
+	eosfails_list.append(eosfails)
+	macros_list.append(macros)
+	mbranches_list.append(mbranches)
+	prevcomp = comp
+
+numeos = np.min(numeos_list)
+idns = []
+eosfails = []
+eosspares = []
+macros = []
+mbranches = []
+for i in range(numcomps):
+	idns.extend(idns_list[i][:numeos])
+	macros.extend(macros_list[i][:numeos])
+	mbranches.extend(mbranches_list[i][:numeos])
+
+	spare_idns = idns_list[i][numeos:]
+	fail_idns = eosfails_list[i]
+	if len(fail_idns) > 0: eosfails.extend(fail_idns)
+	if len(spare_idns) > 0: eosspares.extend(spare_idns)
+
+macrorels = [tools.getrels(macro) for macro in macros]
+bhrels = tools.getbhrels(macros[0][0])
+propnames = tools.getpropnames(macros[0][0])
+
+msamps = []
+for i in range(numeos):
+	msamps_tmp = priors.samplemassprior(nummass,mprior,mrange)
+	msamps.append(msamps_tmp)
+	macroprops = [[tools.getmacroprops(macrorels[i],mbranches[i],bhrels,M) for M in msamps_tmp] for i in range(numeos)] # add other props, canon
+
+# FORMAT AS JSON FILE
+
+jdata = {}
+jdata["mass"] = {}
+jdata["eos"] = {}
+jdata["eos"]["live"] = {}
+jdata["eos"]["properties"] = propnames
+jdata["eos"]["unstable"] = eosfails
+jdata["eos"]["unused"] = eosspares
+for i in range(numeos):
+	props_str = [[outprec.format(float(prop)) for prop in samp] for samp in macroprops[i]]
+	jdata["eos"]["live"][idns[i]] = []
+	jdata["eos"]["live"][idns[i]].extend(props_str)
+	jdata["mass"][idns[i]] = [outprec.format(float(samp)) for samp in msamps[i]]
+
+with open(outfile, 'w') as outpath:
+    json.dump(jdata, outpath)
+

@@ -2,7 +2,7 @@
 
 Code for inference of the neutron-star equation of state from a collection of astronomical observations of neutron stars.
 
-DEPENDENCIES: [ns-struc](https://github.com/landryp/ns-struc)
+DEPENDENCIES: [universality](https://github.com/reedessick/universality), [ns-struc](https://github.com/landryp/ns-struc)
 
 This codebase assumes the existence of EOS prior samples in the form of tabulated pressure,energy-density,baryon-density data.
 
