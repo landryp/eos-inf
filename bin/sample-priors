@@ -36,10 +36,17 @@ np.random.seed(int(opts.randseed))
 
 # PARSE EOS BANK METADATA
 
-eosdir,mod,subdirname,tablename,macrodirname,delim,ext,comps,failr = np.genfromtxt(eosdatfile,dtype=None) # read eos bank metadata
-eosbanksize = tools.geteosbanksize(eosdir) # calculate size of eos bank
+if verb: print "parsing eos bank metadata..."
+
+eosdir,mod,subdirname,tablename,macrodirname,delim,ext,eosbanksize,comps,failr = np.genfromtxt(eosdatfile,dtype=None) # read eos bank metadata
+eosbanksize = int(eosbanksize)
+
+if verb: print "mapping paths to eos and ns tables..."
+
 eospaths = tools.geteospaths(eosdir,eosbanksize,mod,subdirname,tablename,delim,ext)
-macropaths = tools.getmacropaths(eosdir,eosbanksize,mod,subdirname,macrodirname,delim,ext) # retrieve eos tables and NS properties
+	macropaths = tools.getmacropaths(eosdir,eosbanksize,mod,subdirname,macrodirname,delim,ext) # retrieve eos tables and NS properties
+
+if verb: print "classifying eos bank by composition..."
 
 if comps == 'None': compidns = []
 else: compidns = [int(idn) for idn in str(comps).split(',')] 
@@ -51,6 +58,9 @@ failr = float(failr) # record fail code for radius integrations
 
 # SAMPLE FROM EOS AND MASS PRIORS
 # parallelize?
+
+if verb: print "drawing eos and mass samples from priors..."
+
 idns_list, numeos_list, eosfails_list, macros_list, mbranches_list = [], [], [], [], []
 prevcomp = 0
 for comp in compidns:
