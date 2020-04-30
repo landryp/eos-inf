@@ -65,7 +65,7 @@ for comp in compidns:
 	eospaths = [tools.geteospath(idn,eosdir,eosbanksize,mod,subdirname,tablename,delim,ext) for idn in idns]
 	macropaths = [tools.getmacropath(idn,eosdir,eosbanksize,mod,subdirname,macrodirname,delim,ext) for idn in idns] # retrieve eos tables and NS properties
 
-	macros = [macropaths[idn] for idn in idns]
+	macros = [macropath for macropath in macropaths]
 	mseqs = [tools.getmassseq(macro) for macro in macros]
 	mbranches = [tools.getmassbranch(macro) for macro in macros]
 	mtests = [tools.testmassseq(mseq,mseqrng) for mseq in mseqs]
