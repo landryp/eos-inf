@@ -19,7 +19,11 @@ parser.add_option('-p', '--mprior', default='flat', help='mass prior distributio
 parser.add_option('-M', '--mseq', default='0.8,0.8', help='require EOS to support stable NSs over this mass range, DEFAULT="0.8,0.8"', metavar='MINM,MAXM')
 parser.add_option('-r', '--randseed', default=2020, help='random seed to use, DEFAULT=2020', metavar='RAND_SEED')
 parser.add_option('-o', '--outprec', default=8, help='how many digits of precision to output, DEFAULT=8', metavar='PREC')
-parser.add_option('-v', '--verbose', action='store_true', default=False, help='toggle verbose output, DEFAULT=False', metavar='False')
+parser.add_option('--canon', action='store_false', default=True, help='toggle output of canonical NS properties, DEFAULT=True', metavar='BOOL')
+parser.add_option('--maxm', action='store_true', default=False, help='toggle output of max-mass NS properties, DEFAULT=False', metavar='BOOL')
+parser.add_option('--minm', action='store_true', default=False, help='toggle output of min-mass NS properties, DEFAULT=False', metavar='BOOL')
+parser.add_option('--choosem', default=False, help='toggle output of NS properties at chosen mass, DEFAULT=False', metavar='MASS')
+parser.add_option('-v', '--verbose', action='store_true', default=False, help='toggle verbose output, DEFAULT=False', metavar='BOOL')
 # add chirp mass/q cut?
 
 opts, args = parser.parse_args()
@@ -31,7 +35,12 @@ mprior = str(opts.mprior)
 mrange = [float(m) for m in str(opts.mrange).split(',')]
 mseqrng = [float(m) for m in str(opts.mseq).split(',')]
 outprec = "{"+":.{0}E".format(int(opts.outprec)-1)+"}"
-verb = opts.verbose # add some verbose output
+canon_true = opts.canon
+maxm_true = opts.maxm
+minm_true = opts.minm
+choosem_true = opts.choosem
+if choosem_true: choosem = float(choosem_true)
+verb = opts.verbose
 np.random.seed(int(opts.randseed))
 
 # PARSE EOS BANK METADATA
@@ -81,22 +90,8 @@ for comp in compidns:
 	mbranches_list.append(mbranches)
 	prevcomp = comp
 
-numeos = np.min(numeos_list)
-idns = []
-eosfails = []
-eosspares = []
-macros = []
-mbranches = []
-for i in range(numcomps):
-	idns.extend(idns_list[i][:numeos])
-	macros.extend(macros_list[i][:numeos])
-	mbranches.extend(mbranches_list[i][:numeos])
-
-	spare_idns = idns_list[i][numeos:]
-	fail_idns = eosfails_list[i]
-	if len(fail_idns) > 0: eosfails.extend(fail_idns)
-	if len(spare_idns) > 0: eosspares.extend(spare_idns)
-
+idns, macros, mbranches, eosfails, eosspares = tools.mergecomps(numcomps,numeos_list,idns_list,macros_list,mbranches_list,eosfails_list)
+numeos = len(idns)
 macrorels = [tools.getrels(macro) for macro in macros]
 bhrels = tools.getbhrels(macros[0][0])
 propnames = tools.getpropnames(macros[0][0])
@@ -104,25 +99,56 @@ propnames = tools.getpropnames(macros[0][0])
 if verb: print "drawing eos and mass samples from priors..."
 
 msamps = []
+macroprops = [] # add derived props?
+globalprops = []
+if canon_true: canonprops = []
+if maxm_true: maxmprops = []
+if minm_true: minmprops = []
+if choosem_true: choosemprops = []
 for i in range(numeos):
 	msamps_tmp = priors.samplemassprior(nummass,mprior,mrange)
 	msamps.append(msamps_tmp)
-	macroprops = [[tools.getmacroprops(macrorels[i],mbranches[i],bhrels,M) for M in msamps_tmp] for i in range(numeos)] # add other props, canon
+	macroprops.append([tools.getmacroprops(macrorels[i],mbranches[i],bhrels,M) for M in msamps_tmp])
+	globalprops.append([len(mbranches[i][0]),mbranches[i][0][0],mbranches[i][1][-1]])
+	if canon_true:
+		canonprops.append(tools.getmacroprops(macrorels[i],mbranches[i],bhrels,1.4))
+	if maxm_true:
+		maxmprops.append(tools.getmacroprops(macrorels[i],mbranches[i],bhrels,mbranches[i][1][-1]))
+	if minm_true:
+		minmprops.append(tools.getmacroprops(macrorels[i],mbranches[i],bhrels,mbranches[i][0][0]))
+	if choosem_true:
+		choosemprops.append(tools.getmacroprops(macrorels[i],mbranches[i],bhrels,choosem))
 
 # FORMAT AS JSON FILE
 
-jdata = {}
-jdata["mass"] = {}
-jdata["eos"] = {}
+jdata, jdata["mass"], jdata["eos"], jdata["global"] = {}, {}, {}, {}
+jdata["eos"]["properties"], jdata["eos"]["unstable"], jdata["eos"]["unused"] = propnames, eosfails, eosspares
 jdata["eos"]["live"] = {}
-jdata["eos"]["properties"] = propnames
-jdata["eos"]["unstable"] = eosfails
-jdata["eos"]["unused"] = eosspares
+jdata["global"]["properties"] = ["numbranches","Mmin","Mmax"]
+
+if canon_true:
+	jdata["canonical"] = {}
+	jdata["canonical"]["properties"] = [str(prop)+"_1.4" for prop in propnames]
+if maxm_true:
+	jdata["maxmass"] = {}
+	jdata["maxmass"]["properties"] = [str(prop)+"_Mmax" for prop in propnames]
+if minm_true:
+	jdata["minmass"] = {}
+	jdata["minmass"]["properties"] = [str(prop)+"_Mmin" for prop in propnames]
+if choosem_true:
+	jdata["mass_"+str(choosem)] = {}
+	jdata["mass_"+str(choosem)]["properties"] = [str(prop)+"_"+str(choosem) for prop in propnames]
+
 for i in range(numeos):
 	props_str = [[outprec.format(float(prop)) for prop in samp] for samp in macroprops[i]]
 	jdata["eos"]["live"][idns[i]] = []
 	jdata["eos"]["live"][idns[i]].extend(props_str)
 	jdata["mass"][idns[i]] = [outprec.format(float(samp)) for samp in msamps[i]]
+	jdata["global"][idns[i]] = [outprec.format(float(prop)) for prop in globalprops[i]]
+	if canon_true: jdata["canonical"][idns[i]] = [outprec.format(float(prop)) for prop in canonprops[i]]
+	if maxm_true: jdata["maxmass"][idns[i]] = [outprec.format(float(prop)) for prop in maxmprops[i]]
+	if minm_true: jdata["minmass"][idns[i]] = [outprec.format(float(prop)) for prop in minmprops[i]]
+	if choosem_true: jdata["mass_"+str(choosem)][idns[i]] = [outprec.format(float(prop)) for prop in choosemprops[i]]
 
 with open(outfile, 'w') as outpath:
     json.dump(jdata, outpath)

@@ -197,6 +197,23 @@ def removeosfails(idns,macros,mseqs,mtests):
 
 	return idns_tmp, macros_tmp, mseqs_tmp, eosfails
 
+def mergecomps(numcomps,numeoslist,idnslist,macroslist,mbrancheslist,eosfailslist):
+	
+	numeos = np.min(numeoslist)
+	idns, eosfails, eosspares, macros, mbranches = [], [], [], [], []
+	
+	for i in range(numcomps):
+		idns.extend(idnslist[i][:numeos])
+		macros.extend(macroslist[i][:numeos])
+		mbranches.extend(mbrancheslist[i][:numeos])
+
+		spareidns = idnslist[i][numeos:]
+		failidns = eosfailslist[i]
+		if len(failidns) > 0: eosfails.extend(failidns)
+		if len(spareidns) > 0: eosspares.extend(spareidns)
+
+	return idns, macros, mbranches, eosfails, eosspares
+
 # BLACK HOLE PROPERTIES
 
 def bhrhoc(m):
