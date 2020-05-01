@@ -39,23 +39,29 @@ def geteosbanksize(eosdir,mod=1e3,subdirname='DRAWmod',tablename='eos-draw',deli
 
 	return eosbanksize
 
-def geteospath(idn,eosdir,eosbanksize,mod=1e3,subdirname='DRAWmod',tablename='eos-draw',delim='-',ext='csv'):
+def geteospath(idn,eos_parsing_data):
 
-	eospath = eosdir+'/'+nameeossubdir(idn,mod,subdirname,delim)+'/'+nameeostable(idn,tablename,delim,ext)
+	path_to_eos_dir, mod, subdir_name, eos_table_name, macrodir_name, delim, ext = eos_parsing_data
 
-	return eospath
+	eos_path = path_to_eos_dir+'/'+nameeossubdir(idn,mod,subdir_name,delim)+'/'+nameeostable(idn,eos_table_name,delim,ext)
 
-def getgprpath(idn,eosdir,eosbanksize,mod=1e3,subdirname='DRAWmod',tablename='draw-gpr',delim='-',ext='csv'):
+	return eos_path
 
-	gprpath = eosdir+'/'+nameeossubdir(idn,mod,subdirname,delim)+'/'+nameeostable(idn,tablename,delim,ext)
+def getgprpath(idn,eos_parsing_data):
 
-	return gprpath
+	path_to_eos_dir, mod, subdir_name, eos_table_name, macrodir_name, delim, ext = eos_parsing_data
 
-def getmacropath(idn,eosdir,eosbanksize,mod=1e3,subdirname='DRAWmod',macrodirname='MACROdraw',delim='-',ext='csv'):
+	gpr_path = path_to_eos_dir+'/'+nameeossubdir(idn,mod,subdir_name,delim)+'/'+nameeostable(idn,eos_table_name,delim,ext)
 
-	macropaths = glob.glob(eosdir+'/'+nameeossubdir(idn,mod,subdirname,delim)+'/'+namemacrodir(idn,macrodirname,delim)+'/'+macrodirname+delim+str(idn).zfill(6)+'-*.'+ext)
+	return gpr_path
 
-	return macropaths
+def getmacropaths(idn,eos_parsing_data):
+
+	path_to_eos_dir, mod, subdir_name, eos_table_name, macrodir_name, delim, ext = eos_parsing_data
+
+	macro_paths = glob.glob(path_to_eos_dir+'/'+nameeossubdir(idn,mod,subdir_name,delim)+'/'+namemacrodir(idn,macrodir_name,delim)+'/'+macrodir_name+delim+str(idn).zfill(6)+'-*.'+ext)
+
+	return macro_paths
 
 # INTERPOLATION OF EOS PROPERTIES
 
@@ -122,23 +128,7 @@ def findbranch(mbranches,M):
 
 	return branch
 
-def getmassseq(macropaths):
-
-	minms = []
-	maxms = []
-	for macropath in macropaths:
-
-		macrodat = np.genfromtxt(macropath,names=True,delimiter=',',dtype=None)
-		Ms = macrodat[M_key]
-		minms.append(np.min(Ms))
-		maxms.append(np.max(Ms))
-
-	minm = np.min(minms)
-	maxm = np.max(maxms)
-
-	return (minm,maxm)
-
-def getmassbranch(macropaths):
+def getmassseqs(macropaths):
 
 	minms = []
 	maxms = []
@@ -159,7 +149,7 @@ def testmassseq(massseq,mrange):
 
 	return boole
 
-def testr(mbranches,macropaths):
+def testr(mbranches,macropaths,fail_radius=30):
 
 	boole = 1
 	numbranches = len(mbranches[0])
@@ -173,7 +163,7 @@ def testr(mbranches,macropaths):
 
 		rbranch = []
 		for j in range(pts):
-			if Ms[j] >= minm and Ms[j] <= maxm:
+			if Ms[j] >= minm and Ms[j] <= maxm and Rs[j] != fail_radius:
 				rbranch.append(Rs[j])
 
 		if len(rbranch) != pts:
