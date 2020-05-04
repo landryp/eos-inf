@@ -24,6 +24,7 @@ parser.add_option('--maxm', action='store_true', default=False, help='toggle out
 parser.add_option('--minm', action='store_true', default=False, help='toggle output of min-mass NS properties, DEFAULT=False', metavar='BOOL')
 parser.add_option('--choosem', default=False, help='toggle output of NS properties at chosen mass, DEFAULT=False', metavar='MASS')
 parser.add_option('-v', '--verbose', action='store_true', default=False, help='toggle verbose output, DEFAULT=False', metavar='BOOL')
+# combine canon, maxm, minm into single choosem option (repeatable)
 # add chirp mass/q cut?
 
 opts, args = parser.parse_args()
@@ -96,14 +97,14 @@ for start_idn in comp_start_idns: # can these functions be rewritten to only loa
 
 idns, macropath_lists, mass_seqs, eosfails, eosspares = tools.mergecomps(num_comps, numeos_all_comps, idns_all_comps, macropath_lists_all_comps, mass_seqs_all_comps, eosfails_all_comps)
 num_eos = len(idns)
-macro_rels = [tools.getrels(macropaths) for macropaths in macropath_lists]
+macro_rels = [tools.getrels(macropaths) for macropaths in macropath_lists] # only do interpolation for properties needed by weighsamples
 bh_rels = tools.getbhrels(macropath_lists[0][0])
 prop_names = tools.getpropnames(macropath_lists[0][0])
 
 if verb: print "drawing eos and mass samples from priors..."
 
 mass_samps = []
-ns_props = [] # add derived props?
+ns_props = [] # only record properties needed by weighsamples
 global_props = []
 if canon_true: canon_props = []
 if maxm_true: maxm_props = []

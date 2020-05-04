@@ -1,0 +1,28 @@
+#!/bin/bash
+
+obslist=$1
+eosbank=$2
+numeos=$3
+nummass=$4
+mprior=$5
+
+while IFS=, read -r likepath obstype
+do
+	likemetapath="${likepath%.*}.in"
+	parse-likelihood-samples $obstype $likepath $likemetapath -c "m1_source,R1"
+
+	while IFS=, read -r prop lb ub bw
+	do
+		priorpath="${likepath%.*}_prior.json"
+		sample-priors $eosbank $priorpath -n $numeos -N $nummass -m "$lb,$ub" -p $mprior
+	done < $likemetapath
+
+	priorcsvpath="${priorpath%.*}.csv"
+	convert-json-csv $priorpath $priorcsvpath
+
+done < $obslist
+
+
+# convert to tmp csv with convert-json-csv
+# pass to weighsamples along with bandwidth, produce tmp eospost.csv
+# convert to json with convert-json-csv

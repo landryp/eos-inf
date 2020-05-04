@@ -1,0 +1,40 @@
+#!/usr/bin/python
+__doc__ = 'PARSE-LIKELIHOOD-SAMPLES -- get metadata from likelihood samples'
+__usage__ = 'parse-likelihood-samples obstype path/to/likelihood.csv path/to/out.in [...]'
+__author__ = 'pgjlandry@gmail.com'
+__date__ = '05-2020'
+
+from optparse import OptionParser
+import numpy as np
+
+parser = OptionParser(usage=__usage__, description=__doc__)
+parser.add_option('-q', '--quant', default=1.4e-3, help='cutoff quantile, DEFAULT=1.4e-3 (3-sigma)', metavar='QUANT')
+parser.add_option('-c', '--cols', default=False, help='use specified column names, DEFAULT=False', metavar='COL1,COL2,...')
+
+opts, args = parser.parse_args()
+obs_type = str(args[0])
+path_to_likelihood_samples = str(args[1])
+output_path = str(args[2])
+quant = opts.quant
+if quant: props = str(opts.cols).split(',')
+
+obs_dict = {'cbc':['m1','m2','Lambda1','Lambda2'],'xmr':['m','R'],'psr':['m']}
+
+likelihood_samples = np.genfromtxt(path_to_likelihood_samples,dtype=None,delimiter=',',names=True)
+if not opts.cols: props = obs_dict[obs_type]
+
+likelihood_metadata = []
+for prop in props:
+
+	samples = likelihood_samples[prop]
+	num_samples = len(samples)
+	lb = np.quantile(samples,quant)
+	ub = np.quantile(samples,1.-quant)
+
+	bw = (ub-lb)/np.sqrt(num_samples) # use kde optimizer
+
+	likelihood_metadata.append([prop,lb,ub,bw])
+
+data_array = np.array(likelihood_metadata)
+np.savetxt(output_path,data_array,fmt='%s',delimiter=',',header='',comments='')
+

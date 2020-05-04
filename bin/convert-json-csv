@@ -1,6 +1,6 @@
 #!/usr/bin/python
 __doc__ = 'CONVERT-JSON-CSV -- convert json prior samples to csv'
-__usage__ = 'convert json csv path/to/samples.json path/to/samples.csv [...]'
+__usage__ = 'convert-json-csv path/to/samples.json path/to/samples.csv [...]'
 __author__ = 'pgjlandry@gmail.com'
 __date__ = '05-2020'
 
@@ -13,7 +13,6 @@ parser.add_option('--canon', action='store_true', default=False, help='toggle ou
 parser.add_option('--maxm', action='store_true', default=False, help='toggle output of max-mass NS properties, DEFAULT=False', metavar='BOOL')
 parser.add_option('--minm', action='store_true', default=False, help='toggle output of min-mass NS properties, DEFAULT=False', metavar='BOOL')
 parser.add_option('--choosem', default=False, help='toggle output of NS properties at chosen mass, DEFAULT=False', metavar='MASS')
-parser.add_option('-v', '--verbose', action='store_true', default=False, help='toggle verbose output, DEFAULT=False', metavar='BOOL')
 
 opts, args = parser.parse_args()
 path_to_prior_samples = str(args[0])
@@ -23,7 +22,6 @@ maxm_true = opts.maxm
 minm_true = opts.minm
 choosem_true = opts.choosem
 if choosem_true: choosem = 'mass_'+str(choosem_true)
-verb = opts.verbose
 
 with open(path_to_prior_samples, 'r') as inpath:
     prior_samples = json.load(inpath)
