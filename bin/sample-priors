@@ -71,7 +71,7 @@ if verb: print "mapping paths to eos and ns tables..."
 
 idns_all_comps, numeos_all_comps, eosfails_all_comps, macropath_lists_all_comps, mass_seqs_all_comps = [], [], [], [], []
 prev_start_idn = 0
-for start_idn in comp_start_idns:
+for start_idn in comp_start_idns: # can these functions be rewritten to only load the macro table once per eos???
 
 	idns_this_comp = np.random.choice(np.arange(prev_start_idn,start_idn), size=comp_size, replace=False)
 

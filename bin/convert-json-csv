@@ -1,0 +1,75 @@
+#!/usr/bin/python
+__doc__ = 'CONVERT-JSON-CSV -- convert json prior samples to csv'
+__usage__ = 'convert json csv path/to/samples.json path/to/samples.csv [...]'
+__author__ = 'pgjlandry@gmail.com'
+__date__ = '05-2020'
+
+from optparse import OptionParser
+import numpy as np
+import json
+
+parser = OptionParser(usage=__usage__, description=__doc__)
+parser.add_option('--canon', action='store_true', default=False, help='toggle output of canonical NS properties, DEFAULT=False', metavar='BOOL')
+parser.add_option('--maxm', action='store_true', default=False, help='toggle output of max-mass NS properties, DEFAULT=False', metavar='BOOL')
+parser.add_option('--minm', action='store_true', default=False, help='toggle output of min-mass NS properties, DEFAULT=False', metavar='BOOL')
+parser.add_option('--choosem', default=False, help='toggle output of NS properties at chosen mass, DEFAULT=False', metavar='MASS')
+parser.add_option('-v', '--verbose', action='store_true', default=False, help='toggle verbose output, DEFAULT=False', metavar='BOOL')
+
+opts, args = parser.parse_args()
+path_to_prior_samples = str(args[0])
+output_path = str(args[1])
+canon_true = opts.canon
+maxm_true = opts.maxm
+minm_true = opts.minm
+choosem_true = opts.choosem
+if choosem_true: choosem = 'mass_'+str(choosem_true)
+verb = opts.verbose
+
+with open(path_to_prior_samples, 'r') as inpath:
+    prior_samples = json.load(inpath)
+
+idns = prior_samples['eos']['live'].keys()
+mass_dict = prior_samples['mass']
+num_mass = len(mass_dict[idns[0]])
+prop_names = prior_samples['eos']['properties']
+samples_dict = prior_samples['eos']['live']
+global_names = prior_samples['global']['properties']
+global_dict = prior_samples['global']
+if canon_true:
+	canon_names = prior_samples['canonical']['properties']
+	canon_dict = prior_samples['canonical']
+if maxm_true:
+	maxm_names = prior_samples['maxmass']['properties']
+	maxm_dict = prior_samples['maxmass']
+if minm_true:
+	minm_names = prior_samples['minmass']['properties']
+	minm_dict = prior_samples['minmass']
+if choosem_true:
+	choosem_names = prior_samples[choosem]['properties']
+	choosem_dict = prior_samples[choosem]
+
+data = []
+for idn in idns:
+	for i in range(num_mass):
+
+		mass = mass_dict[idn][i]
+
+		sample_data = [idn,mass]
+		sample_data.extend([prop for prop in samples_dict[idn][i]])
+		sample_data.extend([prop for prop in global_dict[idn]])
+		if canon_true: sample_data.extend([prop for prop in canon_dict[idn]])
+		if maxm_true: sample_data.extend([prop for prop in maxm_dict[idn]])
+		if minm_true: sample_data.extend([prop for prop in minm_dict[idn]])
+		if choosem_true: sample_data.extend([prop for prop in choosem_dict[idn]])
+
+		data.append(sample_data)
+
+data_array = np.array(data)
+col_names = 'eos,m,'+','.join(prop_names)+','+','.join(global_names)
+if canon_true: col_names = col_names+','+','.join(canon_names)
+if maxm_true: col_names = col_names+','+','.join(maxm_names)
+if minm_true: col_names = col_names+','+','.join(minm_names)
+if choosem_true: col_names = col_names+','+','.join(choosem_names)
+
+np.savetxt(output_path,data_array,fmt='%s',delimiter=',',header=col_names,comments='')
+
