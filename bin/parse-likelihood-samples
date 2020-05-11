@@ -15,7 +15,7 @@ opts, args = parser.parse_args()
 obs_type = str(args[0])
 path_to_likelihood_samples = str(args[1])
 output_path = str(args[2])
-quant = opts.quant
+quant = 100*(float(opts.quant))
 if quant: props = str(opts.cols).split(',')
 
 obs_dict = {'cbc':['m1','m2','Lambda1','Lambda2'],'xmr':['m','R'],'psr':['m']}
@@ -28,8 +28,8 @@ for prop in props:
 
 	samples = likelihood_samples[prop]
 	num_samples = len(samples)
-	lb = np.quantile(samples,quant)
-	ub = np.quantile(samples,1.-quant)
+	lb = np.percentile(samples,quant)
+	ub = np.percentile(samples,100-quant)
 
 	bw = (ub-lb)/np.sqrt(num_samples) #FIXME: use kde optimizer
 
