@@ -15,16 +15,16 @@ do
 		priorpath="${likepath%.*}_prior.json"
 		if [ "$obstype" == "cbc" ]; then
 			if [ "$prop" == "m1" ]; then
-			gub=$ub
+				gub=$ub
 			elif [ "$prop" == "m2" ]; then
-			llb=$lb
-			sample-priors $eosbank $priorpath -O $obstype -n $numeos -N $nummass -m "$llb,$gub" -p flat
-			break
+				llb=$lb
+				sample-priors $eosbank $priorpath -O $obstype -n $numeos -N $nummass -m "$llb,$gub" -p flat
+				break
 			fi
 		else
 			if [ "$prop" == "m" ]; then
-			sample-priors $eosbank $priorpath -O $obstype -n $numeos -N $nummass -m "$lb,$ub" -p flat
-			break
+				sample-priors $eosbank $priorpath -O $obstype -n $numeos -N $nummass -m "$lb,$ub" -p flat
+				break
 			fi
 		fi
 	done < $likemetapath

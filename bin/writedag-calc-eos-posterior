@@ -1,0 +1,125 @@
+#!/bin/bash
+
+# input
+
+repodir=$1
+rundir=$2
+obslist=$3
+eosbank=$4
+numeos=$5
+nummass=$6
+universalitydir=$7
+
+# output
+
+dagfile="${rundir}/calc-eos-posterior.dag"
+logfile="${rundir}/calc-eos-posterior.in"
+echo $repodir > $logfile
+echo $rundir >> $logfile
+echo $obslist >> $logfile
+echo $eosbank >> $logfile
+echo $numeos >> $logfile
+echo $nummass >> $logfile
+echo $universalitydir >> $logfile
+
+# write sub files
+
+execnames=( "sample-priors" "convert-json-csv" "weigh-samples" "marginalize-samples" )
+execs=( "$repodir/bin/sample-priors \$1 \$2 -O \$3 -n \$4 -N \$5 -m \$6" "$repodir/bin/convert-json-csv \$1 \$2" "$universalitydir/bin/weigh-samples \$1 \$2 \$3 \$4 -v --bandwidth=\$5 --weight-column Prior --weight-column-is-log Prior --invert-weight-column Prior" "$universalitydir/bin/marginalize-samples \$1 eos -o \$2 --weight-column logweight --weight-column-is-log logweight -v" )
+args=( "\"\$(eosbank) \$(priorpath) \$(obstype) \$(numeos) \$(nummass) \$(mbounds)\"" "\"\$(priorpath) \$(priorcsvpath)\"" "\"\$(likepath) \$(priorcsvpath) \$(postpath) \$(props) \$(bw)\"" "\"\$(postpath) \$(eospath)\"" )
+
+for i in $(seq 0 $((${#execs[@]}-1)))
+do
+	execfile=${execnames[$i]}
+	subfile="${rundir}/${execfile}.sub"
+	script=${execs[$i]}
+	arg=${args[$i]}
+
+	echo "universe = vanilla" > $subfile
+	echo "executable = $script" >> $subfile
+	echo "arguments = $arg" >> $subfile
+	echo "output = $rundir/$execfile.out" >> $subfile
+	echo "error = $rundir/$execfile.err" >> $subfile
+	echo "log = $rundir/$execfile.log" >> $subfile
+	echo "getenv = True" >> $subfile
+	echo "accounting_group = ligo.dev.o3.cbc.pe.lalinference" >> $subfile
+	echo "accounting_group_user = philippe.landry" >> $subfile
+	echo "queue 1" >> $subfile
+done
+
+# write dag file
+
+echo "# calc-eos-prior.dag, deploying to $rundir" > $dagfile
+
+job=0
+while IFS=, read -r likepath obstype
+do
+
+	likemetapath="${likepath%.*}.in"
+	priorpath="${likepath%.*}_prior.json"
+	priorcsvpath="${priorpath%.*}.csv"
+	postpath="${likepath%.*}_post.csv"
+	eospath="${likepath%.*}_eos.csv"
+
+	parse-likelihood-samples $obstype $likepath $likemetapath
+
+	sumbw=0
+	vars=0
+	while IFS=, read -r prop lb ub bw
+	do
+		sumbw=$(bc <<<"scale=4;$sumbw+$bw") # FIXME: limit to relevant cols only
+		vars=$(($vars+1))		
+		if [ "$obstype" == "cbc" ]; then
+			if [ "$prop" == "m1" ]; then
+				gub=$ub
+			elif [ "$prop" == "m2" ]; then
+				llb=$lb
+			fi
+		else
+			if [ "$prop" == "m" ]; then
+				gub=$ub
+				llb=$lb
+			fi
+		fi
+	done < $likemetapath
+
+	mbounds="$llb,$gub"
+	avgbw=$(bc <<<"scale=4;$sumbw/$vars")
+
+	echo "JOB $job $rundir/sample-priors.sub" >> $dagfile
+	echo "VARS $job eosbank=\"$eosbank\" priorpath=\"$priorpath\" obstype=\"$obstype\" numeos=\"$numeos\" nummass=\"$nummass\" mbounds=\"$mbounds\"" >> $dagfile
+	echo "RETRY $job 1" >> $dagfile 
+
+	job=$(($job+1))
+
+	echo "JOB $job $rundir/convert-json-csv.sub" >> $dagfile
+	echo "VARS $job priorpath=\"$priorpath\" priorcsvpath=\"$priorcsvpath\"" >> $dagfile
+	echo "RETRY $job 1" >> $dagfile 
+	echo "PARENT $(($job-1)) CHILD $job" >> $dagfile
+	
+	job=$(($job+1))
+
+	if [ "$obstype" == "cbc" ]; then
+		props="m1 m2 Lambda1 Lambda2"
+	elif [ "$obstype" == "xmr" ]; then
+		props="m R"
+	else
+		props="m" # FIXME: change to cumul-weigh-samples for psr
+	fi
+
+	echo "JOB $job $rundir/weigh-samples.sub" >> $dagfile
+	echo "VARS $job likepath=\"$likepath\" priorcsvpath=\"$priorcsvpath\" postpath=\"$postpath\" props=\"$props\" bw=\"$avgbw\"" >> $dagfile
+	echo "RETRY $job 1" >> $dagfile 
+	echo "PARENT $(($job-1)) CHILD $job" >> $dagfile
+
+	job=$(($job+1))
+
+	echo "JOB $job $rundir/marginalize-samples.sub" >> $dagfile
+	echo "VARS $job postpath=\"$postpath\" eospath=\"$eospath\"" >> $dagfile
+	echo "RETRY $job 1" >> $dagfile 
+	echo "PARENT $(($job-1)) CHILD $job" >> $dagfile	
+
+	job=$(($job+1))
+
+done < $obslist
+
