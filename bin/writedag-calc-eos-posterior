@@ -22,7 +22,7 @@ echo $nummass >> $logfile
 
 # write sub files
 
-execs=( "sample-priors.sh" "convert-json-csv.sh" "weigh-samples.sh" "marginalize-samples.sh" )
+execs=( "sample-priors" "convert-json-csv" "weigh-samples" "marginalize-samples" )
 args=( "\"\$(eosbank) \$(priorpath) \$(obstype) \$(numeos) \$(nummass) \$(mbounds)\"" "\"\$(priorpath) \$(priorcsvpath)\"" "\"\$(likepath) \$(priorcsvpath) \$(postpath) \$(props) \$(bw)\"" "\"\$(postpath) \$(eospath)\"" )
 
 for i in $(seq 0 $((${#execs[@]}-1)))
@@ -32,7 +32,7 @@ do
 	arg=${args[$i]}
 
 	echo "universe = vanilla" > $subfile
-	echo "executable = $repodir/bin/$execfile" >> $subfile
+	echo "executable = $repodir/bin/$execfile.sh" >> $subfile
 	echo "arguments = $arg" >> $subfile
 	echo "output = $rundir/$execfile.out" >> $subfile
 	echo "error = $rundir/$execfile.err" >> $subfile
