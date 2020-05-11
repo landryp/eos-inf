@@ -7,4 +7,4 @@ numeos=$4
 nummass=$5
 mbounds=$6
 
-sample-priors $eosbank $priorpath -O $obstype -n $numeos -N $nummass -m $mbounds
+sample-priors $eosbank $priorpath -O $obstype -n $numeos -N $nummass -m $mbounds -v
