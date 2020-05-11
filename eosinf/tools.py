@@ -68,7 +68,7 @@ def getmacropaths(idn,eos_parsing_data):
 M_key = 'M'
 R_key = 'R'
 
-def getpropnames(macropath):
+def getpropnames(macropath,obstype):
 
 	macrodat = np.genfromtxt(macropath,names=True,delimiter=',',dtype=None)
 	props = list(macrodat.dtype.names)
@@ -77,23 +77,22 @@ def getpropnames(macropath):
 
 	return props
 
-def interprels(macrodat):
+def interprels(macrodat,obstype):
 
-	props = list(macrodat.dtype.names)
-	props.remove(M_key)
+	props = [prop for prop in obstype]
+	props[:] = [prop for prop in props if prop != 'm']
 	Ms = macrodat[M_key]
 
 	rels = [interp1d(Ms,macrodat[prop],kind='linear',bounds_error=False,fill_value=0) for prop in props]
 
 	return rels
 
-def getrels(macropaths):
+def getrels(macropaths,obstype):
 
 	macrorels = []
 	for macropath in macropaths:
-
 		macrodat = np.genfromtxt(macropath,names=True,delimiter=',',dtype=None)
-		rels = interprels(macrodat)
+		rels = interprels(macrodat,obstype)
 		macrorels.append(rels)
 
 	return macrorels
@@ -211,12 +210,12 @@ def bhrhoc(m):
 	return 0.
 
 def bhradius(m):
-
+	
 	G = 6.67408e-8
 	Msun = 1.3271244e26/G
 	c = 2.99792458e10
-
-	return 1e-5*2.*G*m*Msun/c**2
+	
+	return 1e-5*2.*G*float(m)*Msun/c**2
 
 def bhlambda(m):
 
@@ -228,7 +227,7 @@ def bhmoi(m):
 	Msun = 1.3271244e26/G
 	c = 2.99792458e10
 
-	return 1e-45*m*Msun*(2.*G*m*Msun/c**2)**2
+	return 1e-45*m*Msun*(2.*G*float(m)*Msun/c**2)**2
 
 def bhmb(m):
 
@@ -236,11 +235,10 @@ def bhmb(m):
 
 bhprops = {'rhoc': bhrhoc,'R': bhradius,'Lambda': bhlambda,'I': bhmoi,'Mb': bhmb}
 
-def getbhrels(macropath):
+def getbhrels(obstype):
 
-	macrodat = np.genfromtxt(macropath,names=True,delimiter=',',dtype=None)
-	props = list(macrodat.dtype.names)
-	props.remove(M_key)
+	props =  [prop for prop in obstype]
+	props[:] = [prop for prop in props if prop != 'm']
 
 	bhrels = [bhprops[prop] for prop in props]
 

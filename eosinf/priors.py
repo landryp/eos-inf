@@ -38,7 +38,7 @@ def samplebinarymassprior(size=1,distr='flat',params=None):
 	if params is None: msamps = distrib(2*size)
 	else: msamps = distrib(2*size,*params)
 
-	m1samps = [max(msamps[i],msamps[i+1]) for i in range(0,size,2)]
-	m2samps = [min(msamps[i],msamps[i+1]) for i in range(0,size,2)]
+	m1samps = [max(msamps[i],msamps[i+1]) for i in range(0,2*size,2)]
+	m2samps = [min(msamps[i],msamps[i+1]) for i in range(0,2*size,2)]
 
 	return zip(m1samps,m2samps)

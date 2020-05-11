@@ -13,6 +13,7 @@ parser.add_option('--canon', action='store_true', default=False, help='toggle ou
 parser.add_option('--maxm', action='store_true', default=False, help='toggle output of max-mass NS properties, DEFAULT=False', metavar='BOOL')
 parser.add_option('--minm', action='store_true', default=False, help='toggle output of min-mass NS properties, DEFAULT=False', metavar='BOOL')
 parser.add_option('--choosem', default=False, help='toggle output of NS properties at chosen mass, DEFAULT=False', metavar='MASS')
+#FIXME: make choosem option repeatable, replace individual options
 
 opts, args = parser.parse_args()
 path_to_prior_samples = str(args[0])
@@ -52,7 +53,8 @@ for idn in idns:
 
 		mass = mass_dict[idn][i]
 
-		sample_data = [idn,mass]
+		if type(mass)==list: sample_data = [idn,mass[0],mass[1]]
+		else: sample_data = [idn,mass]
 		sample_data.extend([prop for prop in samples_dict[idn][i]])
 		sample_data.extend([prop for prop in global_dict[idn]])
 		if canon_true: sample_data.extend([prop for prop in canon_dict[idn]])
@@ -63,7 +65,10 @@ for idn in idns:
 		data.append(sample_data)
 
 data_array = np.array(data)
-col_names = 'eos,m,'+','.join(prop_names)+','+','.join(global_names)
+if type(mass)==list:
+	col_names = 'eos,m1,m2,'+','.join(prop_names)+','+','.join(global_names)
+else:
+	col_names = 'eos,m,'+','.join(prop_names)+','+','.join(global_names)
 if canon_true: col_names = col_names+','+','.join(canon_names)
 if maxm_true: col_names = col_names+','+','.join(maxm_names)
 if minm_true: col_names = col_names+','+','.join(minm_names)

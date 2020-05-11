@@ -31,7 +31,7 @@ for prop in props:
 	lb = np.quantile(samples,quant)
 	ub = np.quantile(samples,1.-quant)
 
-	bw = (ub-lb)/np.sqrt(num_samples) # use kde optimizer
+	bw = (ub-lb)/np.sqrt(num_samples) #FIXME: use kde optimizer
 
 	likelihood_metadata.append([prop,lb,ub,bw])
 

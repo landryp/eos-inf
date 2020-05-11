@@ -4,6 +4,8 @@ __usage__ = 'sample-priors path/to/eosmetadata.in path/to/output.json [...]'
 __author__ = 'pgjlandry@gmail.com'
 __date__ = '04-2020'
 
+# LOAD PACKAGES
+
 from optparse import OptionParser
 import numpy as np
 import numpy.random
@@ -11,38 +13,66 @@ import json
 import eosinf.tools as tools
 import eosinf.priors as priors
 
+# SET UP OPTIONS
+
 parser = OptionParser(usage=__usage__, description=__doc__)
 parser.add_option('-n', '--numeos', default=1e3, help='number of EOS samples, DEFAULT=1e3', metavar='NUM_EOS_SAMPLES')
 parser.add_option('-N', '--nummass', default=1e2, help='number of mass samples per EOS, DEFAULT=1e2', metavar='NUM_MASS_SAMPLES')
+parser.add_option('-O', '--obstype', default='psr', help='type of observation being analyzed, DEFAULT=None', metavar='OBSTYPE')
 parser.add_option('-m', '--mbounds', default='0.,4.', help='bounds on mass prior, DEFAULT="0.,4."', metavar='LB,UB')
 parser.add_option('-p', '--mprior', default='flat', help='mass prior distribution, DEFAULT="flat"', metavar='PRIOR_KEY')
 parser.add_option('-M', '--mseq', default='0.8,0.8', help='require EOS to support stable NSs over this mass range, DEFAULT="0.8,0.8"', metavar='MINM,MAXM')
 parser.add_option('-r', '--randseed', default=2020, help='random seed to use, DEFAULT=2020', metavar='RAND_SEED')
 parser.add_option('-o', '--outprec', default=8, help='how many digits of precision to output, DEFAULT=8', metavar='PREC')
-parser.add_option('--canon', action='store_false', default=True, help='toggle output of canonical NS properties, DEFAULT=True', metavar='BOOL')
-parser.add_option('--maxm', action='store_true', default=False, help='toggle output of max-mass NS properties, DEFAULT=False', metavar='BOOL')
-parser.add_option('--minm', action='store_true', default=False, help='toggle output of min-mass NS properties, DEFAULT=False', metavar='BOOL')
-parser.add_option('--choosem', default=False, help='toggle output of NS properties at chosen mass, DEFAULT=False', metavar='MASS')
+parser.add_option('--choosem', default=[], help='output NS properties at chosen mass, is repeatable and also takes special keywords "maxm", "minm", DEFAULT=False', metavar='MASS', type=str, action='append')
 parser.add_option('-v', '--verbose', action='store_true', default=False, help='toggle verbose output, DEFAULT=False', metavar='BOOL')
-# combine canon, maxm, minm into single choosem option (repeatable)
-# add chirp mass/q cut?
+#FIXME: add chirp mass/q cut, check ok to limit prior range by event
+
+# SAVE INPUT FROM OPTIONS
 
 opts, args = parser.parse_args()
+verb = opts.verbose
+np.random.seed(int(opts.randseed))
+
+# input
 path_to_eos_metadata = str(args[0])
-output_path = str(args[1])
+obs_type = str(opts.obstype)
+obs_dict = {'cbc':['m','m','Lambda','Lambda'],'xmr':['m','R'],'psr':['m']}
+obsprops = obs_dict[obs_type]
+obs_num_mass = obsprops.count('m')
+obsprops = set(obsprops)
+prop_names = list(obsprops)
+prop_names.remove('m')
+if obs_num_mass > 1:
+	prop_names = [prop_name+str(n+1) for n in range(obs_num_mass) for prop_name in prop_names]
+mass_prior_dict = {'cbc':priors.samplebinarymassprior, 'xmr':priors.samplemassprior, 'psr':priors.samplemassprior}
+samplem = mass_prior_dict[obs_type]
+
+# prior samples
 num_eos = int(opts.numeos)
 num_mass = int(opts.nummass)
 mass_prior_distr = str(opts.mprior)
 mass_prior_bounds = [float(m) for m in str(opts.mbounds).split(',')]
 stable_at_masses = [float(m) for m in str(opts.mseq).split(',')]
+
+#output
+output_path = str(args[1])
 output_prec = "{"+":.{0}E".format(int(opts.outprec)-1)+"}"
-canon_true = opts.canon
-maxm_true = opts.maxm
-minm_true = opts.minm
 choosem_true = opts.choosem
-if choosem_true: choosem = float(choosem_true)
-verb = opts.verbose
-np.random.seed(int(opts.randseed))
+if len(choosem_true) > 0:
+	if 'maxm' in choosem_true:
+		maxm_true = True
+		choosem_true.remove('maxm')
+	else: maxm_true = False
+	if 'minm' in choosem_true:
+		minm_true = True
+		choosem_true.remove('minm')
+	else: minm_true = False
+	num_mopts = len(choosem_true)
+	if num_mopts > 0:
+		choosem = [float(m) for m in choosem_true]
+		choosem_true = True
+else: maxm_true, minm_true = False, False
 
 # PARSE EOS BANK METADATA
 
@@ -66,13 +96,13 @@ comp_size = num_eos/num_comps
 fail_radius = float(fail_radius) # record fail code for radius integrations
 
 # SAMPLE FROM EOS AND MASS PRIORS
-# parallelize?
+#FIXME: parallelize?
 
 if verb: print "mapping paths to eos and ns tables..."
 
 idns_all_comps, numeos_all_comps, eosfails_all_comps, macropath_lists_all_comps, mass_seqs_all_comps = [], [], [], [], []
 prev_start_idn = 0
-for start_idn in comp_start_idns: # can these functions be rewritten to only load the macro table once per eos???
+for start_idn in comp_start_idns: #FIXME: can these functions be rewritten to only load the macro table once per eos???
 
 	idns_this_comp = np.random.choice(np.arange(prev_start_idn,start_idn), size=comp_size, replace=False)
 
@@ -80,10 +110,10 @@ for start_idn in comp_start_idns: # can these functions be rewritten to only loa
 	macropath_lists_this_comp = [tools.getmacropaths(idn,eos_parsing_data) for idn in idns_this_comp] # retrieve eos tables and NS properties
 
 	mass_seqs_this_comp = [tools.getmassseqs(macropaths) for macropaths in macropath_lists_this_comp]
-	mass_bounds_this_comp = [(np.min(mass_seq[0]),np.max(mass_seq[1])) for mass_seq in mass_seqs_this_comp] # locate critical masses in stellar sequence
+	mass_bounds_this_comp = [(np.min(mass_seq[0]),np.max(mass_seq[1])) for mass_seq in mass_seqs_this_comp] # locate critical masses in stellar sequence #FIXME: loads macro table first time
 
 	mtests_this_comp = [tools.testmassseq(mass_bounds,stable_at_masses) for mass_bounds in mass_bounds_this_comp]
-	rtests_this_comp = [tools.testr(mass_seqs_this_comp[i],macropath_lists_this_comp[i],fail_radius) for i in range(comp_size)]
+	rtests_this_comp = [tools.testr(mass_seqs_this_comp[i],macropath_lists_this_comp[i],fail_radius) for i in range(comp_size)] #FIXME: loads macro table second time
 	tests_this_comp = [0 if mtests_this_comp[i] == 0 or rtests_this_comp[i] == 0 else 1 for i in range(comp_size)]
 	idns_this_comp, macropath_lists_this_comp, mass_seqs_this_comp, eosfails_this_comp = tools.removeosfails(idns_this_comp, macropath_lists_this_comp, mass_seqs_this_comp, tests_this_comp)
 	numeos_this_comp = len(idns_this_comp)
@@ -97,32 +127,53 @@ for start_idn in comp_start_idns: # can these functions be rewritten to only loa
 
 idns, macropath_lists, mass_seqs, eosfails, eosspares = tools.mergecomps(num_comps, numeos_all_comps, idns_all_comps, macropath_lists_all_comps, mass_seqs_all_comps, eosfails_all_comps)
 num_eos = len(idns)
-macro_rels = [tools.getrels(macropaths) for macropaths in macropath_lists] # only do interpolation for properties needed by weighsamples
-bh_rels = tools.getbhrels(macropath_lists[0][0])
-prop_names = tools.getpropnames(macropath_lists[0][0])
+macro_rels = [tools.getrels(macropaths,obsprops) for macropaths in macropath_lists] #FIXME: loads macro table third time
+bh_rels = tools.getbhrels(obsprops)
+#prop_names = tools.getpropnames(macropath_lists[0][0],obsprops) #FIXME: loads macro table fourth time
+#print ([obsprop in prop_names for obsprop in obsprops]) #FIXME: turn this into assertion check
 
 if verb: print "drawing eos and mass samples from priors..."
 
 mass_samps = []
-ns_props = [] # only record properties needed by weighsamples
-global_props = []
-if canon_true: canon_props = []
+ns_props = []
+global_props = [] #FIXME: are these needed by weighsamples? merge with ns_props?
 if maxm_true: maxm_props = []
 if minm_true: minm_props = []
-if choosem_true: choosem_props = []
+if choosem_true:
+	choosem_props_list = []
+	for j in range(num_mopts):
+		choosem_props_list.append([])
 for i in range(num_eos):
-	mass_samps_this_eos = priors.samplemassprior(num_mass,mass_prior_distr,mass_prior_bounds)
+	
+	mass_samps_this_eos = samplem(num_mass,mass_prior_distr,mass_prior_bounds)
 	mass_samps.append(mass_samps_this_eos)
-	ns_props.append([tools.getmacroprops(macro_rels[i],mass_seqs[i],bh_rels,M) for M in mass_samps_this_eos])
-	global_props.append([len(mass_seqs[i][0]),np.min(mass_seqs[i][0]),np.max(mass_seqs[i][1])])
-	if canon_true:
-		canon_props.append(tools.getmacroprops(macro_rels[i],mass_seqs[i],bh_rels,1.4))
+
+	ns_props_tmp = []
+	for M in mass_samps_this_eos:
+		if type(M)==tuple:
+
+			ns_props_subtmp = []
+			for m in M:
+
+				ns_props_subtmp.extend(tools.getmacroprops(macro_rels[i], mass_seqs[i], bh_rels, m))
+
+			ns_props_tmp.append(ns_props_subtmp)
+
+		else:
+
+			ns_props_tmp.append(tools.getmacroprops(macro_rels[i], mass_seqs[i], bh_rels, M))
+			
+	ns_props.append(ns_props_tmp)
+
+	global_props.append([len(mass_seqs[i][0]), np.min(mass_seqs[i][0]), np.max(mass_seqs[i][1])])
+
 	if maxm_true:
 		maxm_props.append(tools.getmacroprops(macro_rels[i],mass_seqs[i],bh_rels,np.max(mass_seqs[i][1])))
 	if minm_true:
 		minm_props.append(tools.getmacroprops(macro_rels[i],mass_seqs[i],bh_rels,np.min(mass_seqs[i][0])))
 	if choosem_true:
-		choosem_props.append(tools.getmacroprops(macro_rels[i],mass_seqs[i],bh_rels,choosem))
+		for j in range(num_mopts):
+			choosem_props_list[j].append(tools.getmacroprops(macro_rels[i],mass_seqs[i],bh_rels,choosem[j]))
 
 # FORMAT AS JSON FILE
 
@@ -131,9 +182,6 @@ jdata["eos"]["properties"], jdata["eos"]["unstable"], jdata["eos"]["unused"] = p
 jdata["eos"]["live"] = {}
 jdata["global"]["properties"] = ["numbranches","Mmin","Mmax"]
 
-if canon_true:
-	jdata["canonical"] = {}
-	jdata["canonical"]["properties"] = [str(prop)+"_1.4" for prop in prop_names]
 if maxm_true:
 	jdata["maxmass"] = {}
 	jdata["maxmass"]["properties"] = [str(prop)+"_Mmax" for prop in prop_names]
@@ -141,19 +189,24 @@ if minm_true:
 	jdata["minmass"] = {}
 	jdata["minmass"]["properties"] = [str(prop)+"_Mmin" for prop in prop_names]
 if choosem_true:
-	jdata["mass_"+str(choosem)] = {}
-	jdata["mass_"+str(choosem)]["properties"] = [str(prop)+"_"+str(choosem) for prop in prop_names]
+	for j in range(num_mopts):
+		jdata["mass_"+str(choosem[j])] = {}
+		jdata["mass_"+str(choosem[j])]["properties"] = [str(prop)+"_"+str(choosem[j]) for prop in prop_names]
 
 for i in range(num_eos):
 	props_str = [[output_prec.format(float(prop)) for prop in samp] for samp in ns_props[i]]
 	jdata["eos"]["live"][idns[i]] = []
 	jdata["eos"]["live"][idns[i]].extend(props_str)
-	jdata["mass"][idns[i]] = [output_prec.format(float(samp)) for samp in mass_samps[i]]
+	if obs_num_mass == 1:
+		jdata["mass"][idns[i]] = [output_prec.format(float(samp)) for samp in mass_samps[i]]
+	else:
+		jdata["mass"][idns[i]] = [[output_prec.format(float(subsamp)) for subsamp in samp] for samp in mass_samps[i]]
 	jdata["global"][idns[i]] = [output_prec.format(float(prop)) for prop in global_props[i]]
-	if canon_true: jdata["canonical"][idns[i]] = [output_prec.format(float(prop)) for prop in canon_props[i]]
 	if maxm_true: jdata["maxmass"][idns[i]] = [output_prec.format(float(prop)) for prop in maxm_props[i]]
 	if minm_true: jdata["minmass"][idns[i]] = [output_prec.format(float(prop)) for prop in minm_props[i]]
-	if choosem_true: jdata["mass_"+str(choosem)][idns[i]] = [output_prec.format(float(prop)) for prop in choosem_props[i]]
+	if choosem_true:
+		for j in range(num_mopts):
+			jdata["mass_"+str(choosem[j])][idns[i]] = [output_prec.format(float(prop)) for prop in choosem_props_list[j][i]]
 
 with open(output_path, 'w') as outpath:
     json.dump(jdata, outpath)
