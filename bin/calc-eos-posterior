@@ -33,7 +33,7 @@ do
 	convert-json-csv $priorpath $priorcsvpath
 
 	postpath="${likepath%.*}_post.csv"
-	weigh-samples $likepath $priorcsvpath $postpath m R -v --bandwidth=$bw #--weight-column Prior --weight-column-is-log Prior --invert-weight-column Prior 
+	weigh-samples $likepath $priorcsvpath $postpath m R -v --bandwidth=$bw --weight-column Prior --weight-column-is-log Prior --invert-weight-column Prior 
 
 	eospath="${likepath%.*}_eos.csv"
 	marginalize-samples $postpath eos -o $eospath --weight-column logweight --weight-column-is-log logweight -v
