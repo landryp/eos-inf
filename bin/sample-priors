@@ -100,37 +100,38 @@ fail_radius = float(fail_radius) # record fail code for radius integrations
 
 if verb: print "mapping paths to eos and ns tables..."
 
-idns_all_comps, numeos_all_comps, eosfails_all_comps, macropath_lists_all_comps, mass_seqs_all_comps = [], [], [], [], []
+idns_all_comps, numeos_all_comps, eosfails_all_comps, macrodat_lists_all_comps, mass_seqs_all_comps = [], [], [], [], []
 prev_start_idn = 0
-for start_idn in comp_start_idns: #FIXME: can these functions be rewritten to only load the macro table once per eos???
+for start_idn in comp_start_idns:
 
 	idns_this_comp = np.random.choice(np.arange(prev_start_idn,start_idn), size=comp_size, replace=False)
 
 	eospaths_this_comp = [tools.geteospath(idn,eos_parsing_data) for idn in idns_this_comp]
 	macropath_lists_this_comp = [tools.getmacropaths(idn,eos_parsing_data) for idn in idns_this_comp] # retrieve eos tables and NS properties
+	macrodat_lists_this_comp = [tools.getmacrodats(macropaths,obsprops) for macropaths in macropath_lists_this_comp]
 
-	mass_seqs_this_comp = [tools.getmassseqs(macropaths) for macropaths in macropath_lists_this_comp]
-	mass_bounds_this_comp = [(np.min(mass_seq[0]),np.max(mass_seq[1])) for mass_seq in mass_seqs_this_comp] # locate critical masses in stellar sequence #FIXME: loads macro table first time
+	mass_seqs_this_comp = [tools.getmassseqs(macrodats) for macrodats in macrodat_lists_this_comp]
+	mass_bounds_this_comp = [(np.min(mass_seq[0]),np.max(mass_seq[1])) for mass_seq in mass_seqs_this_comp] # locate critical masses in stellar sequence
 
 	mtests_this_comp = [tools.testmassseq(mass_bounds,stable_at_masses) for mass_bounds in mass_bounds_this_comp]
-	rtests_this_comp = [tools.testr(mass_seqs_this_comp[i],macropath_lists_this_comp[i],fail_radius) for i in range(comp_size)] #FIXME: loads macro table second time
+	rtests_this_comp = [tools.testr(mass_seqs_this_comp[i],macrodat_lists_this_comp[i],fail_radius) for i in range(comp_size)]
 	tests_this_comp = [0 if mtests_this_comp[i] == 0 or rtests_this_comp[i] == 0 else 1 for i in range(comp_size)]
-	idns_this_comp, macropath_lists_this_comp, mass_seqs_this_comp, eosfails_this_comp = tools.removeosfails(idns_this_comp, macropath_lists_this_comp, mass_seqs_this_comp, tests_this_comp)
+	idns_this_comp, macrodat_lists_this_comp, mass_seqs_this_comp, eosfails_this_comp = tools.removeosfails(idns_this_comp, macrodat_lists_this_comp, mass_seqs_this_comp, tests_this_comp)
 	numeos_this_comp = len(idns_this_comp)
 
 	idns_all_comps.append(idns_this_comp)
 	numeos_all_comps.append(numeos_this_comp)
 	eosfails_all_comps.append(eosfails_this_comp)
-	macropath_lists_all_comps.append(macropath_lists_this_comp)
+	macrodat_lists_all_comps.append(macrodat_lists_this_comp)
 	mass_seqs_all_comps.append(mass_seqs_this_comp)
 	prev_start_idn = start_idn
 
-idns, macropath_lists, mass_seqs, eosfails, eosspares = tools.mergecomps(num_comps, numeos_all_comps, idns_all_comps, macropath_lists_all_comps, mass_seqs_all_comps, eosfails_all_comps)
+idns, macrodat_lists, mass_seqs, eosfails, eosspares = tools.mergecomps(num_comps, numeos_all_comps, idns_all_comps, macrodat_lists_all_comps, mass_seqs_all_comps, eosfails_all_comps)
 num_eos = len(idns)
-macro_rels = [tools.getrels(macropaths,obsprops) for macropaths in macropath_lists] #FIXME: loads macro table third time
+macro_rels = [tools.getrels(macrodats,obsprops) for macrodats in macrodat_lists]
 bh_rels = tools.getbhrels(obsprops)
-#prop_names = tools.getpropnames(macropath_lists[0][0],obsprops) #FIXME: loads macro table fourth time
-#print ([obsprop in prop_names for obsprop in obsprops]) #FIXME: turn this into assertion check
+#prop_names = tools.getpropnames(macropath_lists[0][0],obsprops)
+#print ([obsprop in prop_names for obsprop in obsprops]) #FIXME: turn this into assertion check, don't load macro table again
 
 if verb: print "drawing eos and mass samples from priors..."
 

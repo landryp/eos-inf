@@ -81,17 +81,16 @@ def interprels(macrodat,obstype):
 
 	props = [prop for prop in obstype]
 	props[:] = [prop for prop in props if prop != 'm']
-	Ms = macrodat[M_key]
+	Ms = macrodat['m']
 
 	rels = [interp1d(Ms,macrodat[prop],kind='linear',bounds_error=False,fill_value=0) for prop in props]
 
 	return rels
 
-def getrels(macropaths,obstype):
+def getrels(macrodats,obstype):
 
 	macrorels = []
-	for macropath in macropaths:
-		macrodat = np.genfromtxt(macropath,names=True,delimiter=',',dtype=None)
+	for macrodat in macrodats:
 		rels = interprels(macrodat,obstype)
 		macrorels.append(rels)
 
@@ -127,18 +126,36 @@ def findbranch(mbranches,M):
 
 	return branch
 
-def getmassseqs(macropaths):
+def getmassseqs(macrodats):
 
 	minms = []
 	maxms = []
-	for macropath in macropaths:
+	for macrodat in macrodats:
 
-		macrodat = np.genfromtxt(macropath,names=True,delimiter=',',dtype=None)
-		Ms = macrodat[M_key]
+		Ms = macrodat['m']
 		minms.append(np.min(Ms))
 		maxms.append(np.max(Ms))
 
 	return (minms,maxms)
+
+def getmacrodats(macropaths,obsprops):
+
+	props = [prop for prop in obsprops if prop != 'm']
+	if 'R' not in props: props.extend('R')
+
+	macrodats = []
+	for macropath in macropaths:
+
+		macrodat_tmp = {}
+		macrodat = np.genfromtxt(macropath,names=True,delimiter=',',dtype=None)
+		macrodat_tmp['m'] = macrodat[M_key]
+		
+		for prop in props:
+			macrodat_tmp[prop] = macrodat[prop]
+
+		macrodats.append(macrodat_tmp)	
+
+	return macrodats
 
 def testmassseq(massseq,mrange):
 
@@ -148,7 +165,7 @@ def testmassseq(massseq,mrange):
 
 	return boole
 
-def testr(mbranches,macropaths,fail_radius=30):
+def testr(mbranches,macrodats,fail_radius=30):
 
 	boole = 1
 	numbranches = len(mbranches[0])
@@ -156,8 +173,8 @@ def testr(mbranches,macropaths,fail_radius=30):
 		minm = mbranches[0][i]
 		maxm = mbranches[1][i]
 		
-		macrodat = np.genfromtxt(macropaths[i],names=True,delimiter=',',dtype=None)
-		Ms, Rs = macrodat[M_key], macrodat[R_key]
+		macrodat = macrodats[i]
+		Ms, Rs = macrodat['m'], macrodat[R_key]
 		pts = len(Rs)
 
 		rbranch = []

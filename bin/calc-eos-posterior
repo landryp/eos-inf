@@ -27,7 +27,7 @@ do
 	weigh-samples $likepath $priorcsvpath $postpath m R -v --bandwidth=$bw #--weight-column Prior --weight-column-is-log Prior --invert-weight-column Prior 
 
 	eospath="${likepath%.*}_eos.csv"
-	marginalize-samples $postpath EoS -o $eospath --weight-column logweight --weight-column-is-log logweight -v
+	marginalize-samples $postpath eos -o $eospath --weight-column logweight --weight-column-is-log logweight -v
 
 done < $obslist
 
