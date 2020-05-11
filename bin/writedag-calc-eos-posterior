@@ -8,7 +8,6 @@ obslist=$3
 eosbank=$4
 numeos=$5
 nummass=$6
-universalitydir=$7
 
 # output
 
@@ -20,23 +19,20 @@ echo $obslist >> $logfile
 echo $eosbank >> $logfile
 echo $numeos >> $logfile
 echo $nummass >> $logfile
-echo $universalitydir >> $logfile
 
 # write sub files
 
-execnames=( "sample-priors" "convert-json-csv" "weigh-samples" "marginalize-samples" )
-execs=( "$repodir/bin/sample-priors \$1 \$2 -O \$3 -n \$4 -N \$5 -m \$6" "$repodir/bin/convert-json-csv \$1 \$2" "$universalitydir/bin/weigh-samples \$1 \$2 \$3 \$4 -v --bandwidth=\$5 --weight-column Prior --weight-column-is-log Prior --invert-weight-column Prior" "$universalitydir/bin/marginalize-samples \$1 eos -o \$2 --weight-column logweight --weight-column-is-log logweight -v" )
+execs=( "sample-priors.sh" "convert-json-csv.sh" "weigh-samples.sh" "marginalize-samples.sh" )
 args=( "\"\$(eosbank) \$(priorpath) \$(obstype) \$(numeos) \$(nummass) \$(mbounds)\"" "\"\$(priorpath) \$(priorcsvpath)\"" "\"\$(likepath) \$(priorcsvpath) \$(postpath) \$(props) \$(bw)\"" "\"\$(postpath) \$(eospath)\"" )
 
 for i in $(seq 0 $((${#execs[@]}-1)))
 do
-	execfile=${execnames[$i]}
+	execfile=${execs[$i]}
 	subfile="${rundir}/${execfile}.sub"
-	script=${execs[$i]}
 	arg=${args[$i]}
 
 	echo "universe = vanilla" > $subfile
-	echo "executable = $script" >> $subfile
+	echo "executable = $repodir/bin/$execfile" >> $subfile
 	echo "arguments = $arg" >> $subfile
 	echo "output = $rundir/$execfile.out" >> $subfile
 	echo "error = $rundir/$execfile.err" >> $subfile
