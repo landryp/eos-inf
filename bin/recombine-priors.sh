@@ -6,7 +6,7 @@ nummass=$3
 
 chunksize=1000
 chunks=$(($numeos/$chunksize))
-if [ "$chunks" -eq 0 ]; then
+if [ "$chunks" -eq "0" ]; then
 	chunks=1
 fi
 
