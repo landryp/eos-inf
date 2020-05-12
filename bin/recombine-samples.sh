@@ -11,7 +11,7 @@ chunks=$(($numlines/$chunksize))
 suffix=$(printf "%06d" 0)
 head -n 1 $postpath$suffix > $postpath
 
-for i in $(seq 0 $(($chunks-1)))
+for i in $(seq 0 $chunks)
 do
 	suffix=$(printf "%06d" $i)
 	tail -n +2 $postpath$suffix >> $postpath
