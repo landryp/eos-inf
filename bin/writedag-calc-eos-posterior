@@ -87,6 +87,9 @@ do
 	chunksize=1000
 	chunks=$(($numeos/$chunksize))
 	leftover=$(($numeos%$chunksize))
+	if [ $chunks -eq 0 ]; then
+		chunks=1
+	fi
 
 	for i in $(seq 0 $(($chunks-1)))
 	do
@@ -134,6 +137,9 @@ do
 
 	chunksize=100
 	chunks=$(($numeos/$chunksize))
+	if [ $chunks -eq 0 ]; then
+		chunks=1
+	fi
 
 	for i in $(seq 0 $chunks)
 	do
