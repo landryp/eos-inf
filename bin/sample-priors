@@ -25,7 +25,6 @@ parser.add_option('-M', '--mseq', default='0.8,0.8', help='require EOS to suppor
 parser.add_option('-r', '--randseed', default=2020, help='random seed to use, DEFAULT=2020', metavar='RAND_SEED')
 parser.add_option('-o', '--outprec', default=8, help='how many digits of precision to output, DEFAULT=8', metavar='PREC')
 parser.add_option('--choosem', default=[], help='output NS properties at chosen mass, is repeatable and also takes special keywords "maxm", "minm", DEFAULT=False', metavar='MASS', type=str, action='append')
-parser.add_option('--chunk', default=False, help='process samples in parallelized chunks of given size, DEFAULT=False', metavar='CHUNK_START,CHUNK_SIZE')
 parser.add_option('-v', '--verbose', action='store_true', default=False, help='toggle verbose output, DEFAULT=False', metavar='BOOL')
 #FIXME: add chirp mass/q cut, check ok to limit prior range by event
 
@@ -48,8 +47,6 @@ if obs_num_mass > 1:
 	prop_names = [prop_name+str(n+1) for n in range(obs_num_mass) for prop_name in prop_names]
 mass_prior_dict = {'cbc':priors.samplebinarymassprior, 'xmr':priors.samplemassprior, 'psr':priors.samplemassprior}
 samplem = mass_prior_dict[obs_type]
-chunk_true = opts.chunk
-if chunk_true: chunk_start, chunk = [int(num) for num in str(opts.chunk).split(',')]
 
 # prior samples
 num_eos = int(opts.numeos)
@@ -108,7 +105,6 @@ prev_start_idn = 0
 for start_idn in comp_start_idns:
 
 	idns_this_comp = np.random.choice(np.arange(prev_start_idn,start_idn), size=comp_size, replace=False)
-	if chunk_true: idns_this_comp = idns_this_comp[chunk_start/num_comps:chunk/num_comps]
 
 	eospaths_this_comp = [tools.geteospath(idn,eos_parsing_data) for idn in idns_this_comp]
 	macropath_lists_this_comp = [tools.getmacropaths(idn,eos_parsing_data) for idn in idns_this_comp] # retrieve eos tables and NS properties

@@ -22,8 +22,8 @@ echo $nummass >> $logfile
 
 # write sub files
 
-execs=( "sample-priors" "convert-json-csv" "weigh-samples" "marginalize-samples" )
-args=( "\"\$(eosbank) \$(priorpath) \$(obstype) \$(numeos) \$(nummass) \$(mbounds)\"" "\"\$(priorpath) \$(priorcsvpath)\"" "\"\$(likepath) \$(priorcsvpath) \$(postpath) '\$(props)' \$(bw)\"" "\"\$(postpath) \$(eospath)\"" )
+execs=( "sample-priors" "convert-json-csv" "weigh-samples" "recombine-samples" "marginalize-samples" )
+args=( "\"\$(eosbank) \$(priorpath) \$(obstype) \$(numeos) \$(nummass) \$(mbounds)\"" "\"\$(priorpath) \$(priorcsvpath) \$(nummass)\"" "\"\$(likepath) \$(priorcsvpath) \$(postpath) '\$(props)' \$(bw)\"" "\"\$(priorcsvpath) \$(postpath) \$(nummass)\"" "\"\$(postpath) \$(eospath)\"" )
 
 for i in $(seq 0 $((${#execs[@]}-1)))
 do
@@ -89,7 +89,7 @@ do
 	job=$(($job+1))
 
 	echo "JOB $job $rundir/convert-json-csv.sub" >> $dagfile
-	echo "VARS $job priorpath=\"$priorpath\" priorcsvpath=\"$priorcsvpath\"" >> $dagfile
+	echo "VARS $job priorpath=\"$priorpath\" priorcsvpath=\"$priorcsvpath\" nummass=\"$nummass\"" >> $dagfile
 	echo "RETRY $job 1" >> $dagfile 
 	echo "PARENT $(($job-1)) CHILD $job" >> $dagfile
 	
@@ -103,8 +103,25 @@ do
 		props="m" # FIXME: change to cumul-weigh-samples for psr
 	fi
 
-	echo "JOB $job $rundir/weigh-samples.sub" >> $dagfile
-	echo "VARS $job likepath=\"$likepath\" priorcsvpath=\"$priorcsvpath\" postpath=\"$postpath\" props=\"$props\" bw=\"$avgbw\"" >> $dagfile
+	chunksize=$((100*nummass))
+	numlines=$(wc -l < $priorcsvpath)
+	chunks=$(($numlines/$chunksize))
+
+	for i in $(seq 0 $(($chunks-1)))
+	do
+		suffix=$(printf "%06d" $i)
+
+		echo "JOB $job $rundir/weigh-samples.sub" >> $dagfile
+		echo "VARS $job likepath=\"$likepath\" priorcsvpath=\"$priorcsvpath$suffix\" postpath=\"$postpath$suffix\" props=\"$props\" bw=\"$avgbw\"" >> $dagfile
+		echo "RETRY $job 1" >> $dagfile 
+		echo "PARENT $(($job-1)) CHILD $job" >> $dagfile
+
+		job=$(($job+1))
+
+	done
+
+	echo "JOB $job $rundir/recombine-samples.sub" >> $dagfile
+	echo "VARS $job priorcsvpath=\"$priorcsvpath\" postpath=\"$postpath\" nummass=\"$nummass\"" >> $dagfile
 	echo "RETRY $job 1" >> $dagfile 
 	echo "PARENT $(($job-1)) CHILD $job" >> $dagfile
 
