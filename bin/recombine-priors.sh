@@ -27,7 +27,7 @@ do
 	counts=$(grep -o "$eos" <<< ${eoslist[*]} | wc -l)
 	if [ "$counts" -le "$nummass" ]; then
 		echo "$eos,$other" >> $priorcsvpath
-		adds+=("$eos")
+		eoslist+=("$eos")
 	fi
 done < $priorcsvpath.tmp
 
