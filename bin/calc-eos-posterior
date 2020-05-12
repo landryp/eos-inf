@@ -50,7 +50,7 @@ do
 		props="m" # FIXME: change to cumul-weigh-samples for psr
 	fi
 
-	weigh-samples $likepath $priorcsvpath $postpath "$props" -v --bandwidth=$avgbw --weight-column Prior --weight-column-is-log Prior --invert-weight-column Prior 
+	weigh-samples $likepath $priorcsvpath $postpath $props -v --bandwidth=$avgbw --weight-column Prior --weight-column-is-log Prior --invert-weight-column Prior 
 
 	marginalize-samples $postpath eos -o $eospath --weight-column logweight --weight-column-is-log logweight -v
 
