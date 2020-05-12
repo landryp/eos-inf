@@ -6,9 +6,13 @@ nummass=$3
 
 chunksize=1000
 chunks=$(($numeos/$chunksize))
+if [ $chunks -eq 0 ]; then
+	chunks=1
+fi
 
 suffix=$(printf "%06d" 0)
 head -n 1 $priorcsvpath$suffix > $priorcsvpath
+touch $priorcsvpath.tmp
 
 for i in $(seq 0 $(($chunks-1)))
 do
