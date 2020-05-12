@@ -165,7 +165,7 @@ def testmassseq(massseq,mrange):
 
 	return boole
 
-def testr(mbranches,macrodats,fail_radius=30):
+def testr(mbranches,macrodats,fail_radius=30,mass_prior_bounds=[0.,4.]):
 
 	boole = 1
 	numbranches = len(mbranches[0])
@@ -179,7 +179,14 @@ def testr(mbranches,macrodats,fail_radius=30):
 
 		rbranch = []
 		for j in range(pts):
-			if Ms[j] >= minm and Ms[j] <= maxm and Rs[j] != fail_radius:
+
+			if Ms[j] < mass_prior_bounds[0] or Ms[j] > mass_prior_bounds[1]:
+				rbranch.append(Rs[j])
+
+			elif Ms[j] < minm or Ms[j] > maxm:
+				rbranch.append(Rs[j])
+
+			elif Ms[j] >= minm and Ms[j] <= maxm and Rs[j] != fail_radius:
 				rbranch.append(Rs[j])
 
 		if len(rbranch) != pts:

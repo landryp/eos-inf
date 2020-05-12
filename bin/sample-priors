@@ -114,7 +114,7 @@ for start_idn in comp_start_idns:
 	mass_bounds_this_comp = [(np.min(mass_seq[0]),np.max(mass_seq[1])) if mass_seq and mass_seq[0] and mass_seq[1] else (0,0) for mass_seq in mass_seqs_this_comp] # locate critical masses in stellar sequence
 
 	mtests_this_comp = [tools.testmassseq(mass_bounds,stable_at_masses) for mass_bounds in mass_bounds_this_comp]
-	rtests_this_comp = [tools.testr(mass_seqs_this_comp[i],macrodat_lists_this_comp[i],fail_radius) for i in range(comp_size)]
+	rtests_this_comp = [tools.testr(mass_seqs_this_comp[i],macrodat_lists_this_comp[i],fail_radius,mass_prior_bounds) for i in range(comp_size)]
 	tests_this_comp = [0 if mtests_this_comp[i] == 0 or rtests_this_comp[i] == 0 else 1 for i in range(comp_size)]
 	idns_this_comp, macrodat_lists_this_comp, mass_seqs_this_comp, eosfails_this_comp = tools.removeosfails(idns_this_comp, macrodat_lists_this_comp, mass_seqs_this_comp, tests_this_comp)
 	numeos_this_comp = len(idns_this_comp)
