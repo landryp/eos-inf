@@ -10,7 +10,7 @@ chunks=$(($numeos/$chunksize))
 suffix=$(printf "%06d" 0)
 head -n 1 $priorcsvpath$suffix > $priorcsvpath
 
-for i in $(seq 0 $chunks)
+for i in $(seq 0 $(($chunks-1)))
 do
 	suffix=$(printf "%06d" $i)
 	tail -n +2 $priorcsvpath$suffix >> $priorcsvpath.tmp

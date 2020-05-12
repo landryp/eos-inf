@@ -95,6 +95,7 @@ do
 			thischunksize=$(($chunksize+$leftover))
 		else
 			thischunksize=$chunksize
+		fi
 
 		echo "JOB $job $rundir/sample-priors.sub" >> $dagfile
 		echo "VARS $job eosbank=\"$eosbank\" priorpath=\"$priorpath$suffix\" obstype=\"$obstype\" numeos=\"$thischunksize\" nummass=\"$nummass\" mbounds=\"$mbounds\" randseed=\"$randseed\"" >> $dagfile # FIXME: enable other priors
@@ -109,7 +110,6 @@ do
 
 		randseed=$(($randseed+1))	
 		job=$(($job+1))
-
 	done
 
 	echo "JOB $job $rundir/recombine-priors.sub" >> $dagfile
