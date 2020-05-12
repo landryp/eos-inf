@@ -8,34 +8,50 @@ nummass=$4
 while IFS=, read -r likepath obstype
 do
 	likemetapath="${likepath%.*}.in"
+	priorpath="${likepath%.*}_prior.json"
+	priorcsvpath="${priorpath%.*}.csv"
+	postpath="${likepath%.*}_post.csv"
+	eospath="${likepath%.*}_eos.csv"
+
 	parse-likelihood-samples $obstype $likepath $likemetapath
 
+	sumbw=0
+	vars=0
 	while IFS=, read -r prop lb ub bw
 	do
-		priorpath="${likepath%.*}_prior.json"
+		sumbw=$(bc <<<"scale=4;$sumbw+$bw") # FIXME: limit to relevant cols only
+		vars=$(($vars+1))
 		if [ "$obstype" == "cbc" ]; then
 			if [ "$prop" == "m1" ]; then
 				gub=$ub
 			elif [ "$prop" == "m2" ]; then
 				llb=$lb
-				sample-priors $eosbank $priorpath -O $obstype -n $numeos -N $nummass -m "$llb,$gub" -p flat
-				break
 			fi
 		else
 			if [ "$prop" == "m" ]; then
-				sample-priors $eosbank $priorpath -O $obstype -n $numeos -N $nummass -m "$lb,$ub" -p flat
-				break
+				gub=$ub
+				llb=$lb
 			fi
 		fi
 	done < $likemetapath
 
-	priorcsvpath="${priorpath%.*}.csv"
+	mbounds="$llb,$gub"
+	avgbw=$(bc <<<"scale=4;$sumbw/$vars")
+
+	sample-priors $eosbank $priorpath -O $obstype -n $numeos -N $nummass -m $mbounds -p flat # FIXME: enable other priors
+
 	convert-json-csv $priorpath $priorcsvpath
 
-	postpath="${likepath%.*}_post.csv"
-	weigh-samples $likepath $priorcsvpath $postpath m R -v --bandwidth=$bw --weight-column Prior --weight-column-is-log Prior --invert-weight-column Prior 
+	if [ "$obstype" == "cbc" ]; then
+		props="m1 m2 Lambda1 Lambda2"
+	elif [ "$obstype" == "xmr" ]; then
+		props="m R"
+	else
+		props="m" # FIXME: change to cumul-weigh-samples for psr
+	fi
 
-	eospath="${likepath%.*}_eos.csv"
+	weigh-samples $likepath $priorcsvpath $postpath "$props" -v --bandwidth=$avgbw --weight-column Prior --weight-column-is-log Prior --invert-weight-column Prior 
+
 	marginalize-samples $postpath eos -o $eospath --weight-column logweight --weight-column-is-log logweight -v
 
 done < $obslist
