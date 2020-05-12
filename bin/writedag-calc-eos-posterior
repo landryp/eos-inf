@@ -103,8 +103,8 @@ do
 		props="m" # FIXME: change to cumul-weigh-samples for psr
 	fi
 
-	chunksize=$((100*nummass))
-	numlines=$(wc -l < $priorcsvpath)
+	chunksize=$((100*$nummass))
+	numlines=$(($numeos*$nummass))
 	chunks=$(($numlines/$chunksize))
 
 	for i in $(seq 0 $(($chunks-1)))

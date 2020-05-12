@@ -6,7 +6,7 @@ nummass=$3
 
 convert-json-csv $priorpath $priorcsvpath
 
-chunksize=$((100*nummass))
+chunksize=$((100*$nummass))
 numlines=$(wc -l < $priorcsvpath)
 chunks=$(($numlines/$chunksize))
 tail -n +2 $priorcsvpath | split -d -l $chunksize -a 6 - $priorcsvpath
