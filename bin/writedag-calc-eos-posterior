@@ -23,7 +23,7 @@ echo $nummass >> $logfile
 # write sub files
 
 execs=( "sample-priors" "convert-json-csv" "weigh-samples" "marginalize-samples" )
-args=( "\"\$(eosbank) \$(priorpath) \$(obstype) \$(numeos) \$(nummass) \$(mbounds)\"" "\"\$(priorpath) \$(priorcsvpath)\"" "\"\$(likepath) \$(priorcsvpath) \$(postpath) \'\$(props)\' \$(bw)\"" "\"\$(postpath) \$(eospath)\"" )
+args=( "\"\$(eosbank) \$(priorpath) \$(obstype) \$(numeos) \$(nummass) \$(mbounds)\"" "\"\$(priorpath) \$(priorcsvpath)\"" "\"\$(likepath) \$(priorcsvpath) \$(postpath) '\$(props)' \$(bw)\"" "\"\$(postpath) \$(eospath)\"" )
 
 for i in $(seq 0 $((${#execs[@]}-1)))
 do
