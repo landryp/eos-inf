@@ -9,8 +9,6 @@ eosbank=$4
 numeos=$5
 nummass=$6
 
-randseed=2020
-
 # output
 
 dagfile="${rundir}/calc-eos-posterior.dag"
@@ -25,7 +23,7 @@ echo $nummass >> $logfile
 # write sub files
 
 execs=( "sample-priors" "convert-json-csv" "recombine-priors" "weigh-samples" "recombine-samples" "marginalize-samples" )
-args=( "\"\$(eosbank) \$(priorpath) \$(obstype) \$(numeos) \$(nummass) \$(mbounds) \$(randseed)\"" "\"\$(priorpath) \$(priorcsvpath)\"" "\"\$(priorcsvpath) \$(numeos) \$(nummass)\"" "\"\$(likepath) \$(priorcsvpath) \$(postpath) '\$(props)' \$(bw)\"" "\"\$(priorcsvpath) \$(postpath) \$(nummass)\"" "\"\$(postpath) \$(eospath)\"" )
+args=( "\"\$(eosbank) \$(priorpath) \$(obstype) \$(numeos) \$(nummass) \$(mbounds) \$(chunkdat)\"" "\"\$(priorpath) \$(priorcsvpath)\"" "\"\$(priorcsvpath) \$(numeos) \$(nummass)\"" "\"\$(likepath) \$(priorcsvpath) \$(postpath) '\$(props)' \$(bw)\"" "\"\$(priorcsvpath) \$(postpath) \$(nummass)\"" "\"\$(postpath) \$(eospath)\"" )
 
 for i in $(seq 0 $((${#execs[@]}-1)))
 do
@@ -96,14 +94,10 @@ do
 	for i in $(seq 0 $(($chunks-1)))
 	do
 		suffix=$(printf "%06d" $i)
-		if [ "$i" -eq "0" ]; then
-			thischunksize=$(($chunksize+$leftover))
-		else
-			thischunksize=$chunksize
-		fi
+		$chunkdat="$i,$chunksize"
 
 		echo "JOB $job $rundir/sample-priors.sub" >> $dagfile
-		echo "VARS $job eosbank=\"$eosbank\" priorpath=\"$priorpath$suffix\" obstype=\"$obstype\" numeos=\"$thischunksize\" nummass=\"$nummass\" mbounds=\"$mbounds\" randseed=\"$randseed\"" >> $dagfile # FIXME: enable other priors
+		echo "VARS $job eosbank=\"$eosbank\" priorpath=\"$priorpath$suffix\" obstype=\"$obstype\" numeos=\"$numeos\" nummass=\"$nummass\" mbounds=\"$mbounds\" chunkdat=\"$chunkdat\"" >> $dagfile # FIXME: enable other priors
 		echo "RETRY $job 1" >> $dagfile 
 
 		job=$(($job+1))

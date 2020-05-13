@@ -117,6 +117,7 @@ for start_idn in comp_start_idns:
 		strt = comp_chunk_size*chunk_num
 		end = comp_chunk_size*(chunk_num+1)
 		idns_this_comp = idns_this_comp[strt:end]
+		comp_size = comp_chunk_size
 
 	print idns_this_comp
 
@@ -139,6 +140,8 @@ for start_idn in comp_start_idns:
 	macrodat_lists_all_comps.append(macrodat_lists_this_comp)
 	mass_seqs_all_comps.append(mass_seqs_this_comp)
 	prev_start_idn = start_idn
+
+	if dag: comp_size = num_eos/num_comps
 
 idns, macrodat_lists, mass_seqs, eosfails, eosspares = tools.mergecomps(num_comps, numeos_all_comps, idns_all_comps, macrodat_lists_all_comps, mass_seqs_all_comps, eosfails_all_comps)
 num_eos = len(idns)
