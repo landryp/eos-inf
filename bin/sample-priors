@@ -113,8 +113,9 @@ for start_idn in comp_start_idns:
 	idns_this_comp = np.random.choice(np.arange(prev_start_idn,start_idn), size=comp_size, replace=False)
 
 	if dag:
-		strt = chunk_size*chunk_num
-		end = chunk_size*(chunk_num+1)
+		comp_chunk_size = chunk_size/num_comps
+		strt = comp_chunk_size*chunk_num
+		end = comp_chunk_size*(chunk_num+1)
 		idns_this_comp = idns_this_comp[strt:end]
 
 	print idns_this_comp
