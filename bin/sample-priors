@@ -23,6 +23,7 @@ parser.add_option('-m', '--mbounds', default='0.,4.', help='bounds on (or other 
 parser.add_option('-p', '--mprior', default='flat', help='mass prior distribution, DEFAULT="flat"', metavar='PRIOR_KEY')
 parser.add_option('-M', '--mseq', default='0.8,0.8', help='require EOS to support stable NSs over this mass range, DEFAULT="0.8,0.8"', metavar='MINM,MAXM')
 parser.add_option('-r', '--randseed', default=2020, help='random seed to use, DEFAULT=2020', metavar='RAND_SEED')
+parser.add_option('-d', '--dag', default=False, help='get input from dag, DEFAULT=False', metavar='CHUNK_NUM,CHUNK_SIZE')
 parser.add_option('-o', '--outprec', default=8, help='how many digits of precision to output, DEFAULT=8', metavar='PREC')
 parser.add_option('--choosem', default=[], help='output NS properties at chosen mass, is repeatable and also takes special keywords "maxm", "minm", DEFAULT=False', metavar='MASS', type=str, action='append')
 parser.add_option('-v', '--verbose', action='store_true', default=False, help='toggle verbose output, DEFAULT=False', metavar='BOOL')
@@ -32,6 +33,11 @@ parser.add_option('-v', '--verbose', action='store_true', default=False, help='t
 
 opts, args = parser.parse_args()
 verb = opts.verbose
+dag = opts.dag
+if dag:
+	chunk_num,chunk_size = str(dag).split(',')
+	chunk_num = int(chunk_num)
+	chunk_size = int(chunk_size)
 np.random.seed(int(opts.randseed))
 
 # input
@@ -105,6 +111,13 @@ prev_start_idn = 0
 for start_idn in comp_start_idns:
 
 	idns_this_comp = np.random.choice(np.arange(prev_start_idn,start_idn), size=comp_size, replace=False)
+
+	if dag:
+		strt = chunk_size*chunk_num
+		end = chunk_size*(chunk_num+1)
+		idns_this_comp = idns_this_comp[strt:end]
+
+	print idns_this_comp
 
 	eospaths_this_comp = [tools.geteospath(idn,eos_parsing_data) for idn in idns_this_comp]
 	macropath_lists_this_comp = [tools.getmacropaths(idn,eos_parsing_data) for idn in idns_this_comp] # retrieve eos tables and NS properties
