@@ -102,7 +102,6 @@ comp_size = num_eos/num_comps
 fail_radius = float(fail_radius) # record fail code for radius integrations
 
 # SAMPLE FROM EOS AND MASS PRIORS
-#FIXME: parallelize?
 
 if verb: print "mapping paths to eos and ns tables..."
 

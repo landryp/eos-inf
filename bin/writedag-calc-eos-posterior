@@ -127,7 +127,7 @@ do
 	elif [ "$obstype" == "xmr" ]; then
 		props="m R"
 	else
-		props="m" # FIXME: change to cumul-weigh-samples for psr
+		props="m"
 	fi
 
 	parent=$(($job-1))
