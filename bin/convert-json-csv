@@ -68,7 +68,8 @@ data_array = np.array(data)
 if type(mass)==list:
 	col_names = 'eos,m1,m2,'+','.join(prop_names)+','+','.join(global_names)
 else:
-	col_names = 'eos,m,'+','.join(prop_names)+','+','.join(global_names)
+	if prop_names: col_names = 'eos,m,'+','.join(prop_names)+','+','.join(global_names)
+	else: col_names = 'eos,m,'+','.join(global_names)
 if canon_true: col_names = col_names+','+','.join(canon_names)
 if maxm_true: col_names = col_names+','+','.join(maxm_names)
 if minm_true: col_names = col_names+','+','.join(minm_names)
