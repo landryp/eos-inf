@@ -132,6 +132,7 @@ do
 
 	if [ "$obstype" == "cbc" ]; then
 		props="m1 m2 Lambda1 Lambda2"
+		avgbw=$(bc <<<"scale=4;$avgbw/100")
 	elif [ "$obstype" == "xmr" ]; then
 		props="m R"
 	else
