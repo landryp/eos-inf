@@ -188,8 +188,8 @@ def testrhoc(mbranches,macrodats,fail_mass=1.,start_rhoc=2.24e14):
 		first_index = minrhocs.index(firstrhoc)
 		firstM = minMs[first_index]
 
-	if firstrhoc <= start_rhoc and firstM > fail_mass:
-		boole = 0
+		if firstrhoc <= start_rhoc and firstM > fail_mass:
+			boole = 0
 
 	return boole
 
