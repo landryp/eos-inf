@@ -181,7 +181,7 @@ def testrhoc(mbranches,macrodats,fail_mass=1.,start_rhoc=2.24e14):
 		minMs.append(minM)
 		minrhocs.append(minrhoc)
 
-	firstrhoc = min(minrhocs)
+	firstrhoc = np.min(np.array(minrhocs))
 	first_index = minrhocs.index(firstrhoc)
 	firstM = minMs[first_index]
 
