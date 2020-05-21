@@ -120,8 +120,6 @@ for start_idn in comp_start_idns:
 		idns_this_comp = idns_this_comp[strt:end]
 		comp_size = comp_chunk_size
 
-	print idns_this_comp
-
 	eospaths_this_comp = [tools.geteospath(idn,eos_parsing_data) for idn in idns_this_comp]
 	macropath_lists_this_comp = [tools.getmacropaths(idn,eos_parsing_data) for idn in idns_this_comp] # retrieve eos tables and NS properties
 	macrodat_lists_this_comp = [tools.getmacrodats(macropaths,obsprops) for macropaths in macropath_lists_this_comp]

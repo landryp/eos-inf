@@ -142,7 +142,8 @@ def getmassseqs(macrodats):
 def getmacrodats(macropaths,obsprops):
 
 	props = [prop for prop in obsprops if prop != 'm']
-	if 'R' not in props: props.extend('R')
+	if 'R' not in props: props.append('R')
+	if 'rhoc' not in props: props.append('rhoc')
 
 	macrodats = []
 	for macropath in macropaths:
