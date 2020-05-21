@@ -171,6 +171,8 @@ def testrhoc(mbranches,macrodats,fail_mass=1.,start_rhoc=2.24e14):
 
 	boole = 1
 	numbranches = len(mbranches[0])
+	if numbranches < 1: boole = 0
+
 	minMs, minrhocs = [], []
 	for i in range(numbranches):	
 		minm = mbranches[0][i]
@@ -181,9 +183,10 @@ def testrhoc(mbranches,macrodats,fail_mass=1.,start_rhoc=2.24e14):
 		minMs.append(minM)
 		minrhocs.append(minrhoc)
 
-	firstrhoc = np.min(np.array(minrhocs))
-	first_index = minrhocs.index(firstrhoc)
-	firstM = minMs[first_index]
+	if numbranches >= 1:
+		firstrhoc = np.min(np.array(minrhocs))
+		first_index = minrhocs.index(firstrhoc)
+		firstM = minMs[first_index]
 
 	if firstrhoc <= start_rhoc and firstM > fail_mass:
 		boole = 0
@@ -194,6 +197,8 @@ def testr(mbranches,macrodats,fail_radius=30,mass_prior_bounds=[0.,4.]):
 
 	boole = 1
 	numbranches = len(mbranches[0])
+	if numbranches < 1: boole = 0
+
 	for i in range(numbranches):	
 		minm = mbranches[0][i]
 		maxm = mbranches[1][i]
