@@ -26,6 +26,7 @@ parser.add_option('-r', '--randseed', default=2020, help='random seed to use, DE
 parser.add_option('-d', '--dag', default=False, help='get input from dag, DEFAULT=False', metavar='CHUNK_NUM,CHUNK_SIZE')
 parser.add_option('-o', '--outprec', default=8, help='how many digits of precision to output, DEFAULT=8', metavar='PREC')
 parser.add_option('--choosem', default=[], help='output NS properties at chosen mass, is repeatable and also takes special keywords "maxm", "minm", DEFAULT=False', metavar='MASS', type=str, action='append')
+parser.add_option('-f', '--failm', default=1., help='require mass less than this value at first central density, DEFAULT=1.', metavar='MASS')
 parser.add_option('-v', '--verbose', action='store_true', default=False, help='toggle verbose output, DEFAULT=False', metavar='BOOL')
 #FIXME: add chirp mass/q cut, check ok to limit prior range by event
 
@@ -53,6 +54,7 @@ if obs_num_mass > 1:
 	prop_names = [prop_name+str(n+1) for n in range(obs_num_mass) for prop_name in prop_names]
 mass_prior_dict = {'cbc':priors.samplebinarymassprior, 'xmr':priors.samplemassprior, 'psr':priors.samplemassprior}
 samplem = mass_prior_dict[obs_type]
+fail_mass = float(opts.failm)
 
 # prior samples
 num_eos = int(opts.numeos)
@@ -128,8 +130,9 @@ for start_idn in comp_start_idns:
 	mass_bounds_this_comp = [(np.min(mass_seq[0]),np.max(mass_seq[1])) if mass_seq and mass_seq[0] and mass_seq[1] else (0,0) for mass_seq in mass_seqs_this_comp] # locate critical masses in stellar sequence
 
 	mtests_this_comp = [tools.testmassseq(mass_bounds,stable_at_masses) for mass_bounds in mass_bounds_this_comp]
+	rhoctests_this_comp = [tools.testrhoc(mass_seqs_this_comp[i],macrodat_lists_this_comp[i],fail_mass) for i in range(comp_size)]
 	rtests_this_comp = [tools.testr(mass_seqs_this_comp[i],macrodat_lists_this_comp[i],fail_radius,mass_prior_bounds) for i in range(comp_size)]
-	tests_this_comp = [0 if mtests_this_comp[i] == 0 or rtests_this_comp[i] == 0 else 1 for i in range(comp_size)]
+	tests_this_comp = [0 if mtests_this_comp[i] == 0 or rtests_this_comp[i] == 0 or rhoctests_this_comp[i] == 0 else 1 for i in range(comp_size)]
 	idns_this_comp, macrodat_lists_this_comp, mass_seqs_this_comp, eosfails_this_comp = tools.removeosfails(idns_this_comp, macrodat_lists_this_comp, mass_seqs_this_comp, tests_this_comp)
 	numeos_this_comp = len(idns_this_comp)
 

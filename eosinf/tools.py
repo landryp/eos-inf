@@ -67,6 +67,7 @@ def getmacropaths(idn,eos_parsing_data):
 
 M_key = 'M'
 R_key = 'R'
+rhoc_key = 'rhoc'
 
 def getpropnames(macropath,obstype):
 
@@ -165,6 +166,29 @@ def testmassseq(massseq,mrange):
 
 	return boole
 
+def testrhoc(mbranches,macrodats,fail_mass=1.,start_rhoc=2.24e14):
+
+	boole = 1
+	numbranches = len(mbranches[0])
+	minMs, minrhocs = [], []
+	for i in range(numbranches):	
+		minm = mbranches[0][i]
+		
+		macrodat = macrodats[i]
+		Ms, rhocs = macrodat['m'], macrodat[rhoc_key]
+		minM, minrhoc = Ms[0], rhocs[0]
+		minMs.append(minM)
+		minrhocs.append(minrhoc)
+
+	firstrhoc = min(minrhocs)
+	first_index = minrhocs.index(firstrhoc)
+	firstM = minMs[first_index]
+
+	if firstrhoc <= start_rhoc and firstM > fail_mass:
+		boole = 0
+
+	return boole
+
 def testr(mbranches,macrodats,fail_radius=30,mass_prior_bounds=[0.,4.]):
 
 	boole = 1
@@ -186,7 +210,7 @@ def testr(mbranches,macrodats,fail_radius=30,mass_prior_bounds=[0.,4.]):
 			elif Ms[j] < minm or Ms[j] > maxm:
 				rbranch.append(Rs[j])
 
-			elif Ms[j] >= minm and Ms[j] <= maxm and Rs[j] != fail_radius:
+			elif Ms[j] >= minm and Ms[j] <= maxm and abs(Rs[j]-fail_radius) > 1e-6:
 				rbranch.append(Rs[j])
 
 		if len(rbranch) != pts:
