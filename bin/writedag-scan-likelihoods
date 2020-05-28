@@ -46,7 +46,7 @@ while IFS=, read -r likepath obstype
 do
 
 	echo "JOB $job $rundir/scan-likelihoods.sub" >> $dagfile
-	echo "VARS $job likepath=\"$likepath\" obstype\"$obstype\"" >> $dagfile
+	echo "VARS $job likepath=\"$likepath\" obstype=\"$obstype\"" >> $dagfile
 	echo "RETRY $job 1" >> $dagfile 
 
 	job=$(($job+1))
