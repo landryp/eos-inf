@@ -52,12 +52,13 @@ while IFS=, read -r likepath obstype
 do
 
 	likemetapath="${likepath%.*}.in"
+	bwpath="${likepath%.*}.bw"
 	priorpath="${likepath%.*}_prior.json"
 	priorcsvpath="${priorpath%.*}.csv"
 	postpath="${likepath%.*}_post.csv"
 	eospath="${likepath%.*}_eos.csv"
 
-	parse-likelihood-samples $obstype $likepath $likemetapath
+#	parse-likelihood-samples $obstype $likepath $likemetapath
 
 	sumbw=0
 	vars=0
@@ -89,6 +90,8 @@ do
 
 	mbounds="$llb,$gub"
 	avgbw=$(bc <<<"scale=4;$sumbw/$vars")
+
+	optbw=$(head -n 1 $bwpath)
 
 	chunksize=1000
 	chunks=$(($numeos/$chunksize))
@@ -152,7 +155,7 @@ do
 		suffix=$(printf "%06d" $i)
 
 		echo "JOB $job $rundir/weigh-samples.sub" >> $dagfile
-		echo "VARS $job likepath=\"$likepath\" priorcsvpath=\"$priorcsvpath$suffix\" postpath=\"$postpath$suffix\" props=\"$props\" bw=\"$avgbw\"" >> $dagfile
+		echo "VARS $job likepath=\"$likepath\" priorcsvpath=\"$priorcsvpath$suffix\" postpath=\"$postpath$suffix\" props=\"$props\" bw=\"$optbw\"" >> $dagfile
 		echo "RETRY $job 1" >> $dagfile 
 		echo "PARENT $parent CHILD $job" >> $dagfile
 

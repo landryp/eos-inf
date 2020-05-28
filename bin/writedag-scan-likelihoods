@@ -1,0 +1,61 @@
+#!/bin/bash
+
+# input
+
+repodir=$1
+rundir=$2
+obslist=$3
+
+# output
+
+dagfile="${rundir}/scan-likelihoods.dag"
+logfile="${rundir}/scan-likelihoods.in"
+echo $repodir > $logfile
+echo $rundir >> $logfile
+echo $obslist >> $logfile
+
+# write sub files
+
+execs=( "scan-likelihoods" )
+args=( "\"\$(likepath) \$(obstype)\"" )
+
+for i in $(seq 0 $((${#execs[@]}-1)))
+do
+	execfile=${execs[$i]}
+	subfile="${rundir}/${execfile}.sub"
+	arg=${args[$i]}
+
+	echo "universe = vanilla" > $subfile
+	echo "executable = $repodir/bin/$execfile.sh" >> $subfile
+	echo "arguments = $arg" >> $subfile
+	echo "output = $rundir/$execfile.out" >> $subfile
+	echo "error = $rundir/$execfile.err" >> $subfile
+	echo "log = $rundir/$execfile.log" >> $subfile
+	echo "getenv = True" >> $subfile
+	echo "accounting_group = ligo.dev.o3.cbc.pe.lalinference" >> $subfile
+	echo "accounting_group_user = philippe.landry" >> $subfile
+	echo "queue 1" >> $subfile
+done
+
+# write dag file
+
+echo "# scan-likelihoods.dag, deploying to $rundir" > $dagfile
+
+job=0
+while IFS=, read -r likepath obstype
+do
+
+	echo "JOB $job $rundir/scan-likelihoods.sub" >> $dagfile
+	echo "VARS $job likepath=\"$likepath\" obstype\"$obstype\"" >> $dagfile
+	echo "RETRY $job 1" >> $dagfile 
+
+	job=$(($job+1))
+
+done < $obslist
+
+while [ ! -f "$dagfile" ]
+do
+	sleep 10s
+done
+
+condor_submit_dag -maxjobs 100 $dagfile

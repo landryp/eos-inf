@@ -7,30 +7,40 @@ nummass=$4
 
 while IFS=, read -r likepath obstype
 do
+
 	likemetapath="${likepath%.*}.in"
+	bwpath="${likepath%.*}.bw"
 	priorpath="${likepath%.*}_prior.json"
 	priorcsvpath="${priorpath%.*}.csv"
 	postpath="${likepath%.*}_post.csv"
 	eospath="${likepath%.*}_eos.csv"
 
-	parse-likelihood-samples $obstype $likepath $likemetapath
+#	parse-likelihood-samples $obstype $likepath $likemetapath
 
 	sumbw=0
 	vars=0
 	while IFS=, read -r prop lb ub bw
-	do
-		sumbw=$(bc <<<"scale=4;$sumbw+$bw") # FIXME: limit to relevant cols only
-		vars=$(($vars+1))
+	do		
 		if [ "$obstype" == "cbc" ]; then
 			if [ "$prop" == "m1" ]; then
 				gub=$ub
 			elif [ "$prop" == "m2" ]; then
 				llb=$lb
 			fi
+			if [ "$prop" == "m1" ] || [ "$prop" == "m2" ] || [ "$prop" == "Lambda1" ] || [ "$prop" == "Lambda2" ]; then
+				sumbw=$(bc <<<"scale=4;$sumbw+$bw")
+				vars=$(($vars+1))
+			fi
 		else
 			if [ "$prop" == "m" ]; then
 				gub=$ub
 				llb=$lb
+				sumbw=$(bc <<<"scale=4;$sumbw+$bw")
+				vars=$(($vars+1))
+			fi
+			if [ "$obstype" == "xmr" ] && [ "$prop" == "R" ]; then
+				sumbw=$(bc <<<"scale=4;$sumbw+$bw")
+				vars=$(($vars+1))
 			fi
 		fi
 	done < $likemetapath
@@ -38,19 +48,33 @@ do
 	mbounds="$llb,$gub"
 	avgbw=$(bc <<<"scale=4;$sumbw/$vars")
 
+	optbw=$(head -n 1 $bwpath)
+
 	sample-priors $eosbank $priorpath -O $obstype -n $numeos -N $nummass -m $mbounds -p flat # FIXME: enable other priors
 
 	convert-json-csv $priorpath $priorcsvpath
 
 	if [ "$obstype" == "cbc" ]; then
 		props="m1 m2 Lambda1 Lambda2"
+		avgbw=$(bc <<<"scale=4;$avgbw/100")
+
+		weigh-samples $likepath $priorcsvpath $postpath $props -v --bandwidth=$optbw --weight-column Prior --weight-column-is-log Prior --invert-weight-column Prior --invert-weight-column Prior --reflect --column-range Lambda1 0 5000 --column-range Lambda2 0 5000 --prune
+
 	elif [ "$obstype" == "xmr" ]; then
 		props="m R"
-	else
-		props="m" # FIXME: change to cumul-weigh-samples for psr
-	fi
 
-	weigh-samples $likepath $priorcsvpath $postpath $props -v --bandwidth=$avgbw --weight-column Prior --weight-column-is-log Prior --invert-weight-column Prior 
+		weigh-samples $likepath $priorcsvpath $postpath $props -v --bandwidth=$optbw --weight-column Prior --weight-column-is-log Prior --invert-weight-column Prior
+
+	elif [ "$obstype" == "m" ]; then
+		props="m"
+
+		cumweigh-samples $likepath $priorcsvpath $postpath "m" "Mmax" 0.1 3.5 -v	
+
+	else
+		props="m"
+		weigh-samples $likepath $priorcsvpath $postpath $props -v --bandwidth=$optbw	
+
+	fi
 
 	marginalize-samples $postpath eos -o $eospath --weight-column logweight --weight-column-is-log logweight -v
 
