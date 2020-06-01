@@ -14,7 +14,9 @@ head -n 1 $postpath$suffix > $postpath
 for i in $(seq 0 $chunks)
 do
 	suffix=$(printf "%06d" $i)
-	tail -n +2 $postpath$suffix >> $postpath
+	if test -f "$postpath$suffix"; then
+		tail -n +2 $postpath$suffix >> $postpath
+	fi
 	rm $priorcsvpath$suffix
 	rm $postpath$suffix
 done
