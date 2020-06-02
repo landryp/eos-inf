@@ -34,7 +34,7 @@ do
 		echo "$eos,$weight,$var,$num" >> "${outpath}.tmp"
 	fi
 
-done < <(tail -n +2 $outpath)
+done < $outpath
 
 mv "${outpath}.tmp" $outpath
 
@@ -44,7 +44,7 @@ while IFS=, read -r eos other
 do
 
 	eos=$(echo print $eos | python)
-	dat="$eos"
+	dat="${eos}"
 
 	while IFS=, read -r likepath obstype
 	do
