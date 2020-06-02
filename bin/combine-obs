@@ -27,7 +27,7 @@ while IFS=, read -r eos weight var num
 do
 
 	num=$(echo print $num | python)
-	if [[ $num -eq $counter ]]; then
+	if (( $(echo "$num == $counter" |bc -l) )); then
 		echo "$eos,$weight,$var,$num" >> "${outpath}.tmp"
 	fi
 
