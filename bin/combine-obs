@@ -5,15 +5,18 @@ outpath=$2
 
 echo "eos,logmargweight,logvarmargweight,num_elements" > "${outpath}.tmp"
 
+header="eos"
 counter=0
 while IFS=, read -r likepath obstype
 do
 
 	posteospath="${likepath%.*}_eos.csv"
+	name=$(basename "${likepath%.*}")
 
 	tail -n +2 $posteospath >> "${outpath}.tmp"
 
 	counter=$(($counter+1))
+	header="${header},${name}"
 
 done < $obslist
 
@@ -31,6 +34,38 @@ do
 		echo "$eos,$weight,$var,$num" >> "${outpath}.tmp"
 	fi
 
-done < $outpath
+done < <(tail -n +2 $outpath)
 
 mv "${outpath}.tmp" $outpath
+
+echo "$header" > "${outpath}.tmp"
+
+while IFS=, read -r eos other
+do
+
+	eos=$(echo print $eos | python)
+	dat="$eos"
+
+	while IFS=, read -r likepath obstype
+	do
+
+		posteospath="${likepath%.*}_eos.csv"
+
+		while IFS=, read -r loceos locweight locother
+		do
+
+			loceos=$(echo print $loceos | python)
+
+			if (( $(echo "$eos == $loceos" |bc -l) )); then
+				dat="${dat},$locweight"
+			fi
+
+		done < $posteospath
+
+	done < $obslist
+
+	echo "$dat" >> "${outpath}.tmp"
+
+done < $outpath
+
+mv "${outpath}.tmp" "${outpath%.*}_all.csv"
