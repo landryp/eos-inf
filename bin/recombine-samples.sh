@@ -16,7 +16,7 @@ do
 	suffix=$(printf "%06d" $i)
 	if test -f "$postpath$suffix"; then
 		tail -n +2 $postpath$suffix >> $postpath
+		rm $postpath$suffix
 	fi
 	rm $priorcsvpath$suffix
-	rm $postpath$suffix
 done

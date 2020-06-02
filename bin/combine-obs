@@ -1,0 +1,22 @@
+#!/bin/bash
+
+obslist=$1
+outpath=$2
+
+echo "eos,logmargweight,logvarmargweight,num_elements" > "${outpath}.tmp"
+
+counter=0
+while IFS=, read -r likepath obstype
+do
+
+	posteospath="${likepath%.*}_eos.csv"
+
+	tail -n +2 $posteospath >> "${outpath}.tmp"
+
+	counter=$(($counter+1))
+
+done
+
+marginalize-samples "${outpath}.tmp" eos -o $outpath --weight-column logmargweight --weight-column-is-log logmargweight -v
+
+rm "${outpath}.tmp"
