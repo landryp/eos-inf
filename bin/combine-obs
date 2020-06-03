@@ -60,7 +60,7 @@ do
 				dat="${dat},$locweight"
 			fi
 
-		done < $posteospath
+		done <  <(tail -n +2 "${posteospath}")
 
 	done < $obslist
 
