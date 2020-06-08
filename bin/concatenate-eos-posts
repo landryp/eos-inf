@@ -8,17 +8,19 @@ import numpy as np
 from optparse import OptionParser
 
 parser = OptionParser(usage=__usage__, description=__doc__)
-parser.add_option('-o', '--outdir', default='./combined_all.csv', help='path to output directory, DEFAULT=./combined_all.csv', metavar='PATH/TO/OUTPUT.CSV')
+parser.add_option('-o', '--outpath', default='./combined_all.csv', help='path to output directory, DEFAULT=./combined_all.csv', metavar='PATH/TO/OUTPUT.CSV')
 parser.add_option('-v', '--verbose', action='store_true', default=False, help='toggle verbose output, DEFAULT=False', metavar='False')
 
 opts, args = parser.parse_args()
 obsfile = str(args[0])
 combinedfile = str(args[1])
+outpath = str(opts.outpath)
+outfile = open(outpath,"w")
 
 obsdat = np.genfromtxt(obsfile,delimiter=",",dtype=str)
 obslist = obsdat[:,0]
-number_of_obs = len(obs)
-obnames = [(ob.split('/')[-1]).split(".")[0] for ob in obs]
+number_of_obs = len(obslist)
+obnames = [(ob.split('/')[-1]).split(".")[0] for ob in obslist]
 
 namesstr = ['logweight_'+n for n in obnames]
 outfile.write('eos,'+','.join(namesstr)+',logweight_total')
