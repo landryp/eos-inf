@@ -38,34 +38,5 @@ done < <(tail -n +2 "${outpath}")
 
 mv "${outpath}.tmp" $outpath
 
-#echo "$header" > "${outpath}.tmp"
+concatenate-eos-posts $obslist $outpath -v -o "${outpath%.*}_all.csv"
 
-#while IFS=, read -r eos other
-#do
-
-#	eos=$(echo print $eos | python)
-#	dat="${eos}"
-
-#	while IFS=, read -r likepath obstype
-#	do
-
-#		posteospath="${likepath%.*}_eos.csv"
-
-#		while IFS=, read -r loceos locweight locother
-#		do
-
-#			loceos=$(echo print $loceos | python)
-
-#			if (( $(echo "$eos == $loceos" |bc -l) )); then
-#				dat="${dat},$locweight"
-#			fi
-
-#		done <  <(tail -n +2 "${posteospath}")
-
-#	done < $obslist
-
-#	echo "$dat" >> "${outpath}.tmp"
-
-#done < <(tail -n +2 "${outpath}")
-
-#mv "${outpath}.tmp" "${outpath%.*}_all.csv"

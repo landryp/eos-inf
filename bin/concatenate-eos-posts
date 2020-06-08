@@ -16,42 +16,53 @@ obsfile = str(args[0])
 combinedfile = str(args[1])
 outpath = str(opts.outpath)
 outfile = open(outpath,"w")
+verb = opts.verbose
+
+if verb: print 'Getting EoS list'
 
 obsdat = np.genfromtxt(obsfile,delimiter=",",dtype=str)
 obslist = obsdat[:,0]
 number_of_obs = len(obslist)
-obnames = [(ob.split('/')[-1]).split(".")[0] for ob in obslist]
+obnames = [(ob.split('/')[-1]).split(".csv")[0] for ob in obslist]
 
 namesstr = ['logweight_'+n for n in obnames]
-outfile.write('eos,'+','.join(namesstr)+',logweight_total')
+outfile.write('eos,'+','.join(namesstr)+',logweight_total \n')
 
 combineddat = np.genfromtxt(combinedfile,names=True,delimiter=",",dtype=None)
 eoss = combineddat['eos']
+number_of_eoss = len(eoss)
+
+if verb: print 'Loading weights from each observation'
 
 obeoss = []
 obweights = []
 for ob in obslist:
 
-	obdat = np.genfromtxt(ob,names=True,delimiter=",",dtype=None)
+	obfile = ob.split('.csv')[0]+'_eos.csv'
+	obdat = np.genfromtxt(obfile,names=True,delimiter=",",dtype=None)
 	obeoss.append(obdat['eos'])
 	obweights.append(obdat['logmargweight'])
 
+j = 1
 for eos in eoss:
+
+	if verb: print 'Working on EoS {0} of {1}'.format(j,number_of_eoss)
 
 	weights = []
 	outstr = "{0}".format(eos)
 	for i in range(number_of_obs):
 
-		eoslist = obeoss[i]
-		weightslist = obweights[i]
+		eoslist = list(obeoss[i])
+		weightslist = list(obweights[i])
 		
 		pos = eoslist.index(eos)
 		weight = weightslist[pos]
 		weights.append(weight)
 
-		outstr = outstr+",{1}".format(weight)	
+		outstr = outstr+",{0}".format(weight)	
 
 	totweight = np.sum(weights)
-	outstr = outstr+",{1}".format(totweight)
+	outstr = outstr+",{0} \n".format(totweight)
 	outfile.write(outstr)
 
+	j = j+1
