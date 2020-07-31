@@ -45,7 +45,7 @@ do
 
 	if [ "$obstype" == "cbc" ]; then
 		props="m1 m2 Lambda1 Lambda2"
-		avgbw=$(bc <<<"scale=4;$avgbw/1000")
+		avgbw=$(bc <<<"scale=4;$avgbw/100")
 
 	elif [ "$obstype" == "xmr" ]; then
 		props="m R"
@@ -61,13 +61,17 @@ do
 	for i in 0 1 2 3 4 5
 	do
 		j=$((2*$i+1))
-		bws[$i]=$(bc <<<"scale=4;$avgbw*$j")
+		#bws[$i]=$(bc <<<"scale=4;$avgbw*$j")
+		bws[$i]=$(bc <<<"scale=4;0.04*$j") # finds bandwidth in [0.04,0.44]
 	done
+	#echo "${bws[*]}"
 	
 	investigate-bandwidth $likepath $props -v --num-proc 50 -b ${bws[0]} -b ${bws[1]} -b ${bws[2]} -b ${bws[3]} -b ${bws[4]} -b ${bws[5]} --weight-column Prior --weight-column-is-log Prior --invert-weight-column Prior > $bwpath
 
-	grep 'mean_logL' $bwpath | tr -d 'mean_logL =' > $tmppath1
+	grep 'mean_logL' $bwpath | cut -d= -f2 > $tmppath1
 	grep 'b=' $bwpath | tr -d 'b =' > $tmppath2
+
+        #echo $(grep 'mean_logL' $bwpath | cut -d= -f2)
 
 	optbw=1
 	maxlogL=-1000
@@ -87,15 +91,17 @@ do
 	for i in 0 1 2 3 4 5 6
 	do
 		j=$(($i-3))
-		j=$(bc <<<"scale=4;$j/10")
-		j=$(bc <<<"scale=4;$j+1")
-		bws[${i}]=$(bc <<<"scale=4;$optbw*$j")
+		j=$(bc <<<"scale=4;0.027*$j")
+		bws[${i}]=$(bc <<<"scale=4;$optbw+$j")
 	done
+	#echo "${bws[*]}"
 
 	investigate-bandwidth $likepath $props -v --num-proc 50 -b ${bws[0]} -b ${bws[1]} -b ${bws[2]} -b ${bws[3]} -b ${bws[4]} -b ${bws[5]} -b ${bws[6]} --weight-column Prior --weight-column-is-log Prior --invert-weight-column Prior > $bwpath
 
-	grep 'mean_logL' $bwpath | tr -d 'mean_logL =' > $tmppath1
+	grep 'mean_logL' $bwpath | cut -d= -f2 > $tmppath1
 	grep 'b=' $bwpath | tr -d 'b =' > $tmppath2
+
+        #echo $(grep 'mean_logL' $bwpath | cut -d= -f2)
 
 	optbw=1
 	maxlogL=-1000
@@ -115,15 +121,17 @@ do
 	for i in 0 1 2 3 4 5 6 7 8 9 10
 	do
 		j=$(($i-5))
-		j=$(bc <<<"scale=4;$j/10")
-		j=$(bc <<<"scale=4;$j+1")
-		bws[${i}]=$(bc <<<"scale=4;$optbw*$j")
+		j=$(bc <<<"scale=4;0.006*$j")
+		bws[${i}]=$(bc <<<"scale=4;$optbw+$j")
 	done
+	#echo "${bws[*]}"
 
 	investigate-bandwidth $likepath $props -v --num-proc 50 -b ${bws[0]} -b ${bws[1]} -b ${bws[2]} -b ${bws[3]} -b ${bws[4]} -b ${bws[5]} -b ${bws[6]} -b ${bws[7]} -b ${bws[8]} -b ${bws[9]} -b ${bws[10]} --weight-column Prior --weight-column-is-log Prior --invert-weight-column Prior > $bwpath
 
-	grep 'mean_logL' $bwpath | tr -d 'mean_logL =' > $tmppath1
+	grep 'mean_logL' $bwpath | cut -d= -f2 > $tmppath1
 	grep 'b=' $bwpath | tr -d 'b =' > $tmppath2
+
+        #echo $(grep 'mean_logL' $bwpath | cut -d= -f2)
 
 	optbw=1
 	maxlogL=-1000
