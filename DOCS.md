@@ -7,3 +7,16 @@ Documentation for the eos-inf code for inference of the neutron-star equation of
 # Installation
 
 ...
+
+
+---
+
+# Setup
+
+scan-likelihoods /path/to/obslist.in
+
+---
+
+# Analysis
+
+...
