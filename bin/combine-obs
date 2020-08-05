@@ -3,40 +3,52 @@
 obslist=$1
 outpath=$2
 
-echo "eos,logmargweight,logvarmargweight,num_elements" > "${outpath}.tmp"
-
-header="eos"
-counter=0
+samplespaths=()
 while IFS=, read -r likepath obstype
 do
 
-	posteospath="${likepath%.*}_eos.csv"
-	name=$(basename "${likepath%.*}")
-
-	tail -n +2 $posteospath >> "${outpath}.tmp"
-
-	counter=$(($counter+1))
-	header="${header},${name}"
+	samplespaths+=("${likepath}")
 
 done < $obslist
 
-marginalize-samples "${outpath}.tmp" eos -o $outpath --weight-column logmargweight --weight-column-is-log logmargweight -v
+samples=$(printf '-s %s ' "${samplespaths[@]}")
 
-rm "${outpath}.tmp"
+collate-samples eos ${outpath} ${samples} --omit-missing -V
 
-echo "eos,logmargweight,logvarmargweight,num_elements" > "${outpath}.tmp"
+#echo "eos,logmargweight,logvarmargweight,num_elements" > "${outpath}.tmp"
 
-while IFS=, read -r eos weight var num
-do
+#header="eos"
+#counter=0
+#while IFS=, read -r likepath obstype
+#do
 
-	num=$(echo print $num | python)
-	if (( $(echo "$num == $counter" |bc -l) )); then
-		echo "$eos,$weight,$var,$num" >> "${outpath}.tmp"
-	fi
+#	posteospath="${likepath%.*}_eos.csv"
+#	name=$(basename "${likepath%.*}")
 
-done < <(tail -n +2 "${outpath}")
+#	tail -n +2 $posteospath >> "${outpath}.tmp"
 
-mv "${outpath}.tmp" $outpath
+#	counter=$(($counter+1))
+#	header="${header},${name}"
 
-concatenate-eos-posts $obslist $outpath -v -o "${outpath%.*}_all.csv"
+#done < $obslist
+
+#marginalize-samples "${outpath}.tmp" eos -o $outpath --weight-column logmargweight --weight-column-is-log logmargweight -v
+
+#rm "${outpath}.tmp"
+
+#echo "eos,logmargweight,logvarmargweight,num_elements" > "${outpath}.tmp"
+
+#while IFS=, read -r eos weight var num
+#do
+
+#	num=$(echo print $num | python)
+#	if (( $(echo "$num == $counter" |bc -l) )); then
+#		echo "$eos,$weight,$var,$num" >> "${outpath}.tmp"
+#	fi
+
+#done < <(tail -n +2 "${outpath}")
+
+#mv "${outpath}.tmp" $outpath
+
+#concatenate-eos-posts $obslist $outpath -v -o "${outpath%.*}_all.csv"
 

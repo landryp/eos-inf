@@ -3,8 +3,9 @@
 priorcsvpath=$1
 postpath=$2
 nummass=$3
+chunksize=$4
 
-chunksize=$((100*$nummass))
+chunksize=$(($chunksize*$nummass))
 numlines=$(wc -l < $priorcsvpath)
 chunks=$(($numlines/$chunksize))
 
