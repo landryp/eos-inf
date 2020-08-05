@@ -7,13 +7,13 @@ samplespaths=()
 while IFS=, read -r likepath obstype
 do
 
-	samplespaths+=("${likepath}")
+	samplespaths+=("-s ${likepath}")
 
 done < $obslist
 
-samples=$(printf '-s %s ' "${samplespaths[@]}")
+samples=$(printf "%s " "${samplespaths[@]}")
 
-collate-samples eos ${outpath} ${samples} --omit-missing -V
+collate-samples -V --omit-missing eos ${outpath} ${samples}
 
 #echo "eos,logmargweight,logvarmargweight,num_elements" > "${outpath}.tmp"
 
