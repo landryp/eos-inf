@@ -93,7 +93,7 @@ do
 
 	optbw=$(head -n 1 $bwpath)
 
-	chunksize=10000
+	chunksize=1000
 	chunks=$(($numeos/$chunksize))
 	leftover=$(($numeos%$chunksize))
 	if [ "$chunks" -eq "0" ]; then
@@ -144,7 +144,7 @@ do
 
 	parent=$(($job-1))
 
-#	chunksize=10000
+	chunksize=100
 	chunks=$(($numeos/$chunksize))
 
 	for i in $(seq 0 $chunks)
