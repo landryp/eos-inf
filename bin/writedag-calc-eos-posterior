@@ -144,7 +144,7 @@ do
 
 	parent=$(($job-1))
 
-	chunksize=100
+	chunksize=1000
 	chunks=$(($numeos/$chunksize))
 
 	for i in $(seq 0 $chunks)

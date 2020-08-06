@@ -21,7 +21,7 @@ do
 	rm $priorcsvpath$suffix
 done
 
-chunksize=$((100*$nummass))
+chunksize=$((1000*$nummass))
 numlines=$(wc -l < $priorcsvpath)
 chunks=$(($(($numlines+$chunksize-1))/$chunksize))
 
