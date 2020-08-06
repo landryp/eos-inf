@@ -4,8 +4,8 @@ priorcsvpath=$1
 numeos=$2
 nummass=$3
 chunksize=$4
+rechunksize=$5
 
-chunksize=10000
 chunks=$(($numeos/$chunksize))
 if [ "$chunks" -eq "0" ]; then
 	chunks=1
@@ -21,7 +21,7 @@ do
 	rm $priorcsvpath$suffix
 done
 
-chunksize=$((1000*$nummass))
+chunksize=$(($rechunksize*$nummass))
 numlines=$(wc -l < $priorcsvpath)
 chunks=$(($(($numlines+$chunksize-1))/$chunksize))
 
