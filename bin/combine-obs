@@ -7,7 +7,7 @@ samplespaths=()
 while IFS=, read -r likepath obstype
 do
 
-	samplespaths+=("-s ${likepath}")
+	samplespaths+=("-s ${likepath%.csv}_eos.csv")
 
 done < $obslist
 
