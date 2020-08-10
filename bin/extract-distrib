@@ -9,7 +9,7 @@ __date__ = '08-2020'
 from optparse import OptionParser
 import numpy as np
 import numpy.random
-import json
+import os
 import scipy.interpolate
 from scipy.interpolate import interp1d
 
@@ -34,7 +34,7 @@ prop = str(args[0])
 path_to_eos_post = str(args[1])
 num_eoss = int(opts.numeos)
 num_masses = int(opts.nummasses)
-mmin, mmax = opts.mrange
+minm, maxm = opts.mrange
 eos_dir = str(opts.eosdir)
 branch_method = str(opts.branch)
 path_to_output = str(opts.outpath)
@@ -80,7 +80,7 @@ sample_array = np.empty((num_eoss,num_masses+2))
 
 if verb: print "extracting samples..."
 
-for i, eos, logweight in enumerate(zip(eoss,logweights)):
+for i, (eos, logweight) in enumerate(zip(eoss,logweights)):
 
 	init_val = -1
 	branch_vals = []
@@ -91,8 +91,19 @@ for i, eos, logweight in enumerate(zip(eoss,logweights)):
 	
 		macro_dat = np.genfromtxt(macropath, dtype=None, delimiter=",", names=True)
 		masses = macro_dat["M"]
-		vals = macro_dat[prop]
-		val_of_m = interp1d(masses, vals, bounds_error=False, fill_value=0)
+		rhocs = macro_dat["rhoc"]
+		
+		if prop == 'pressurec2' or prop == 'energy_densityc2' or prop == 'baryon_density':
+			eos_dat = np.genfromtxt(eos_path(eos), dtype=None, delimiter=",", names=True)
+			vals = eos_dat[prop]
+			rhoc_of_m = interp1d(masses, rhocs, bounds_error=False, fill_value=0)
+			val_of_rhoc = interp1d(rhocs, vals, bounds_error=False, fill_value=0)
+			val_of_m = lambda M: val_of_rhoc(rhoc_of_m(M))
+		
+		else:
+			vals = macro_dat[prop]		
+			val_of_m = interp1d(masses, vals, bounds_error=False, fill_value=0)
+		
 		branch_interps.append(val_of_m)
 
 		branch += 1
