@@ -107,10 +107,11 @@ for i, (eos, logweight) in enumerate(zip(eoss,logweights)):
 		
 			if prop == 'pressurec2' or prop == 'energy_densityc2' or prop == 'baryon_density':
 				eos_dat = np.genfromtxt(eospath, dtype=None, delimiter=",", names=True)
+				rhos = eos_dat["baryon_density"]
 				vals = eos_dat[prop]
 				rhoc_of_m = interp1d(masses, rhocs, bounds_error=False, fill_value=0)
-				val_of_rhoc = interp1d(rhocs, vals, bounds_error=False, fill_value=0)
-				val_of_m = lambda M: val_of_rhoc(rhoc_of_m(M))
+				val_of_rho = interp1d(rhos, vals, bounds_error=False, fill_value=0)
+				val_of_m = lambda M: val_of_rho(rhoc_of_m(M))
 		
 			else:
 				vals = macro_dat[prop]		
