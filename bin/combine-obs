@@ -6,14 +6,14 @@ outpath=$2
 samplespaths=()
 while IFS=, read -r likepath obstype
 do
-
-	samplespaths+=("-s ${likepath%.csv}_eos.csv")
+	eventname=${likepath##*PosteriorSamples_}
+	samplespaths+=("--samples ${likepath%.csv}_eos.csv --column-map ${likepath%.csv}_eos.csv logmargweight logweight_${eventname%.csv} --column-map ${likepath%.csv}_eos.csv logvarmargweight logvar_${eventname%.csv} --column-map ${likepath%.csv}_eos.csv num_elements num_${eventname%.csv}")
 
 done < $obslist
 
 samples=$(printf "%s " "${samplespaths[@]}")
 
-collate-samples -V --omit-missing eos ${outpath} ${samples}
+collate-samples -V eos ${outpath} ${samples}
 
 #echo "eos,logmargweight,logvarmargweight,num_elements" > "${outpath}.tmp"
 
