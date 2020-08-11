@@ -1,0 +1,78 @@
+#!/usr/bin/python
+__doc__ = 'CALC-TOTAL-WEIGHT -- calculate total weight of eos from multiple observations and append to csv'
+__usage__ = 'calc-total-weight path/to/eos_post.csv [-o path/to/output.csv ...]'
+__author__ = 'pgjlandry@gmail.com'
+__date__ = '08-2020'
+
+# LOAD PACKAGES
+
+from optparse import OptionParser
+import numpy as np
+import numpy.random
+import os
+import scipy.interpolate
+from scipy.interpolate import interp1d
+
+# SET UP OPTIONS
+
+parser = OptionParser(usage=__usage__, description=__doc__)
+parser.add_option('-o', '--outpath', default=False, help='path to output csv, if not overwriting input file, DEFAULT=OVERWRITE', metavar='OUT_PATH')
+parser.add_option('-w', '--weightcol', default="logmargweight", help='basename of logweight column(s) in eos posterior samples, DEFAULT="logmargweight"', metavar='WEIGHT_COL')
+parser.add_option('-c', '--eoscol', default="eos", help='name of eos column in eos posterior samples, DEFAULT="eos"', metavar='EOS_COL')
+parser.add_option('-v', '--verbose', action='store_true', default=False, help='toggle verbose output, DEFAULT=False', metavar='False')
+
+# SAVE INPUT FROM OPTIONS
+
+opts, args = parser.parse_args()
+path_to_eos_post = str(args[0])
+path_to_output = opts.outpath
+wcol = str(opts.weightcol)
+eoscol = str(opts.eoscol)
+verb = opts.verbose
+
+if path_to_output: path_to_output = str(path_to_output)
+else: path_to_output = path_to_eos_post
+
+# LOAD DATA
+
+if verb: print "loading data..."
+
+eos_post = np.genfromtxt(path_to_eos_post,dtype=None,delimiter=",",names=True) # read eos posterior process
+cols = eos_post.dtype.names
+eoss = eos_post[eoscol]
+num_eos = len(eoss)
+
+events = []
+for col in cols:
+	if wcol in col: events.append(col)
+	
+num_events = len(events)
+if verb: print "found %i events" num_events
+
+logweights_array = np.empty((num_eos,num_events+2))
+
+if verb: print "computing total weights..."
+
+for i, eos in enumerate(eoss):
+
+	logweights_array[i,0] = eos
+
+	logweights = []
+	for j, event in enumerate(events):
+	
+		logweight = event[i]
+		logweights.append(logweight)
+		logweights_array[i,j] = logweight
+		
+	tot_logweight = np.sum(logweights)
+	logweights_array[i,-1] = tot_logweight
+
+# SAVE OUTPUT
+
+if verb: print "saving weights..."
+
+head = 'eos,'+','.join(events)+','+wcol'_total'
+
+np.savetxt(path_to_output,logweights_array,'%.6e',delimiter=',',header=head)
+
+if verb: print "done"

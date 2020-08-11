@@ -153,7 +153,8 @@ for i, (eos, logweight) in enumerate(zip(eoss,logweights)):
 
 if verb: print "saving samples..."
 
-mgrid_str = ['%.2f' % mass for mass in mgrid]
+if use_rho: mgrid_str = ['%.2e' % mass for mass in mgrid]
+else: mgrid_str = ['%.2f' % mass for mass in mgrid]
 head = 'eos,logweights,'+','.join(mgrid_str)
 
 np.savetxt(path_to_output,sample_array,fmt_str,delimiter=',',header=head)
