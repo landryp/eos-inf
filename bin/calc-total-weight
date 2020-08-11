@@ -17,7 +17,7 @@ from scipy.interpolate import interp1d
 
 parser = OptionParser(usage=__usage__, description=__doc__)
 parser.add_option('-o', '--outpath', default=False, help='path to output csv, if not overwriting input file, DEFAULT=OVERWRITE', metavar='OUT_PATH')
-parser.add_option('-w', '--weightcol', default="logmargweight", help='basename of logweight column(s) in eos posterior samples, DEFAULT="logmargweight"', metavar='WEIGHT_COL')
+parser.add_option('-w', '--weightcol', default="logweight", help='basename of logweight column(s) in eos posterior samples, DEFAULT="logweight"', metavar='WEIGHT_COL')
 parser.add_option('-c', '--eoscol', default="eos", help='name of eos column in eos posterior samples, DEFAULT="eos"', metavar='EOS_COL')
 parser.add_option('-v', '--verbose', action='store_true', default=False, help='toggle verbose output, DEFAULT=False', metavar='False')
 
@@ -47,7 +47,7 @@ for col in cols:
 	if wcol in col: events.append(col)
 	
 num_events = len(events)
-if verb: print "found %i events" num_events
+if verb: print "found {0} events".format(num_events)
 
 logweights_array = np.empty((num_eos,num_events+2))
 
@@ -60,7 +60,7 @@ for i, eos in enumerate(eoss):
 	logweights = []
 	for j, event in enumerate(events):
 	
-		logweight = event[i]
+		logweight = eos_post[event][i]
 		logweights.append(logweight)
 		logweights_array[i,j] = logweight
 		
@@ -71,8 +71,8 @@ for i, eos in enumerate(eoss):
 
 if verb: print "saving weights..."
 
-head = 'eos,'+','.join(events)+','+wcol'_total'
+head = 'eos,'+','.join(events)+','+wcol+'_total'
 
-np.savetxt(path_to_output,logweights_array,'%.6e',delimiter=',',header=head)
+np.savetxt(path_to_output,logweights_array,'%.6e',delimiter=',',header=head,comments='')
 
 if verb: print "done"
