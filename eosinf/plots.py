@@ -17,8 +17,8 @@ def pplot(array,weights,path_to_output,xlims,axis_label=None,color=sns.color_pal
         array = array + [-pt for pt in array]
         weights = weights + weights
         
-    equal_weight_post = equalize_sample_weights(array,weights)
-    
+    equal_weight_post = equalize_sample_weights(array,weights,res=len(array))
+    print equal_weight_post
     prior_kde = gaussian_kde(array)
     post_kde = gaussian_kde(equal_weight_post)
 #    post_kde = gaussian_kde(array,weights=weights)
