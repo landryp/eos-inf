@@ -10,6 +10,8 @@ from optparse import OptionParser
 import numpy as np
 import scipy.stats
 from scipy.stats import gaussian_kde
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import seaborn as sns
 import eosinf.plots as plots
@@ -18,7 +20,7 @@ import eosinf.plots as plots
 
 parser = OptionParser(usage=__usage__, description=__doc__)
 parser.add_option('-n', '--numeos', default=False, help='number of EOS samples to use, DEFAULT=ALL', metavar='NUM_EOS_SAMPLES')
-parser.add_option('-o', '--outpath', default="./samples.csv", help='path to output csv, DEFAULT="./samples.csv"', metavar='OUT_PATH')
+parser.add_option('-o', '--outpath', default="./plot.png", help='path to output plot, DEFAULT="./plot.png"', metavar='OUT_PATH')
 parser.add_option('-w', '--weightcol', default="logweight", help='name of logweight column in eos posterior samples, DEFAULT="logweight"', metavar='WEIGHT_COL')
 parser.add_option('-x', '--xrange', default=False, help='x range for plot, DEFAULT=AUTO', metavar='X_START,X_END')
 parser.add_option('-y', '--yrange', default=False, help='y range for plot, DEFAULT=AUTO', metavar='Y_START,Y_END')
@@ -45,10 +47,11 @@ verb = opts.verbose
 if verb: print "loading data..."
 
 post = np.genfromtxt(path_to_post,dtype=None,delimiter=",",names=True) # read eos posterior process
+print post.dtype.names
 samples = post[prop]
 logweights = post[wcol]
 if num_eoss:
-	samples = samples[:num_eos]
+	samples = samples[:num_eoss]
 	logweights = logweights[:num_eoss]
 else: num_eoss = len(logweights)
 
@@ -56,10 +59,10 @@ weights = np.exp(logweights)
 weights = weights/np.sum(weights)
 
 if opts.xrange:
-	xmin,xmax = [float(x) for x in str(opts.xrange).split(','])
+	xmin,xmax = [float(x) for x in str(opts.xrange).split(',')]
 else: xmin, xmax = np.min(samples), np.max(samples)
 if opts.yrange:
-	ymin,ymax = [float(y) for y in str(opts.yrange).split(','])
+	ymin,ymax = [float(y) for y in str(opts.yrange).split(',')]
 
 # PLOTTING
 
