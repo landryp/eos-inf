@@ -27,7 +27,7 @@ parser.add_option('-y', '--yrange', default=False, help='y range for plot, DEFAU
 parser.add_option('-l', '--label', default=None, help='x-axis label, DEFAULT=NONE', metavar='LABEL')
 parser.add_option('-r', '--reflect', action='store_true', default=False, help='reflect kde about zero, DEFAULT=False', metavar='False')
 parser.add_option('-b', '--numbins', default=None, help='number of histogram bins use, DEFAULT=AUTO', metavar='NUM_BINS')
-parser.add_option('-s', '--skipbhs', action='store_true', default=False, help='skip BH samples, DEFAULT=False', metavar='False')
+parser.add_option('-s', '--skipbhs', default=False, help='skip BH samples, DEFAULT=False', metavar='False')
 parser.add_option('-v', '--verbose', action='store_true', default=False, help='toggle verbose output, DEFAULT=False', metavar='False')
 
 # SAVE INPUT FROM OPTIONS
@@ -60,7 +60,7 @@ if skipbhs:
 	ns_samples = []
 	ns_weights = []
 	for samp, logweight in zip(samples,logweights):
-		if samp != bh_dict[prop]:
+		if samp != bh_dict[skip_bhs](float(prop)):
 			ns_samples.append(samp)
 			ns_weights.append(logweight)
 	samples = ns_samples
