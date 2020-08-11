@@ -11,17 +11,22 @@ import seaborn as sns
 
 def pplot(array,weights,xlims,axis_label=None,color=sns.color_palette()[0],num_bins=None,reflect=False,ylims=False):
 
-    sns.rugplot(weighted_quantile(array,weights), height=0.03, color=color, lw=1.5, zorder=100)
+    weights = weights/np.sum(weights)
     
     if reflect:
         array = array + [-pt for pt in array]
         weights = weights + weights
+        
+    equal_weight_post = equalize_sample_weights(array,weights)
     
-    prior_kde=gaussian_kde(array)
-    post_kde=gaussian_kde(array,weights=weights)
+    prior_kde = gaussian_kde(array)
+    post_kde = gaussian_kde(equal_weight_post)
+#    post_kde = gaussian_kde(array,weights=weights)
     
     xmin, xmax = xlims
     grid = np.linspace(xmin,xmax,1000)
+    
+    sns.rugplot(weighted_quantile(array,weights), height=0.03, color=color, lw=1.5, zorder=100)
     
     plt.plot(grid,prior_kde(grid),color='0.3',linestyle=':',label='prior')
     plt.plot(grid,post_kde(grid),color=color)
@@ -39,6 +44,12 @@ def pplot(array,weights,xlims,axis_label=None,color=sns.color_palette()[0],num_b
     plt.savefig(path_to_output)
     
     return None
+
+def equalize_sample_weights(array,weights,res=int(1e3)):
+
+    equal_weight_array = np.random.choice(array,size=res,p=weights/np.sum(weights)) # draw equal-weight samples
+    
+    return equal_weight_array
 
 def weighted_quantile(array,weights,qs=[0.05,0.5,0.95],res=10000):
     
