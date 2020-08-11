@@ -49,17 +49,17 @@ verb = opts.verbose
 
 # SET UP PATH FINDERS
 
-def eos_path(id):
+def eos_path(eos):
     
     mod = 1000
-    path = eos_dir+"DRAWmod"+str(mod)+"-"+"%06d/eos-draw-%06d.csv" % (id/mod,id)
+    path = eos_dir+"DRAWmod"+str(mod)+"-"+"%06d/eos-draw-%06d.csv" % (eos/mod,eos)
     
     return path
 
-def macro_path(id,branch=0):
+def macro_path(eos,branch=0):
     
     mod = 1000
-    path = eos_dir+"DRAWmod"+str(mod)+"-"+"%06d/MACROdraw-%06d/MACROdraw-%06d-%d.csv" % (id/mod,id,id,branch)
+    path = eos_dir+"DRAWmod"+str(mod)+"-"+"%06d/MACROdraw-%06d/MACROdraw-%06d-%d.csv" % (eos/mod,eos,eos,branch)
     
     return path
 

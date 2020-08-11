@@ -60,7 +60,7 @@ if skipbhs:
 	ns_samples = []
 	ns_weights = []
 	for samp, logweight in zip(samples,logweights):
-		if samp != bh_dict[skip_bhs](float(prop)):
+		if samp != bh_dict[skipbhs](float(prop)):
 			ns_samples.append(samp)
 			ns_weights.append(logweight)
 	samples = ns_samples
