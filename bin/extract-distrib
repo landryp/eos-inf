@@ -63,7 +63,7 @@ def macro_path(id,branch=0):
 
 branch_dict = {"random":np.random.choice,"first":lambda l: l[0],"max":np.max,"min":np.min}
 
-bh_dict = {"R":lambda M: 2*M,"Lambda":lambda M: 0*M}
+bh_dict = {"R":lambda M: 2*M,"Lambda":lambda M: 0*M,"pressurec2":0,"baryon_density":0,"energy_densityc2":0}
 
 # LOAD DATA
 
