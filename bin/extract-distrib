@@ -18,8 +18,9 @@ from scipy.interpolate import interp1d
 parser = OptionParser(usage=__usage__, description=__doc__)
 parser.add_option('-n', '--numeos', default=False, help='number of EOS samples to use, DEFAULT=ALL', metavar='NUM_EOS_SAMPLES')
 parser.add_option('-m', '--nummasses', default=100, help='number of mass samples to use, DEFAULT=100', metavar='NUM_MASS_SAMPLES')
-parser.add_option('-r', '--mrange', default=[1.,3.], help='mass range to sample in, DEFAULT=[1.,3.]', metavar='MASS_RANGE')
+parser.add_option('-r', '--mrange', default="1.,3.", help='mass range to sample in, DEFAULT="1.,3."', metavar='MASS_RANGE')
 parser.add_option('-u', '--userho', action='store_true', default=False, help='use densities instead of masses as input, DEFAULT=False', metavar='False')
+parser.add_option('-l', '--loggrid', action='store_true', default=False, help='use logarithmically spaced masses, DEFAULT=False', metavar='False')
 parser.add_option('-e', '--eosdir', default="./", help='path to EOS directory, DEFAULT="./"', metavar='EOS_DIR_PATH')
 parser.add_option('-o', '--outpath', default="./samples.csv", help='path to output csv, DEFAULT="./samples.csv"', metavar='OUT_PATH')
 parser.add_option('-f', '--fmtstr', default="%.2e", help='output format string, DEFAULT="%.2e"', metavar='FMT_STR')
@@ -43,6 +44,7 @@ fmt_str = str(opts.fmtstr)
 wcol = str(opts.weightcol)
 eoscol = str(opts.eoscol)
 use_rho = opts.userho
+loggrid = opts.loggrid
 verb = opts.verbose
 
 # SET UP PATH FINDERS
@@ -76,7 +78,8 @@ if num_eoss:
 	eoss = eoss[:num_eoss]
 	logweights = logweights[:num_eoss]
 else: num_eoss = len(eoss)
-mgrid = np.linspace(minm,maxm,num_masses)
+if loggrid: mgrid = np.logspace(np.log10(minm),np.log10(maxm),num_masses)
+else: mgrid = np.linspace(minm,maxm,num_masses)
 
 sample_array = np.empty((num_eoss,num_masses+2))
 
