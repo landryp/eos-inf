@@ -58,4 +58,4 @@ def weighted_quantile(array,weights,qs=[0.05,0.5,0.95],res=10000):
     
     equal_weight_array = np.random.choice(array,size=res,p=weights/np.sum(weights))
     
-    return np.percentile(equal_weight_array,qs*100)
+    return np.percentile(equal_weight_array,[q*100 for q in qs])
