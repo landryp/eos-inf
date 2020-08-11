@@ -1,0 +1,75 @@
+#!/usr/bin/python
+__doc__ = 'PLOT-DISTRIB -- plot distribution'
+__usage__ = 'plot-distrib prop path/to/post_samples.csv [-o path/to/plot.png ...]'
+__author__ = 'pgjlandry@gmail.com'
+__date__ = '08-2020'
+
+# LOAD PACKAGES
+
+from optparse import OptionParser
+import numpy as np
+import scipy.stats
+from scipy.stats import gaussian_kde
+import matplotlib.pyplot as plt
+import seaborn as sns
+import eosinf.plots as plots
+
+# SET UP OPTIONS
+
+parser = OptionParser(usage=__usage__, description=__doc__)
+parser.add_option('-n', '--numeos', default=False, help='number of EOS samples to use, DEFAULT=ALL', metavar='NUM_EOS_SAMPLES')
+parser.add_option('-o', '--outpath', default="./samples.csv", help='path to output csv, DEFAULT="./samples.csv"', metavar='OUT_PATH')
+parser.add_option('-w', '--weightcol', default="logweight", help='name of logweight column in eos posterior samples, DEFAULT="logweight"', metavar='WEIGHT_COL')
+parser.add_option('-x', '--xrange', default=False, help='x range for plot, DEFAULT=AUTO', metavar='X_START,X_END')
+parser.add_option('-y', '--yrange', default=False, help='y range for plot, DEFAULT=AUTO', metavar='Y_START,Y_END')
+parser.add_option('-l', '--label', default=None, help='x-axis label, DEFAULT=NONE', metavar='LABEL')
+parser.add_option('-r', '--reflect', action='store_true', default=False, help='reflect kde about zero, DEFAULT=False', metavar='False')
+parser.add_option('-b', '--numbins', default=None, help='number of histogram bins use, DEFAULT=AUTO', metavar='NUM_BINS')
+parser.add_option('-v', '--verbose', action='store_true', default=False, help='toggle verbose output, DEFAULT=False', metavar='False')
+
+# SAVE INPUT FROM OPTIONS
+
+opts, args = parser.parse_args()
+prop = str(args[0])
+path_to_post = str(args[1])
+num_eoss = int(opts.numeos)
+path_to_output = str(opts.outpath)
+wcol = str(opts.weightcol)
+label = opts.label
+reflect = opts.reflect
+numbins = opts.numbins
+verb = opts.verbose
+
+# LOAD DATA
+
+if verb: print "loading data..."
+
+post = np.genfromtxt(path_to_post,dtype=None,delimiter=",",names=True) # read eos posterior process
+samples = post[prop]
+logweights = post[wcol]
+if num_eoss:
+	samples = samples[:num_eos]
+	logweights = logweights[:num_eoss]
+else: num_eoss = len(logweights)
+
+weights = np.exp(logweights)
+weights = weights/np.sum(weights)
+
+if opts.xrange:
+	xmin,xmax = [float(x) for x in str(opts.xrange).split(','])
+else: xmin, xmax = np.min(samples), np.max(samples)
+if opts.yrange:
+	ymin,ymax = [float(y) for y in str(opts.yrange).split(','])
+
+# PLOTTING
+
+if verb: print "plotting..."
+
+sns.set(style="ticks", palette="Dark2", font_scale=1.3, rc={"lines.linewidth": 1.5})
+
+if opts.yrange:
+	plots.pplot(samples, weights, (xmin,xmax), axis_label=label, color=sns.color_palette()[0], num_bins=numbins, reflect=reflect, ylims=yrange)
+else:
+	plots.pplot(samples, weights, (xmin,xmax), axis_label=label, color=sns.color_palette()[0], num_bins=numbins, reflect=reflect)
+
+if verb: print "done"
