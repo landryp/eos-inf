@@ -22,6 +22,8 @@ def pplot(array,weights,path_to_output,xlims,axis_label=None,color=sns.color_pal
     prior_kde = gaussian_kde(array)
     post_kde = gaussian_kde(equal_weight_post)
 #    post_kde = gaussian_kde(array,weights=weights)
+    print prior_kde(12.)
+    print post_kde(12.)
     
     xmin, xmax = xlims
     grid = np.linspace(xmin,xmax,1000)
@@ -42,7 +44,7 @@ def pplot(array,weights,path_to_output,xlims,axis_label=None,color=sns.color_pal
     plt.yticks([], [])
     plt.legend(frameon=False)
     
-    plt.savefig(path_to_output)
+    plt.savefig(path_to_output,pad_inches=0.5)
     
     return None
 
