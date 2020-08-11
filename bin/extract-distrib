@@ -34,7 +34,7 @@ parser.add_option('-v', '--verbose', action='store_true', default=False, help='t
 opts, args = parser.parse_args()
 prop = str(args[0])
 path_to_eos_post = str(args[1])
-num_eoss = int(opts.numeos)
+if opts.numeos: num_eoss = int(opts.numeos)
 num_masses = int(opts.nummasses)
 minm, maxm = [float(item) for item in str(opts.mrange).split(',')]
 eos_dir = str(opts.eosdir)
@@ -74,7 +74,7 @@ if verb: print "loading data..."
 eos_post = np.genfromtxt(path_to_eos_post,dtype=None,delimiter=",",names=True) # read eos posterior process
 eoss = eos_post[eoscol]
 logweights = eos_post[wcol]
-if num_eoss:
+if opts.numeos:
 	eoss = eoss[:num_eoss]
 	logweights = logweights[:num_eoss]
 else: num_eoss = len(eoss)
