@@ -80,11 +80,10 @@ if opts.yrange:
 if verb: print "plotting..."
 
 sns.set(style="ticks", palette="Dark2", font_scale=1.3, rc={"lines.linewidth": 1.5})
-rcParams.update({'figure.autolayout': True})
 
 if opts.yrange:
-	plots.pplot(samples, weights, path_to_output, (xmin,xmax), axis_label=label, color=sns.color_palette()[0], num_bins=numbins, reflect=reflect, ylims=(ymin,ymax))
+	plots.pplot(samples, weights, path_to_output, (xmin,xmax), axis_label=r"{0}".format(label), color=sns.color_palette()[0], num_bins=numbins, reflect=reflect, ylims=(ymin,ymax))
 else:
-	plots.pplot(samples, weights, path_to_output, (xmin,xmax), axis_label=label, color=sns.color_palette()[0], num_bins=numbins, reflect=reflect)
+	plots.pplot(samples, weights, path_to_output, (xmin,xmax), axis_label=r"{0}".format(label), color=sns.color_palette()[0], num_bins=numbins, reflect=reflect)
 
 if verb: print "done"

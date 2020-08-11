@@ -26,6 +26,7 @@ def pplot(array,weights,path_to_output,xlims,axis_label=None,color=sns.color_pal
     xmin, xmax = xlims
     grid = np.linspace(xmin,xmax,1000)
     
+    print weighted_quantile(array,weights,res=len(array))
     sns.rugplot(weighted_quantile(array,weights,res=len(array)), height=0.03, color=color, lw=1.5, zorder=100)
     
     plt.plot(grid,prior_kde(grid),color='0.3',linestyle=':',label='prior')
