@@ -9,7 +9,7 @@ import seaborn as sns
 
 # PLOTTING FUNCTIONS
 
-def pplot(array,weights,xlims,axis_label=None,color=sns.color_palette()[0],num_bins=None,reflect=False,ylims=False):
+def pplot(array,weights,path_to_output,xlims,axis_label=None,color=sns.color_palette()[0],num_bins=None,reflect=False,ylims=False):
 
     weights = weights/np.sum(weights)
     
@@ -30,7 +30,7 @@ def pplot(array,weights,xlims,axis_label=None,color=sns.color_palette()[0],num_b
     
     plt.plot(grid,prior_kde(grid),color='0.3',linestyle=':',label='prior')
     plt.plot(grid,post_kde(grid),color=color)
-    sns.distplot(array, bins=num_bins, hist_kws={"weights":weights}, kde=False, label='post', color=color)
+    sns.distplot(array, bins=num_bins, hist_kws={"weights":weights,"density":True}, kde=False, label='post', color=color)
     
     plt.xlabel(axis_label)
     plt.xlim(xmin,xmax)
