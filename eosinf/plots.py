@@ -12,11 +12,11 @@ import seaborn as sns
 def pplot(array,weights,path_to_output,xlims,axis_label=None,color=sns.color_palette()[0],num_bins=None,reflect=False,ylims=False):
 
     weights = weights/np.sum(weights)
+    qs = weighted_quantile(array,weights,res=len(array))
     
     if reflect:
         array = array + [-pt for pt in array]
-        weights = weights + weights
-        print len(array), len(weights)
+        weights = list(weights) + [wt for wt in weights]
         
     equal_weight_post = equalize_sample_weights(array,weights,res=len(array))
 
@@ -27,7 +27,7 @@ def pplot(array,weights,path_to_output,xlims,axis_label=None,color=sns.color_pal
     xmin, xmax = xlims
     grid = np.linspace(xmin,xmax,1000)
     
-    sns.rugplot(weighted_quantile(array,weights,res=len(array)), height=0.03*np.max(post_kde(grid)), color=color, lw=1.5, zorder=100)
+    sns.rugplot(qs, height=0.03*np.max(post_kde(grid)), color=color, lw=1.5, zorder=100)
     
     plt.plot(grid,prior_kde(grid),color='0.3',linestyle=':',label='prior')
     plt.plot(grid,post_kde(grid),color=color,label='post')
