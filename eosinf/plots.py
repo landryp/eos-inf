@@ -26,10 +26,10 @@ def pplot(array,weights,path_to_output,xlims,axis_label=None,color=sns.color_pal
     xmin, xmax = xlims
     grid = np.linspace(xmin,xmax,1000)
     
-    sns.rugplot(weighted_quantile(array,weights), height=0.03, color=color, lw=1.5, zorder=100)
+    sns.rugplot(weighted_quantile(array,weights,res=len(array)), height=0.03, color=color, lw=1.5, zorder=100)
     
     plt.plot(grid,prior_kde(grid),color='0.3',linestyle=':',label='prior')
-    plt.plot(grid,post_kde(grid),color=color)
+    plt.plot(grid,post_kde(grid),color=color,label='post')
     plt.fill_between(grid,post_kde(grid),0.,color=color,alpha=0.3, label='post')
     #sns.distplot(array, bins=num_bins, hist_kws={"weights":weights,"density":True}, kde=False, label='post', color=color)
     
@@ -41,8 +41,9 @@ def pplot(array,weights,path_to_output,xlims,axis_label=None,color=sns.color_pal
     sns.despine(left=True, offset=10, trim=True)
     plt.yticks([], [])
     plt.legend(frameon=False)
+    plt.tight_layout()
     
-    plt.savefig(path_to_output,pad_inches=1.)
+    plt.savefig(path_to_output,bbox_inches='tight')
     
     return None
 
