@@ -18,12 +18,10 @@ def pplot(array,weights,path_to_output,xlims,axis_label=None,color=sns.color_pal
         weights = weights + weights
         
     equal_weight_post = equalize_sample_weights(array,weights,res=len(array))
-    print equal_weight_post
+
     prior_kde = gaussian_kde(array)
     post_kde = gaussian_kde(equal_weight_post)
 #    post_kde = gaussian_kde(array,weights=weights)
-    print prior_kde(12.)
-    print post_kde(12.)
     
     xmin, xmax = xlims
     grid = np.linspace(xmin,xmax,1000)
@@ -32,7 +30,7 @@ def pplot(array,weights,path_to_output,xlims,axis_label=None,color=sns.color_pal
     
     plt.plot(grid,prior_kde(grid),color='0.3',linestyle=':',label='prior')
     plt.plot(grid,post_kde(grid),color=color)
-    plt.fill_between(grid,post_kde(grid),0.,color=color,alpha=0.3)
+    plt.fill_between(grid,post_kde(grid),0.,color=color,alpha=0.3, label='post')
     #sns.distplot(array, bins=num_bins, hist_kws={"weights":weights,"density":True}, kde=False, label='post', color=color)
     
     plt.xlabel(axis_label)
@@ -44,7 +42,7 @@ def pplot(array,weights,path_to_output,xlims,axis_label=None,color=sns.color_pal
     plt.yticks([], [])
     plt.legend(frameon=False)
     
-    plt.savefig(path_to_output,pad_inches=0.5)
+    plt.savefig(path_to_output,pad_inches=1.)
     
     return None
 
