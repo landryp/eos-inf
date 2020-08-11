@@ -62,7 +62,7 @@ for i, eos in enumerate(eoss):
 	
 		logweight = eos_post[event][i]
 		logweights.append(logweight)
-		logweights_array[i,j] = logweight
+		logweights_array[i,j+1] = logweight
 		
 	tot_logweight = np.sum(logweights)
 	logweights_array[i,-1] = tot_logweight
