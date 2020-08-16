@@ -51,12 +51,13 @@ if verb: print "calculating..."
 
 q_dat = np.empty((len(cols),len(qs)+1))
 for i in range(len(cols)):
-	q_dat[i,0] = cols[i] 
+	q_dat[i,0] = float(cols[i])/100
 
 for i,prop in enumerate(cols):
 
 	samples = post[prop]
-	logweights = post[wcol]
+	if wcol != 'None': logweights = post[wcol]
+	else: logweights = list(np.ones(len(samples)))
 	if num_eoss:
 		samples = samples[:num_eoss]
 		logweights = logweights[:num_eoss]
@@ -64,7 +65,7 @@ for i,prop in enumerate(cols):
 		ns_samples = []
 		ns_weights = []
 		for samp, logweight in zip(samples,logweights):
-			if samp != bh_dict[skipbhs](float(prop)): #FIXME: watch out for header corruption
+			if samp != bh_dict[skipbhs](float(prop)/100): #FIXME: watch out for header corruption
 				ns_samples.append(samp)
 				ns_weights.append(logweight)
 		samples = ns_samples
