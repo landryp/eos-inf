@@ -1,6 +1,6 @@
 #!/usr/bin/python
 __doc__ = 'EXTRACT-QS -- extract quantiles'
-__usage__ = 'extract-qs prop path/to/post_samples.csv [-o path/to/plot.png ...]'
+__usage__ = 'extract-qs xname path/to/post_samples.csv [-o path/to/plot.png ...]'
 __author__ = 'pgjlandry@gmail.com'
 __date__ = '08-2020'
 
@@ -17,7 +17,7 @@ from scipy.stats import gaussian_kde
 parser = OptionParser(usage=__usage__, description=__doc__)
 parser.add_option('-q', '--quantiles', default="0.05,0.5,0.95", help='quantiles to return, DEFAULT="0.05,0.5,0.95"', metavar='Q1,Q2,...')
 parser.add_option('-n', '--numeos', default=False, help='number of EOS samples to use, DEFAULT=ALL', metavar='NUM_EOS_SAMPLES')
-parser.add_option('-o', '--outpath', default="./plot.png", help='path to output plot, DEFAULT="./plot.png"', metavar='OUT_PATH')
+parser.add_option('-o', '--outpath', default="quantiles.csv", help='path to output plot, DEFAULT="quantiles.csv"', metavar='OUT_PATH')
 parser.add_option('-w', '--weightcol', default="logweight", help='name of logweight column in eos posterior samples, DEFAULT="logweight"', metavar='WEIGHT_COL')
 parser.add_option('-s', '--skipbhs', default=False, help='skip BH samples, if true give "prop,M", DEFAULT=False', metavar='False')
 parser.add_option('-t', '--qtype', default="sym", help='symmetric (sym) or HPD (hpd) quantiles, DEFAULT="sym"', metavar='Q_TYPE')
@@ -27,7 +27,7 @@ parser.add_option('-v', '--verbose', action='store_true', default=False, help='t
 # SAVE INPUT FROM OPTIONS
 
 opts, args = parser.parse_args()
-prop = str(args[0])
+xname = str(args[0])
 path_to_post = str(args[1])
 num_eoss = int(opts.numeos)
 path_to_output = str(opts.outpath)
@@ -64,7 +64,7 @@ for i,prop in enumerate(cols):
 		ns_samples = []
 		ns_weights = []
 		for samp, logweight in zip(samples,logweights):
-			if samp != bh_dict[skipbhs](float(M)):
+			if samp != bh_dict[skipbhs](float(prop)): #FIXME: watch out for header corruption
 				ns_samples.append(samp)
 				ns_weights.append(logweight)
 		samples = ns_samples
@@ -77,7 +77,7 @@ for i,prop in enumerate(cols):
 
 # SYMMETRIC CREDIBLE INTERVALS
 
-	if qtype not "hpd":
+	if qtype != "hpd":
 
 		quants = [np.percentile(samples_eqwt,100*q) for q in qs]
 
@@ -132,7 +132,7 @@ for i,prop in enumerate(cols):
 
 # SAVE DATA
 
-head = 'M,'+','.join(['{0:.2f}'.format(q) for q in qs])
+head = xname+','+','.join(['{0:.2f}'.format(q) for q in qs])
 np.savetxt(path_to_output,q_dat,'%.8e',delimiter=',',header=head,comments='')
 
 if verb: print "done"
