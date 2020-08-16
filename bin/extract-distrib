@@ -1,6 +1,6 @@
 #!/usr/bin/python
 __doc__ = 'EXTRACT-DISTRIB -- extract distributions from process and save as csv'
-__usage__ = 'extract-process prop path/to/eos_post.csv [-o path/to/output.csv ...]'
+__usage__ = 'extract-distrib prop path/to/eos_post.csv [-o path/to/output.csv ...]'
 __author__ = 'pgjlandry@gmail.com'
 __date__ = '08-2020'
 
@@ -15,6 +15,8 @@ from scipy.interpolate import interp1d
 
 # SET UP OPTIONS
 
+#FIXME: "random" branch method seems broken; also check EOS numbering on CIT
+
 parser = OptionParser(usage=__usage__, description=__doc__)
 parser.add_option('-n', '--numeos', default=False, help='number of EOS samples to use, DEFAULT=ALL', metavar='NUM_EOS_SAMPLES')
 parser.add_option('-m', '--nummasses', default=100, help='number of mass samples to use, DEFAULT=100', metavar='NUM_MASS_SAMPLES')
@@ -23,10 +25,10 @@ parser.add_option('-u', '--userho', action='store_true', default=False, help='us
 parser.add_option('-l', '--loggrid', action='store_true', default=False, help='use logarithmically spaced masses, DEFAULT=False', metavar='False')
 parser.add_option('-e', '--eosdir', default="./", help='path to EOS directory, DEFAULT="./"', metavar='EOS_DIR_PATH')
 parser.add_option('-o', '--outpath', default="./samples.csv", help='path to output csv, DEFAULT="./samples.csv"', metavar='OUT_PATH')
-parser.add_option('-f', '--fmtstr', default="%.2e", help='output format string, DEFAULT="%.2e"', metavar='FMT_STR')
+parser.add_option('-f', '--fmtstr', default="%.8e", help='output format string, DEFAULT="%.8e"', metavar='FMT_STR')
 parser.add_option('-w', '--weightcol', default="logweight", help='name of logweight column in eos posterior samples, DEFAULT="logweight"', metavar='WEIGHT_COL')
 parser.add_option('-c', '--eoscol', default="eos", help='name of eos column in eos posterior samples, DEFAULT="eos"', metavar='EOS_COL')
-parser.add_option('-b', '--branch', default="random", help='method (random,first,max,min) used to pick stellar sequence, if mass is stable on more than one, DEFAULT="random"', metavar='METHOD_STR')
+parser.add_option('-b', '--branch', default="first", help='method (random,first,max,min) used to pick stellar sequence, if mass is stable on more than one, DEFAULT="random"', metavar='METHOD_STR')
 parser.add_option('-v', '--verbose', action='store_true', default=False, help='toggle verbose output, DEFAULT=False', metavar='False')
 
 # SAVE INPUT FROM OPTIONS
@@ -93,8 +95,8 @@ for i, (eos, logweight) in enumerate(zip(eoss,logweights)):
 	branch = 0
 	macropath = macro_path(eos)
 	eospath = eos_path(eos)
-	while os.path.isfile(macropath):
-	
+	#while os.path.isfile(macropath):
+	if os.path.isfile(macropath):
 		if use_rho:
 		
 			eos_dat = np.genfromtxt(eospath, dtype=None, delimiter=",", names=True)

@@ -1,6 +1,6 @@
 #!/usr/bin/python
-__doc__ = 'PLOT-DISTRIB -- plot distribution'
-__usage__ = 'plot-distrib prop path/to/post_samples.csv [-o path/to/plot.png ...]'
+__doc__ = 'EXTRACT-QS -- extract quantiles'
+__usage__ = 'extract quantiles prop path/to/post_samples.csv [-o path/to/plot.png ...]'
 __author__ = 'pgjlandry@gmail.com'
 __date__ = '08-2020'
 
@@ -10,24 +10,16 @@ from optparse import OptionParser
 import numpy as np
 import scipy.stats
 from scipy.stats import gaussian_kde
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-import seaborn as sns
-import eosinf.plots as plots
 
 # SET UP OPTIONS
 
 parser = OptionParser(usage=__usage__, description=__doc__)
+parser.add_option('-q', '--quantiles', default="0.05,0.5,0.95", help='quantiles to return, DEFAULT="0.05,0.5,0.95"', metavar='Q1,Q2,...')
 parser.add_option('-n', '--numeos', default=False, help='number of EOS samples to use, DEFAULT=ALL', metavar='NUM_EOS_SAMPLES')
 parser.add_option('-o', '--outpath', default="./plot.png", help='path to output plot, DEFAULT="./plot.png"', metavar='OUT_PATH')
 parser.add_option('-w', '--weightcol', default="logweight", help='name of logweight column in eos posterior samples, DEFAULT="logweight"', metavar='WEIGHT_COL')
-parser.add_option('-x', '--xrange', default=False, help='x range for plot, DEFAULT=AUTO', metavar='X_START,X_END')
-parser.add_option('-y', '--yrange', default=False, help='y range for plot, DEFAULT=AUTO', metavar='Y_START,Y_END')
-parser.add_option('-l', '--label', default=None, help='x-axis label, DEFAULT=NONE', metavar='LABEL')
-parser.add_option('-r', '--reflect', action='store_true', default=False, help='reflect kde about zero, DEFAULT=False', metavar='False')
-parser.add_option('-b', '--numbins', default=None, help='number of histogram bins use, DEFAULT=AUTO', metavar='NUM_BINS')
 parser.add_option('-s', '--skipbhs', default=False, help='skip BH samples, if true give "prop,M", DEFAULT=False', metavar='False')
+parser.add_option('-b', '--numbins', default=False, help='number of bins to use for histogram-based HPD interval calculator, DEFAULT=AUTO', metavar='NUM_BINS')
 parser.add_option('-v', '--verbose', action='store_true', default=False, help='toggle verbose output, DEFAULT=False', metavar='False')
 
 # SAVE INPUT FROM OPTIONS
@@ -38,9 +30,8 @@ path_to_post = str(args[1])
 num_eoss = int(opts.numeos)
 path_to_output = str(opts.outpath)
 wcol = str(opts.weightcol)
-label = opts.label
-reflect = opts.reflect
-numbins = opts.numbins
+numbins = int(opts.numbins)
+qs = [float(q) for q in str(opts.quantiles).split(',')]
 if opts.skipbhs: skipbhs, M = str(opts.skipbhs).split(',')
 verb = opts.verbose
 
@@ -69,21 +60,51 @@ if opts.skipbhs:
 weights = np.exp(logweights)
 weights = weights/np.sum(weights)
 
-if opts.xrange:
-	xmin,xmax = [float(x) for x in str(opts.xrange).split(',')]
-else: xmin, xmax = np.min(samples), np.max(samples)
-if opts.yrange:
-	ymin,ymax = [float(y) for y in str(opts.yrange).split(',')]
+# SYMMETRIC CREDIBLE INTERVALS
 
-# PLOTTING
+if verb: print "calculating..."
 
-if verb: print "plotting..."
+quants = np.percentile(samples,100*qs)
 
-sns.set(style="ticks", palette="Dark2", font_scale=1.3, rc={"lines.linewidth": 1.5})
+quants_str = ['{0:.8e}'.format(quant) for quant in quants]
+quants_str = ','.join(quants_str)
 
-if opts.yrange:
-	plots.pplot(samples, weights, path_to_output, (xmin,xmax), axis_label=label, color=sns.color_palette()[0], num_bins=numbins, reflect=reflect, ylims=(ymin,ymax))
-else:
-	plots.pplot(samples, weights, path_to_output, (xmin,xmax), axis_label=label, color=sns.color_palette()[0], num_bins=numbins, reflect=reflect)
+print(quants_str)
+
+# HIGHEST POSTERIOR DENSITY INTERVALS
+
+def hpd_sample(dat,cl,num_bins=False):
+
+    dat = [datum for datum in dat if datum == datum]
+    norm = len(dat)
+    if not num_bins: num_bins = int(np.sqrt(norm))
+    dat = np.array(dat)
+    hist, bin_edges = np.histogram(dat,bins=num_bins)
+    bins = [(bin_edges[i],bin_edges[i+1]) for i in range(len(bin_edges)-1)]
+    hist_dat = zip(hist,bins)
+    hist_dat.sort(reverse=True)
+    hist, bins = zip(*hist_dat)
+    hist = list(hist)
+    bins = list(bins)
+
+    for i in range(len(bins)):
+        subdat = []
+        for j in range(i+1):
+            bin = bins[j]
+            subdat.extend(dat[(dat >= bin[0]) & (dat < bin[1])])
+        prob = float(len(list(subdat)))/norm
+        if i == 0: maxap = 0.5*(min(subdat)+max(subdat))
+        if prob >= cl: break
+
+    lb, ub = min(subdat), max(subdat)
+
+    return lb, maxap, ub
+
+quants = [hpd_sample(samples,q,numbins) for q in qs]
+
+quants_str = ['{0:.8e}'.format(quant) for quant in quants]
+quants_str = ','.join(quants_str)
+
+print(quants_str)
 
 if verb: print "done"
