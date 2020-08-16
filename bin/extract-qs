@@ -20,6 +20,7 @@ parser.add_option('-n', '--numeos', default=False, help='number of EOS samples t
 parser.add_option('-o', '--outpath', default="./plot.png", help='path to output plot, DEFAULT="./plot.png"', metavar='OUT_PATH')
 parser.add_option('-w', '--weightcol', default="logweight", help='name of logweight column in eos posterior samples, DEFAULT="logweight"', metavar='WEIGHT_COL')
 parser.add_option('-s', '--skipbhs', default=False, help='skip BH samples, if true give "prop,M", DEFAULT=False', metavar='False')
+parser.add_option('-t', '--qtype', default="sym", help='symmetric (sym) or HPD (hpd) quantiles, DEFAULT="sym"', metavar='Q_TYPE')
 parser.add_option('-b', '--numbins', default=False, help='number of bins to use for histogram-based HPD interval calculator, DEFAULT=AUTO', metavar='NUM_BINS')
 parser.add_option('-v', '--verbose', action='store_true', default=False, help='toggle verbose output, DEFAULT=False', metavar='False')
 
@@ -31,6 +32,7 @@ path_to_post = str(args[1])
 num_eoss = int(opts.numeos)
 path_to_output = str(opts.outpath)
 wcol = str(opts.weightcol)
+qtype = str(opts.qtype)
 numbins = int(opts.numbins)
 qs = [float(q) for q in str(opts.quantiles).split(',')]
 if opts.skipbhs: skipbhs, M = str(opts.skipbhs).split(',')
@@ -43,71 +45,94 @@ bh_dict = {"R":lambda M: 2*M,"Lambda":lambda M: 0*M,"pressurec2":lambda M:0*M,"b
 if verb: print "loading data..."
 
 post = np.genfromtxt(path_to_post,dtype=None,delimiter=",",names=True) # read eos posterior process
-samples = post[prop]
-logweights = post[wcol]
-if num_eoss:
-	samples = samples[:num_eoss]
-	logweights = logweights[:num_eoss]
-if opts.skipbhs:
-	ns_samples = []
-	ns_weights = []
-	for samp, logweight in zip(samples,logweights):
-		if samp != bh_dict[skipbhs](float(M)):
-			ns_samples.append(samp)
-			ns_weights.append(logweight)
-	samples = ns_samples
-	logweights = ns_weights
-
-weights = np.exp(logweights)
-weights = weights/np.sum(weights)
-
-samples_eqwt = np.random.choice(samples,size=int(1e6),p=weights)
-
-# SYMMETRIC CREDIBLE INTERVALS
+cols = list(post.dtype.names)[2:]
 
 if verb: print "calculating..."
 
-quants = [np.percentile(samples_eqwt,100*q) for q in qs]
+q_dat = np.empty((len(cols),len(qs)+1))
+for i in range(len(cols)):
+	q_dat[i,0] = cols[i] 
 
-quants_str = ['{0:.8e}'.format(quant) for quant in quants]
-quants_str = ','.join(quants_str)
+for i,prop in enumerate(cols):
 
-print(quants_str)
+	samples = post[prop]
+	logweights = post[wcol]
+	if num_eoss:
+		samples = samples[:num_eoss]
+		logweights = logweights[:num_eoss]
+	if opts.skipbhs:
+		ns_samples = []
+		ns_weights = []
+		for samp, logweight in zip(samples,logweights):
+			if samp != bh_dict[skipbhs](float(M)):
+				ns_samples.append(samp)
+				ns_weights.append(logweight)
+		samples = ns_samples
+		logweights = ns_weights
+
+	weights = np.exp(logweights)
+	weights = weights/np.sum(weights)
+
+	samples_eqwt = np.random.choice(samples,size=int(1e6),p=weights)
+
+# SYMMETRIC CREDIBLE INTERVALS
+
+	if qtype not "hpd":
+
+		quants = [np.percentile(samples_eqwt,100*q) for q in qs]
+
+		for j in range(len(quants)):
+			q_dat[i,j+1] = quants[j]
+
+#		quants_str = ['{0:.8e}'.format(quant) for quant in quants]
+#		quants_str = ','.join(quants_str)
+
+#		print(quants_str)
 
 # HIGHEST POSTERIOR DENSITY INTERVALS
 
-def hpd_sample(dat,cl,num_bins=False):
+	else:
 
-    dat = [datum for datum in dat if datum == datum]
-    norm = len(dat)
-    if not num_bins: num_bins = int(np.sqrt(norm))
-    dat = np.array(dat)
-    hist, bin_edges = np.histogram(dat,bins=num_bins)
-    bins = [(bin_edges[i],bin_edges[i+1]) for i in range(len(bin_edges)-1)]
-    hist_dat = zip(hist,bins)
-    hist_dat.sort(reverse=True)
-    hist, bins = zip(*hist_dat)
-    hist = list(hist)
-    bins = list(bins)
+		def hpd_sample(dat,cl,num_bins=False):
+	
+			dat = [datum for datum in dat if datum == datum]
+	    		norm = len(dat)
+			if not num_bins: num_bins = int(np.sqrt(norm))
+	    		dat = np.array(dat)
+			hist, bin_edges = np.histogram(dat,bins=num_bins)
+	    		bins = [(bin_edges[i],bin_edges[i+1]) for i in range(len(bin_edges)-1)]
+	    		hist_dat = zip(hist,bins)
+	    		hist_dat.sort(reverse=True)
+	    		hist, bins = zip(*hist_dat)
+	    		hist = list(hist)
+	    		bins = list(bins)
 
-    for i in range(len(bins)):
-        subdat = []
-        for j in range(i+1):
-            bin = bins[j]
-            subdat.extend(dat[(dat >= bin[0]) & (dat < bin[1])])
-        prob = float(len(list(subdat)))/norm
-        if i == 0: maxap = 0.5*(min(subdat)+max(subdat))
-        if prob >= cl: break
+		    	for i in range(len(bins)):
+				subdat = []
+				for j in range(i+1):
+			    		bin = bins[j]
+			    		subdat.extend(dat[(dat >= bin[0]) & (dat < bin[1])])
+				prob = float(len(list(subdat)))/norm
+				if i == 0: maxap = 0.5*(min(subdat)+max(subdat))
+				if prob >= cl: break
 
-    lb, ub = min(subdat), max(subdat)
+		    	lb, ub = min(subdat), max(subdat)
 
-    return lb, maxap, ub
+		    	return lb, maxap, ub
 
-quants = [hpd_sample(samples_eqwt,q,numbins) for q in qs]
+		quants = [hpd_sample(samples_eqwt,q,numbins) for q in qs]
 
-quants_str = ['{0:.8e}'.format(quant) for quant in quants]
-quants_str = ','.join(quants_str)
+		for j in range(len(quants)):
+			q_dat[i,j+1] = quants[j]
 
-print(quants_str)
+	#	quants_str = ['{0:.8e}'.format(quant) for quant in quants]
+	#	quants_str = ','.join(quants_str)
+
+	#	print(quants_str)
+
+# SAVE DATA
+
+head = 'M,'+','.join(['{0:.2f}'.format(q) for q in qs])
+np.savetxt(path_to_output,q_dat,'%.8e',delimiter=',',header=head,comments='')
 
 if verb: print "done"
