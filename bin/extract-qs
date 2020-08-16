@@ -67,7 +67,7 @@ samples_eqwt = np.random.choice(samples,size=int(1e6),p=weights)
 
 if verb: print "calculating..."
 
-quants = np.percentile(samples_eqwt,[100*q for q in qs])
+quants = [np.percentile(samples_eqwt,100*q) for q in qs]
 
 quants_str = ['{0:.8e}'.format(quant) for quant in quants]
 quants_str = ','.join(quants_str)
