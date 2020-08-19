@@ -15,8 +15,7 @@ from scipy.interpolate import interp1d
 
 # SET UP OPTIONS
 
-#FIXME: "random" branch method seems broken; also check EOS numbering on CIT
-#FIXME: interpolation from stable branches also seems broken; full macro better
+#FIXME: check EOS numbering on CIT
 
 parser = OptionParser(usage=__usage__, description=__doc__)
 parser.add_option('-n', '--numeos', default=False, help='number of EOS samples to use, DEFAULT=ALL', metavar='NUM_EOS_SAMPLES')
@@ -62,8 +61,8 @@ def eos_path(eos):
 def macro_path(eos,branch=0):
     
     mod = 1000
-    #path = eos_dir+"DRAWmod"+str(mod)+"-"+"%06d/MACROdraw-%06d/MACROdraw-%06d-%d.csv" % (eos/mod,eos,eos,branch)
-    path = eos_dir+"DRAWmod"+str(mod)+"-"+"%06d/macro-draw-%06d.csv" % (eos/mod,eos)
+    path = eos_dir+"DRAWmod"+str(mod)+"-"+"%06d/MACROdraw-%06d/MACROdraw-%06d-%d.csv" % (eos/mod,eos,eos,branch)
+    #path = eos_dir+"DRAWmod"+str(mod)+"-"+"%06d/macro-draw-%06d.csv" % (eos/mod,eos)
     
     return path
 
@@ -92,13 +91,11 @@ if verb: print "extracting samples..."
 for i, (eos, logweight) in enumerate(zip(eoss,logweights)):
 
 	init_val = -1
-	branch_vals = []
 	branch_interps = []
 	branch = 0
 	macropath = macro_path(eos)
 	eospath = eos_path(eos)
-	#while os.path.isfile(macropath):
-	if os.path.isfile(macropath):
+	while os.path.isfile(macropath):
 		if use_rho:
 		
 			eos_dat = np.genfromtxt(eospath, dtype=None, delimiter=",", names=True)
@@ -130,7 +127,7 @@ for i, (eos, logweight) in enumerate(zip(eoss,logweights)):
 		macropath = macro_path(eos,branch)
 
 	for j, m in enumerate(mgrid):
-	
+		branch_vals = []
 		for val_of_m in branch_interps:
 		
 			tmp_val = float(val_of_m(m))
