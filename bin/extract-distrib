@@ -15,8 +15,6 @@ from scipy.interpolate import interp1d
 
 # SET UP OPTIONS
 
-#FIXME: check EOS numbering on CIT
-
 parser = OptionParser(usage=__usage__, description=__doc__)
 parser.add_option('-n', '--numeos', default=False, help='number of EOS samples to use, DEFAULT=ALL', metavar='NUM_EOS_SAMPLES')
 parser.add_option('-m', '--nummasses', default=100, help='number of mass samples to use, DEFAULT=100', metavar='NUM_MASS_SAMPLES')
@@ -28,7 +26,7 @@ parser.add_option('-o', '--outpath', default="./samples.csv", help='path to outp
 parser.add_option('-f', '--fmtstr', default="%.8e", help='output format string, DEFAULT="%.8e"', metavar='FMT_STR')
 parser.add_option('-w', '--weightcol', default="logweight", help='name of logweight column in eos posterior samples, DEFAULT="logweight"', metavar='WEIGHT_COL')
 parser.add_option('-c', '--eoscol', default="eos", help='name of eos column in eos posterior samples, DEFAULT="eos"', metavar='EOS_COL')
-parser.add_option('-b', '--branch', default="first", help='method (random,first,max,min) used to pick stellar sequence, if mass is stable on more than one, DEFAULT="random"', metavar='METHOD_STR')
+parser.add_option('-b', '--branch', default="random", help='method (random,first,max,min) used to pick stellar sequence, if mass is stable on more than one, DEFAULT="random"', metavar='METHOD_STR')
 parser.add_option('-v', '--verbose', action='store_true', default=False, help='toggle verbose output, DEFAULT=False', metavar='False')
 
 # SAVE INPUT FROM OPTIONS

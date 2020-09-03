@@ -35,10 +35,25 @@ def samplemassprior(size=1,distr='flat',params=None):
 def samplebinarymassprior(size=1,distr='flat',params=None):
 
 	distrib = distrs[distr]
-	if params is None: msamps = distrib(2*size)
-	else: msamps = distrib(2*size,*params)
+	if params is None:
+		msamps2 = distrib(size)
+		msamps1 = distrib(size)
+	else:
+		params2 = [params[0],params[1]]
+		params1 = [params[2],params[3]]
+		msamps2 = distrib(size,*params2)
+		msamps1 = distrib(size,*params1)
 
-	m1samps = [max(msamps[i],msamps[i+1]) for i in range(0,2*size,2)]
-	m2samps = [min(msamps[i],msamps[i+1]) for i in range(0,2*size,2)]
+	m1samps = []
+	m2samps = []
+	for m1,m2 in zip(msamps1,msamps2):
+	
+		while m1 < m2:
+		
+			m1 = distrib(1,*params1)
+			m2 = distrib(1,*params2)
+
+		m1samps.append(m1)
+		m2samps.append(m2)
 
 	return zip(m1samps,m2samps)

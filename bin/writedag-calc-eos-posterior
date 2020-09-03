@@ -67,7 +67,9 @@ do
 		if [ "$obstype" == "cbc" ]; then
 			if [ "$prop" == "m1" ]; then
 				gub=$ub
+				glb=$lb
 			elif [ "$prop" == "m2" ]; then
+				lub=$ub
 				llb=$lb
 			fi
 			if [ "$prop" == "m1" ] || [ "$prop" == "m2" ] || [ "$prop" == "Lambda1" ] || [ "$prop" == "Lambda2" ]; then
@@ -88,7 +90,11 @@ do
 		fi
 	done < $likemetapath
 
-	mbounds="$llb,$gub"
+	if [ "$obstype" == "cbc" ]; then
+		mbounds="$llb,$lub,$glb,$gub"
+	else
+		mbounds="$llb,$gub"
+	fi
 	avgbw=$(bc <<<"scale=4;$sumbw/$vars")
 
 	optbw=$(head -n 1 $bwpath)
