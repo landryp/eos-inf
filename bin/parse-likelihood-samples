@@ -35,11 +35,11 @@ for prop in props:
 
 	likelihood_metadata.append([prop,lb,ub,bw])
 
-if obs_type = 'cbc':
+if obs_type == 'cbc':
 
 	m1_samples = likelihood_samples['m1']
 	m2_samples = likelihood_samples['m2']
-	mc_samples = (m1*m2)**0.6/(m1+m2)**0.2
+	mc_samples = [(m1*m2)**0.6/(m1+m2)**0.2 for m1,m2 in zip(m1_samples,m2_samples)]
 	num_samples = len(mc_samples)
 	
 	lb = min(mc_samples)
