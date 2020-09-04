@@ -28,7 +28,7 @@ parser.add_option('-o', '--outprec', default=8, help='how many digits of precisi
 parser.add_option('--choosem', default=[], help='output NS properties at chosen mass, is repeatable and also takes special keywords "maxm", "minm", DEFAULT=False', metavar='MASS', type=str, action='append')
 parser.add_option('-f', '--failm', default=1., help='require mass less than this value at first central density, DEFAULT=1.', metavar='MASS')
 parser.add_option('-v', '--verbose', action='store_true', default=False, help='toggle verbose output, DEFAULT=False', metavar='BOOL')
-#FIXME: add chirp mass/q cut, check ok to limit prior range by event
+#FIXME: add chirp mass/q cut
 
 # SAVE INPUT FROM OPTIONS
 

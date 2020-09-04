@@ -18,7 +18,7 @@ output_path = str(args[2])
 quant = 100*(float(opts.quant))
 if quant: props = str(opts.cols).split(',')
 
-obs_dict = {'cbc':['m1','m2','Lambda1','Lambda2'],'xmr':['m','R'],'psr':['m']}
+obs_dict = {'cbc':['m1','m2','Lambda1','Lambda2','mc','q'],'xmr':['m','R'],'psr':['m']}
 
 likelihood_samples = np.genfromtxt(path_to_likelihood_samples,dtype=None,delimiter=',',names=True)
 if not opts.cols: props = obs_dict[obs_type]

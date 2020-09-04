@@ -40,7 +40,8 @@ def samplebinarymassprior(size=1,distr='flat',params=None):
 		msamps1 = distrib(size)
 	else:
 		params2 = [params[0],params[1]]
-		params1 = [params[2],params[3]]
+		params1 = [params[-2],params[-1]]
+		mcrange = [params[2],params[3]]
 		msamps2 = distrib(size,*params2)
 		msamps1 = distrib(size,*params1)
 
@@ -48,7 +49,9 @@ def samplebinarymassprior(size=1,distr='flat',params=None):
 	m2samps = []
 	for m1,m2 in zip(msamps1,msamps2):
 	
-		while m1 < m2:
+		chirp = (m1*m2)**0.6/(m1+m2)**0.2
+	
+		while m1 < m2 or chirp < mcrange[0] or chirp > mcrange[1]:
 		
 			m1 = distrib(1,*params1)
 			m2 = distrib(1,*params2)

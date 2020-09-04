@@ -28,6 +28,9 @@ do
 			elif [ "$prop" == "m2" ]; then
 				lub=$ub
 				llb=$lb
+			elif [ "$prop" == "mc" ]; then
+				mcub=$ub
+				mclb=$lb
 			fi
 			if [ "$prop" == "m1" ] || [ "$prop" == "m2" ] || [ "$prop" == "Lambda1" ] || [ "$prop" == "Lambda2" ]; then
 				sumbw=$(bc <<<"scale=4;$sumbw+$bw")
@@ -48,7 +51,7 @@ do
 	done < $likemetapath
 
 	if [ "$obstype" == "cbc" ]; then
-		mbounds="$llb,$lub,$glb,$gub"
+		mbounds="$llb,$lub,$mclb,$mcub,$glb,$gub"
 	else
 		mbounds="$llb,$gub"
 	fi
