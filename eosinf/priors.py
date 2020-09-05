@@ -55,6 +55,7 @@ def samplebinarymassprior(size=1,distr='flat',params=None):
 		
 			m1 = distrib(1,*params1)
 			m2 = distrib(1,*params2)
+			chirp = (m1*m2)**0.6/(m1+m2)**0.2
 
 		m1samps.append(m1)
 		m2samps.append(m2)
