@@ -66,7 +66,7 @@ do
 	done
 	echo "${bws[*]}"
 	
-	investigate-bandwidth $likepath $props -v --num-proc 50 -b ${bws[0]} -b ${bws[1]} -b ${bws[2]} -b ${bws[3]} -b ${bws[4]} -b ${bws[5]} --weight-column Prior --weight-column-is-log Prior --invert-weight-column Prior > $bwpath
+	investigate-bandwidth $likepath $props -v --num-proc 50 -b ${bws[0]} -b ${bws[1]} -b ${bws[2]} -b ${bws[3]} -b ${bws[4]} -b ${bws[5]} --weight-column Prior --invert-weight-column Prior > $bwpath
 
 	grep 'mean_logL' $bwpath | cut -d= -f2 > $tmppath1
 	grep 'b=' $bwpath | tr -d 'b =' > $tmppath2
@@ -96,7 +96,7 @@ do
 	done
 	echo "${bws[*]}"
 
-	investigate-bandwidth $likepath $props -v --num-proc 50 -b ${bws[0]} -b ${bws[1]} -b ${bws[2]} -b ${bws[3]} -b ${bws[4]} -b ${bws[5]} -b ${bws[6]} -b ${bws[7]} -b ${bws[8]} -b ${bws[9]} -b ${bws[10]} --weight-column Prior --weight-column-is-log Prior --invert-weight-column Prior > $bwpath
+	investigate-bandwidth $likepath $props -v --num-proc 50 -b ${bws[0]} -b ${bws[1]} -b ${bws[2]} -b ${bws[3]} -b ${bws[4]} -b ${bws[5]} -b ${bws[6]} -b ${bws[7]} -b ${bws[8]} -b ${bws[9]} -b ${bws[10]} --weight-column Prior --invert-weight-column Prior > $bwpath
 
 	grep 'mean_logL' $bwpath | cut -d= -f2 > $tmppath1
 	grep 'b=' $bwpath | tr -d 'b =' > $tmppath2
@@ -126,7 +126,7 @@ do
 	done
 	echo "${bws[*]}"
 
-	investigate-bandwidth $likepath $props -v --num-proc 50 -b ${bws[0]} -b ${bws[1]} -b ${bws[2]} -b ${bws[3]} -b ${bws[4]} -b ${bws[5]} -b ${bws[6]} --weight-column Prior --weight-column-is-log Prior --invert-weight-column Prior > $bwpath
+	investigate-bandwidth $likepath $props -v --num-proc 50 -b ${bws[0]} -b ${bws[1]} -b ${bws[2]} -b ${bws[3]} -b ${bws[4]} -b ${bws[5]} -b ${bws[6]} --weight-column Prior --invert-weight-column Prior > $bwpath
 
 	grep 'mean_logL' $bwpath | cut -d= -f2 > $tmppath1
 	grep 'b=' $bwpath | tr -d 'b =' > $tmppath2
