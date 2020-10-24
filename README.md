@@ -4,13 +4,13 @@ Code for inference of the neutron-star equation of state from a collection of as
 
 DEPENDENCIES: [universality](https://github.com/reedessick/universality)
 
-This codebase assumes the existence of EOS prior samples in the form of tabulated pressure,energy-density,baryon-density data.
+This codebase assumes the existence of EOS prior samples in the form of tabulated pressure,energy-density,baryon-density data. It depends on tools from the universality module developed by reed.essick.
 
 ---
 
 ### Documentation
 
-Instructions for using the code are provided in DOCS.md (*under construction*).
+Instructions for using the code are provided in DOCS.md. Brief commands for running the most common top-level executables are given below.
 
 ---
 
