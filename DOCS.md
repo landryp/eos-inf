@@ -23,7 +23,7 @@ The path and python path variables should be updated to point to the install dir
 export PATH=path/to/opt/bin:$PATH
 export PYTHONPATH=path/to/opt/lib/python2.7/site-packages:/path/to/opt/lib64/python2.7/site-packages:$PYTHONPATH
 
-The same install instructions apply to the [universality](git clone https://github.com/reedessick/universality) module, upon which eos-inf depends.
+The same install instructions apply to the [universality](https://github.com/reedessick/universality) module, upon which eos-inf depends.
 
 git clone https://github.com/reedessick/universality
 
@@ -48,7 +48,7 @@ xmr: m,R,Prior
 psr: m,Prior
 moi: m,I,Prior
 
-The likelihoods to be analyzed should be recorded in an observations metadata file that contains the observation paths and types, i.e.
+The likelihoods to be analyzed should be recorded in an observations metadata file ("obs.in") that contains the observation paths and types, i.e.
 
 path/to/likelihood1.csv,cbc
 path/to/likelihood2.csv,psr
