@@ -16,7 +16,7 @@ obs_type = str(args[0])
 path_to_likelihood_samples = str(args[1])
 output_path = str(args[2])
 quant = 100*(float(opts.quant))
-if quant: props = str(opts.cols).split(',')
+if opts.cols: props = str(opts.cols).split(',')
 
 obs_dict = {'cbc':['m1','m2','Lambda1','Lambda2'],'xmr':['m','R'],'psr':['m']}
 
@@ -31,9 +31,7 @@ for prop in props:
 	lb = np.percentile(samples,quant)
 	ub = np.percentile(samples,100-quant)
 
-	bw = (ub-lb)/np.sqrt(num_samples) #FIXME: use kde optimizer
-
-	likelihood_metadata.append([prop,lb,ub,bw])
+	likelihood_metadata.append([prop,lb,ub])
 
 if obs_type == 'cbc':
 
@@ -44,9 +42,8 @@ if obs_type == 'cbc':
 	
 	lb = min(mc_samples)
 	ub = max(mc_samples)
-	bw = (ub-lb)/np.sqrt(num_samples)
 	
-	likelihood_metadata.append(['mc',lb,ub,bw])
+	likelihood_metadata.append(['mc',lb,ub])
 
 data_array = np.array(likelihood_metadata)
 np.savetxt(output_path,data_array,fmt='%s',delimiter=',',header='',comments='')

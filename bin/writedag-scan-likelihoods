@@ -33,7 +33,7 @@ do
 	echo "log = $rundir/$execfile.log" >> $subfile
 	echo "getenv = True" >> $subfile
 	echo "accounting_group = ligo.dev.o3.cbc.pe.lalinference" >> $subfile
-	echo "accounting_group_user = philippe.landry" >> $subfile
+	echo "accounting_group_user = $USER" >> $subfile
 	echo "queue 1" >> $subfile
 done
 
