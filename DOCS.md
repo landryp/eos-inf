@@ -64,7 +64,7 @@ With these preliminaries satisfied, the inference code can be run.
 
 writedag-scan-likelihoods path/to/eos-inf/ path/to/rundir/ path/to/obs.in
 
-The paths to the likelihood data are sourced from the observation metadata file obs.in (described above). The run directory stores logs associated with the condor jobs. The path to the eos-inf repo is needed to source the script parse-likelihood-samples that interprets the likelihood data; a script investigate-bandwidth from universality is used to search for the optimal KDE bandwidth. For each likelihood, an output .bw file is saved to the same directory as the likelihood. The first line of that file is the optimal bandwidth.
+The paths to the likelihood data are sourced from the observation metadata file obs.in (described above). The run directory stores logs associated with the condor jobs. The path to the eos-inf repo is needed to source the scripts parse-likelihood-samples and find-kde-bw that interpret the likelihood data and search for the optimal KDE bandwidth, respectively; a script investigate-bandwidth from universality is used to evaluate the log-likelihood of each trial bandwidth. For each likelihood, an output .bw file is saved to the same directory as the likelihood samples. The first line of that file is the optimal bandwidth.
 
 2. Sample in EOSs and masses, then analyze the likelihoods to calculate the EOS posterior for each observation.
 
