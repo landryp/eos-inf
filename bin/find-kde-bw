@@ -1,0 +1,68 @@
+#!/usr/bin/python
+__doc__ = 'FIND-KDE-BW -- search for optimal bandwidth for kde representation of likelihood'
+__usage__ = 'find-kde-bw obstype likepath [-m maxiters -t tol -r bwrange -v]'
+__author__ = 'pgjlandry@gmail.com'
+__date__ = '11-2020'
+
+from optparse import OptionParser
+import numpy as np
+import subprocess
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+
+parser = OptionParser(usage=__usage__, description=__doc__)
+parser.add_option('-m', '--maxiters', default=10, help='maximum number of iterations of bisection search for optimal bandwidth, DEFAULT=10', metavar='NUM')
+parser.add_option('-t', '--tol', default=1e-3, help='tolerance for optimal bandwidth, DEFAULT=1e-3', metavar='TOL')
+parser.add_option('-r', '--bwrange', default="0.05,0.55", help='range of bandwidths to investigate, DEFAULT="0.05,0.55"', metavar='MINBW,MAXBW')
+parser.add_option('-v', '--verbose', action='store_true', default=False, help='toggle verbose output, DEFAULT=False')
+
+opts, args = parser.parse_args()
+obs_type = str(args[0])
+path_to_likelihood_samples = str(args[1])
+tol = float(opts.tol)
+maxiters = int(opts.maxiters)
+minbw,maxbw = [float(bw) for bw in str(opts.bwrange).split(',')]
+verb = opts.verbose
+
+obs_dict = {'cbc':['m1','m2','Lambda1','Lambda2'],'xmr':['m','R'],'psr':['m']}
+props = obs_dict[obs_type]
+
+bw_path = path_to_likelihood_samples.split('.csv')[0]+".bw"
+
+for i in range(maxiters):
+
+	bws = np.linspace(minbw,maxbw,4)
+	if i==0:
+	
+		bws_str = ' '.join(["-b "+str(bw) for bw in bws])
+		subprocess.call('investigate-bandwidth {0} {1} -v --num-proc 50 {2} --weight-column Prior --invert-weight-column Prior > {3}'.format(path_to_likelihood_samples,(' ').join(props),bws_str,bw_path),shell=True)
+	
+	else:
+		bws_str = ' '.join(["-b "+str(bw) for bw in bws[1:-1]])
+		subprocess.call('investigate-bandwidth {0} {1} -v --num-proc 50 {2} --weight-column Prior --invert-weight-column Prior >> {3}'.format(path_to_likelihood_samples,(' ').join(props),bws_str,bw_path),shell=True)
+	
+	bstr = np.fromregex(bw_path,r'b=.*',[('key', 'S32')])
+	bs = [float(b.split('=')[-1]) for b in bstr['key']]
+	logLstr = np.fromregex(bw_path,r'mean_logL\s.\s.*',[('key', 'S32')])
+	logLs = [float(logL.split('= ')[-1]) for logL in logLstr['key']]
+	bs,logLs = zip(*sorted(zip(bs, logLs)))
+	if verb:
+		print(bs)
+		print(logLs)
+	opt_idx = np.argmax(logLs)
+	optbw = bs[opt_idx]
+	minbw = bs[opt_idx-1]
+	maxbw = bs[opt_idx+1]
+
+	if verb: print(optbw)
+	
+	if (maxbw-minbw) <= 2*tol: break
+	
+tmp_path = bw_path+".tmp"
+tmp_output = open(tmp_path, "w")  
+tmp_output.write('{0}\n'.format(optbw))
+tmp_output.close()
+
+subprocess.call('cat {0} >> {1}'.format(bw_path,tmp_path),shell=True)
+subprocess.call('mv {0} {1}'.format(tmp_path,bw_path),shell=True)
